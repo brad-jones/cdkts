@@ -15,6 +15,7 @@ tasks:
       - git config core.editor "code --wait"
       - git config commit.template "$PWD/.gitmsgtpl"
       - deno install {{if .CI}}--frozen{{end}}
+      - deno run -qA ./scripts/install-cdkts.ts
       - "{{if .CI}}git config --global user.name github-actions[bot]{{end}}"
       - "{{if .CI}}git config --global user.email github-actions[bot]@users.noreply.github.com{{end}}"
 
@@ -42,7 +43,7 @@ tasks:
     preconditions:
       - '[ "$CI" = "true" ]'
     cmds:
-      - ./scripts/try-cog-bump.ts
+      - deno run -qA ./scripts/try-cog-bump.ts
 
   package:
     desc: This is triggered by cog as a pre_bump_hook to generate all the final publishable artifacts

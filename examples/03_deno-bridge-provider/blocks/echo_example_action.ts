@@ -1,6 +1,4 @@
-import type { Construct } from "../../construct.ts";
-import type { Action } from "./action.ts";
-import { DenoAction, type DenoActionConfig } from "./deno_action.ts";
+import { type Action, type Construct, DenoAction, type DenoActionConfig } from "@brad-jones/cdkts/constructs";
 
 export interface EchoExampleActionProps {
   /**

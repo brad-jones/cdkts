@@ -1,6 +1,4 @@
-import type { Construct } from "../../construct.ts";
-import type { DataSource } from "./datasource.ts";
-import { DenoDataSource } from "./deno_datasource.ts";
+import { type Construct, type DataSource, DenoDataSource } from "@brad-jones/cdkts/constructs";
 
 export interface Sha256ExampleDataSourceProps {
   value: string;

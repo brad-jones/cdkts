@@ -60,7 +60,7 @@ tasks:
       vars:
         - VERSION
     cmds:
-      - deno publish
+      - deno publish --allow-slow-types
       - git push && git push --tags
       - cog changelog --at v{{.VERSION}} > GITHUB_CHANGELOG.md
       - gh release create v{{.VERSION}} -F GITHUB_CHANGELOG.md

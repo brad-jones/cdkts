@@ -7,13 +7,24 @@ export async function fmtHcl(hcl: string, enabled = true): Promise<string> {
   return enabled ? await format(hcl) : hcl;
 }
 
+export function escapeHclString(str: string): string {
+  return str
+    .replace(/\\/g, "\\\\") // Backslash must be first
+    .replace(/"/g, '\\"') // Double quote
+    .replace(/\n/g, "\\n") // Newline
+    .replace(/\r/g, "\\r") // Carriage return
+    .replace(/\t/g, "\\t") // Tab
+    .replace(/\$/g, "\\$") // Dollar sign (prevents interpolation)
+    .replace(/%/g, "\\%"); // Percent sign (prevents directives)
+}
+
 export function toHcl(obj: unknown, root = true): string {
   if (obj === null || typeof obj === "undefined") {
     return "null";
   }
 
   if (typeof obj === "string") {
-    return `"${obj}"`;
+    return `"${escapeHclString(obj)}"`;
   }
 
   if (typeof obj === "boolean") {

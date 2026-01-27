@@ -39,7 +39,15 @@ export class Block<
         if (typeof propName === "number") {
           return target.atIndex(propName);
         }
-        throw new Error("not supported");
+        if (propName === Symbol.toPrimitive) {
+          return function (hint: any) {
+            if (hint === "string") {
+              return target.toString();
+            }
+            throw new Error(`toPrimitive not supported: ${hint}`);
+          };
+        }
+        throw new Error(`atIndex not supported: ${String(propName)}`);
       },
     }) as Outputs;
   }

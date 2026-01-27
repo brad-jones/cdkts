@@ -30,6 +30,11 @@ tasks:
     cmds:
       - dprint fmt
 
+  test:
+    desc: Executes our lib test suite
+    cmds:
+      - deno test -A ./lib/**/*.test.ts
+
   cog:
     desc: Executes 'cog bump' which orchestrates the release process.
     deps:
@@ -43,6 +48,7 @@ tasks:
     desc: This is triggered by cog as a pre_bump_hook to generate all the final publishable artifacts
     deps:
       - lint
+      - test
     requires:
       vars:
         - VERSION

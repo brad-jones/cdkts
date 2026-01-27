@@ -1,29 +1,22 @@
-import { Construct } from "../../construct.ts";
-import { Resource, ResourceInputs } from "./resource.ts";
+import type { Construct } from "../../construct.ts";
+import { Resource } from "./resource.ts";
 
-// deno-lint-ignore no-explicit-any
-export interface DenoResourceInputs<Props extends any = any> extends ResourceInputs {
-  path: string;
-  props: Props;
-  permissions?: DenoPermissions;
-}
+export class DenoResource<Self = typeof DenoResource> extends Resource<Self> {
+  static override readonly Props = class extends Resource.Props {
+    id = new Resource.Output<string>();
+    props = new Resource.Input<any>();
+    state = new Resource.Output<any>();
+    path = new Resource.Input<string>();
+    permissions = new Resource.Input<
+      {
+        all?: boolean;
+        allow?: string[];
+        deny?: string[];
+      } | undefined
+    >();
+  };
 
-// deno-lint-ignore no-explicit-any
-export interface DenoResourceOutputs<State extends any = any> {
-  id: string;
-  state: State;
-}
-
-export interface DenoPermissions {
-  all?: boolean;
-  allow?: string[];
-  deny?: string[];
-}
-
-// deno-lint-ignore no-explicit-any
-export class DenoResource<Props extends any = any, State extends any = any>
-  extends Resource<DenoResourceInputs<Props>, DenoResourceOutputs<State>> {
-  constructor(parent: Construct, label: string, inputs: DenoResourceInputs<Props>) {
+  constructor(parent: Construct, label: string, inputs: DenoResource["inputs"]) {
     super(parent, "denobridge_resource", label, inputs);
   }
 }

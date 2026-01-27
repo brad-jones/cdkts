@@ -1,26 +1,21 @@
-import { Stack } from "../../stack.ts";
-import { DataSource, DataSourceInputs } from "./datasource.ts";
+import type { Construct } from "../../construct.ts";
+import { DataSource } from "./datasource.ts";
 
-// deno-lint-ignore no-explicit-any
-export interface DenoDataSourceInputs<Props extends any = any> extends DataSourceInputs {
-  path: string;
-  props: Props;
-  permissions?: {
-    all?: boolean;
-    allow?: string[];
-    deny?: string[];
+export class DenoDataSource<Self = typeof DenoDataSource> extends DataSource<Self> {
+  static override readonly Props = class extends DataSource.Props {
+    path = new DataSource.Input<string>();
+    props = new DataSource.Input<any>();
+    permissions = new DataSource.Input<
+      {
+        all?: boolean;
+        allow?: string[];
+        deny?: string[];
+      } | undefined
+    >();
+    result = new DataSource.Output<any>();
   };
-}
 
-// deno-lint-ignore no-explicit-any
-export interface DenoDataSourceOutputs<Result extends any = any> {
-  result: Result;
-}
-
-// deno-lint-ignore no-explicit-any
-export class DenoDataSource<Props extends any = any, Result extends any = any>
-  extends DataSource<DenoDataSourceInputs<Props>, DenoDataSourceOutputs<Result>> {
-  constructor(parent: Stack, label: string, inputs: DenoDataSourceInputs<Props>) {
+  constructor(parent: Construct, label: string, inputs: DenoDataSource["inputs"]) {
     super(parent, "denobridge_datasource", label, inputs);
   }
 }

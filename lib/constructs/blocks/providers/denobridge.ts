@@ -1,21 +1,13 @@
-import { Construct } from "../../construct.ts";
-import { Provider, ProviderInputs } from "./provider.ts";
+import type { Construct } from "../../construct.ts";
+import { Provider } from "./provider.ts";
 
-export interface DenoBridgeInputs extends ProviderInputs {
-  denoBinaryPath?: string;
-  denoVersion?: string;
-}
+export class DenoBridgeProvider extends Provider<typeof DenoBridgeProvider> {
+  static override Props = class extends Provider.Props {
+    denoBinaryPath = new Provider.Input<string | undefined>({ default: Deno.execPath() });
+    denoVersion = new Provider.Input<string | undefined>();
+  };
 
-export class DenoBridge extends Provider<DenoBridgeInputs> {
-  constructor(parent: Construct, inputs?: DenoBridgeInputs) {
-    super(parent, "denobridge", inputs!);
-  }
-
-  protected override mapInputsForHcl(): unknown {
-    const inputs = { denoBinaryPath: Deno.execPath(), ...this.inputs };
-    return {
-      deno_binary_path: inputs.denoBinaryPath,
-      deno_version: inputs.denoVersion,
-    };
+  constructor(parent: Construct, inputs?: DenoBridgeProvider["inputs"]) {
+    super(parent, "denobridge", inputs);
   }
 }

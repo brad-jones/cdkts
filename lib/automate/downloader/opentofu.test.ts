@@ -130,7 +130,7 @@ Deno.test("OpenTofuDownloader - downloads for different platforms", async () => 
     const linuxDownloader = new OpenTofuDownloader({
       baseDir: join(tempDir, "linux"),
       platform: "linux",
-      arch: "amd64",
+      arch: "x86_64",
     });
     const linuxPath = await linuxDownloader.getBinaryPath(version);
     assertEquals(existsSync(linuxPath), true);
@@ -140,7 +140,7 @@ Deno.test("OpenTofuDownloader - downloads for different platforms", async () => 
     const windowsDownloader = new OpenTofuDownloader({
       baseDir: join(tempDir, "windows"),
       platform: "windows",
-      arch: "amd64",
+      arch: "x86_64",
     });
     const windowsPath = await windowsDownloader.getBinaryPath(version);
     assertEquals(existsSync(windowsPath), true);
@@ -150,7 +150,7 @@ Deno.test("OpenTofuDownloader - downloads for different platforms", async () => 
     const darwinDownloader = new OpenTofuDownloader({
       baseDir: join(tempDir, "darwin"),
       platform: "darwin",
-      arch: "arm64",
+      arch: "aarch64",
     });
     const darwinPath = await darwinDownloader.getBinaryPath(version);
     assertEquals(existsSync(darwinPath), true);

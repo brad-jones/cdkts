@@ -1,47 +1,46 @@
-import { Construct } from "../../construct.ts";
-import { Action } from "../actions/action.ts";
+import type { Construct } from "../../construct.ts";
+import type { Action } from "../actions/action.ts";
 import { Block } from "../block.ts";
-import { Provider } from "../providers/provider.ts";
+import type { Provider } from "../providers/provider.ts";
 
-export interface ResourceInputs {
-  count?: number;
-  depends_on?: string[];
-  forEach?: Record<string, string> | string[];
-  provider?: Provider;
-  lifecycles?: { when: "pre" | "post"; condition: string; errorMessage: string }[];
-  actionTriggers?: {
-    events: ("before_create" | "after_create" | "before_update" | "after_update")[];
-    actions: Action[];
-    condition?: string;
-  }[];
-  createBeforeDestroy?: boolean;
-  preventDestroy?: boolean;
-  ignoreChanges?: string[];
-  replaceTriggeredBy?: string[];
-  // TODO: https://developer.hashicorp.com/terraform/language/block/resource#connection
-  // TODO: https://developer.hashicorp.com/terraform/language/block/resource#provisioner
-  [x: string]: unknown;
-}
+export class Resource<Self = typeof Resource> extends Block<Self> {
+  static override readonly Props = class extends Block.Props {
+    count = new Block.Input<number | undefined>();
+    dependsOn = new Block.Input<string[] | undefined>();
+    forEach = new Block.Input<Record<string, string> | string[] | undefined>();
+    provider = new Block.Input<Provider | undefined>();
+    createBeforeDestroy = new Block.Input<boolean | undefined>();
+    preventDestroy = new Block.Input<boolean | undefined>();
+    ignoreChanges = new Block.Input<string[] | undefined>();
+    replaceTriggeredBy = new Block.Input<string[] | undefined>();
+    lifecycles = new Block.Input<{ when: "pre" | "post"; condition: string; errorMessage: string }[] | undefined>();
+    actionTriggers = new Block.Input<
+      {
+        events: ("before_create" | "after_create" | "before_update" | "after_update")[];
+        actions: Action[];
+        condition?: string;
+      }[] | undefined
+    >();
+    // TODO: https://developer.hashicorp.com/terraform/language/block/resource#connection
+    // TODO: https://developer.hashicorp.com/terraform/language/block/resource#provisioner
+  };
 
-// deno-lint-ignore no-explicit-any
-export class Resource<Inputs extends ResourceInputs = ResourceInputs, Outputs extends any = any>
-  extends Block<Inputs, Outputs> {
   constructor(
     parent: Construct,
     readonly typeName: string,
     readonly label: string,
-    inputs: Inputs,
+    inputs: Resource["inputs"],
     childBlocks?: (b: Block) => void,
   ) {
     super(parent, "resource", [typeName, label], inputs, childBlocks);
 
     if (
-      typeof inputs.createBeforeDestroy !== "undefined" ||
-      typeof inputs.preventDestroy !== "undefined" ||
-      inputs.ignoreChanges && inputs.ignoreChanges.length > 0 ||
-      inputs.replaceTriggeredBy && inputs.replaceTriggeredBy.length > 0 ||
-      inputs.lifecycles && inputs.lifecycles.length > 0 ||
-      inputs.actionTriggers && inputs.actionTriggers.length > 0
+      typeof inputs?.createBeforeDestroy !== "undefined" ||
+      typeof inputs?.preventDestroy !== "undefined" ||
+      inputs?.ignoreChanges && inputs.ignoreChanges.length > 0 ||
+      inputs?.replaceTriggeredBy && inputs.replaceTriggeredBy.length > 0 ||
+      inputs?.lifecycles && inputs.lifecycles.length > 0 ||
+      inputs?.actionTriggers && inputs.actionTriggers.length > 0
     ) {
       new Block(this, "lifecycle", [], {
         create_before_destroy: inputs.createBeforeDestroy,

@@ -1,11 +1,11 @@
 export abstract class Construct {
-  protected get fqid(): string {
+  get fqid(): string {
     return `${this.parent ? this.parent.id : ""}/${this.id}`;
   }
 
-  protected readonly children: Construct[] = [];
+  readonly children: Construct[] = [];
 
-  protected get descendants(): Construct[] {
+  get descendants(): Construct[] {
     const children = [];
     children.push(...this.children);
     for (const c of this.children) {
@@ -15,7 +15,7 @@ export abstract class Construct {
   }
 
   constructor(
-    protected readonly parent: Construct | undefined,
+    readonly parent: Construct | undefined,
     readonly id: string,
   ) {
     this.parent?.children.push(this);

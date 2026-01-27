@@ -1,9 +1,16 @@
-import { Construct } from "../../construct.ts";
+import type { Construct } from "../../construct.ts";
 import { Block } from "../block.ts";
 
-// deno-lint-ignore no-explicit-any
-export class Backend<Inputs extends any = any> extends Block<Inputs> {
-  constructor(parent: Construct, readonly backendType: string, inputs: Inputs, childBlocks?: (b: Block) => void) {
+/**
+ * @see https://developer.hashicorp.com/terraform/language/backend
+ */
+export class Backend<Self = typeof Backend> extends Block<Self> {
+  constructor(
+    parent: Construct,
+    readonly backendType: string,
+    inputs?: Backend["inputs"],
+    childBlocks?: (b: Block) => void,
+  ) {
     super(parent, "backend", [backendType], inputs, childBlocks);
   }
 }

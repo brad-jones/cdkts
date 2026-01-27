@@ -1,33 +1,67 @@
-import { Construct } from "../../construct.ts";
+import type { Construct } from "../../construct.ts";
 import { Block } from "../block.ts";
-import { Provider } from "../providers/provider.ts";
+import type { Provider } from "../providers/provider.ts";
 
-// deno-lint-ignore no-explicit-any
-export interface ActionInputs<Config extends any = any> {
-  config: Config;
-  count?: number;
-  forEach?: Record<string, string> | string[];
-  provider?: Provider;
-}
+/**
+ * The action block specifies a provider-defined action that you can invoke
+ * using the Terraform CLI or during an apply operation.
+ *
+ * Actions are preset operations built into providers that you can invoke to
+ * trigger automations outside of Terraform, such as Ansible playbooks and
+ * Lambda jobs.
+ *
+ * @see https://developer.hashicorp.com/terraform/language/block/action
+ *
+ * _NB: Unsupported by OpenTofu <https://github.com/opentofu/opentofu/issues/3309>_
+ */
+export class Action<Self = typeof Action> extends Block<Self> {
+  static override readonly Props = class extends Block.Props {
+    /**
+     * The config block sets values for arguments or nested blocks defined by the provider.
+     *
+     * @see: https://developer.hashicorp.com/terraform/language/block/action#config
+     */
+    config = new Block.Input<any>();
 
-// deno-lint-ignore no-explicit-any
-export class Action<Config extends any = any> extends Block<ActionInputs<Config>> {
+    /**
+     * The count meta-argument instructs Terraform to invoke an action multiple
+     * times using the same configuration.
+     *
+     * @see https://developer.hashicorp.com/terraform/language/block/action#count
+     */
+    count = new Block.Input<number | undefined>();
+
+    /**
+     * The for_each meta-argument instructs Terraform to invoke the action once
+     * for each member of a list or key-value pair in a map.
+     *
+     * @see https://developer.hashicorp.com/terraform/language/block/action#for_each
+     */
+    forEach = new Block.Input<Record<string, string> | string[] | undefined>();
+
+    /**
+     * The provider argument instructs Terraform to use an alternate provider
+     * configuration to invoke the action.
+     *
+     * @see https://developer.hashicorp.com/terraform/language/block/action#provider
+     */
+    provider = new Block.Input<Provider | undefined>();
+  };
+
   constructor(
     parent: Construct,
     readonly typeName: string,
     readonly label: string,
-    inputs: ActionInputs<Config>,
+    inputs: Action["inputs"],
     childBlocks?: (b: Block) => void,
   ) {
     super(parent, "action", [typeName, label], inputs, childBlocks);
-    new Block(this, "config", [], inputs.config);
+    new Block(this, "config", [], inputs!.config);
   }
 
   protected override mapInputsForHcl(): unknown {
-    return {
-      count: this.inputs?.count,
-      for_each: this.inputs?.forEach,
-      provider: this.inputs?.provider?.inputs?.alias,
-    };
+    const inputs = { ...this.inputs };
+    delete inputs["config"];
+    return inputs;
   }
 }

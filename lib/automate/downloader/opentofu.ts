@@ -24,18 +24,20 @@ interface GitHubRelease {
 export class OpenTofuDownloader implements Downloader {
   private readonly maxVersions = 3;
   private readonly baseDir: string;
-  private readonly platformOverride?: string;
-  private readonly archOverride?: string;
+  private readonly platformOverride?: typeof Deno.build.os;
+  private readonly archOverride?: typeof Deno.build.arch;
 
-  constructor(options?: { baseDir?: string; platform?: string; arch?: string }) {
+  constructor(options?: { baseDir?: string; platform?: typeof Deno.build.os; arch?: typeof Deno.build.arch }) {
+    this.platformOverride = options?.platform;
+    this.archOverride = options?.arch;
     this.baseDir = options?.baseDir ??
       join(
         Deno.env.get("TMPDIR") || Deno.env.get("TEMP") || Deno.env.get("TMP") || "/tmp",
         "cdkts",
         "opentofu",
+        this.getPlatform(),
+        this.getArch(),
       );
-    this.platformOverride = options?.platform;
-    this.archOverride = options?.arch;
   }
 
   async getBinaryPath(version?: string): Promise<string> {
@@ -215,11 +217,7 @@ export class OpenTofuDownloader implements Downloader {
   }
 
   private getPlatform(): string {
-    if (this.platformOverride) {
-      return this.platformOverride;
-    }
-
-    switch (Deno.build.os) {
+    switch (this.platformOverride ?? Deno.build.os) {
       case "windows":
         return "windows";
       case "darwin":
@@ -236,11 +234,7 @@ export class OpenTofuDownloader implements Downloader {
   }
 
   private getArch(): string {
-    if (this.archOverride) {
-      return this.archOverride;
-    }
-
-    switch (Deno.build.arch) {
+    switch (this.archOverride ?? Deno.build.arch) {
       case "x86_64":
         return "amd64";
       case "aarch64":

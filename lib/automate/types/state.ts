@@ -1,5 +1,5 @@
 // https://developer.hashicorp.com/terraform/internals/json-format#state-representation
-export interface State {
+export interface State<Outputs> {
   /** Format version for the state JSON structure */
   format_version?: string;
 
@@ -7,24 +7,24 @@ export interface State {
   terraform_version: string;
 
   /** The values representation derived from the state */
-  values?: ValuesRepresentation;
+  values?: ValuesRepresentation<Outputs>;
 }
 
 /**
  * Values representation describes the current state or planned state
  * https://developer.hashicorp.com/terraform/internals/json-format#values-representation
  */
-export interface ValuesRepresentation {
+export interface ValuesRepresentation<Outputs> {
   /** Outputs from the root module */
-  outputs?: Record<string, OutputValue>;
+  outputs?: { [K in keyof Outputs]: OutputValue<Outputs[K]> };
 
   /** Resources and child modules in the root module */
   root_module?: ModuleRepresentation;
 }
 
-export interface OutputValue {
+export interface OutputValue<Value> {
   /** The output value */
-  value: unknown;
+  value: Value;
 
   /** Type of the output value (e.g., "string", "number", ["map","string"]) */
   type?: string | unknown[];

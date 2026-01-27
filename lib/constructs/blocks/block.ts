@@ -1,15 +1,34 @@
 import { outdent } from "@cspotcode/outdent";
-import { Attribute } from "../attribute.ts";
 import { Construct } from "../construct.ts";
+import { Attribute } from "../input_output/attribute.ts";
+import type { InferInputs, InferOutputs } from "../input_output/types.ts";
+import { Input, Output } from "../input_output/types.ts";
 import { fmtHcl, toHcl } from "../utils.ts";
 
-// deno-lint-ignore no-explicit-any
-export class Block<Inputs extends any = undefined, Outputs extends any = undefined> extends Construct {
-  protected get blocks(): Block[] {
-    return this.children.filter((_) => _ instanceof Block);
+export class Block<
+  Self = any,
+  Inputs = InferInputs<Self>,
+  Outputs = InferOutputs<Self>,
+> extends Construct {
+  static readonly Input = class<ValueType = string> extends Input<ValueType> {
+    constructor(override readonly metadata?: { default?: string }) {
+      super(metadata);
+    }
+  };
+
+  static readonly Output = class<ValueType = string> extends Output<ValueType> {
+    constructor(override readonly metadata?: {}) {
+      super(metadata);
+    }
+  };
+
+  static readonly Props = class {};
+
+  get props(): Record<string, Input | Output> {
+    return new ((this.constructor as any).Props)();
   }
 
-  get outputs() {
+  get outputs(): Outputs {
     return new Proxy(new Attribute(this.id), {
       get(target, propName, _) {
         if (typeof propName === "string") {
@@ -23,16 +42,31 @@ export class Block<Inputs extends any = undefined, Outputs extends any = undefin
     }) as Outputs;
   }
 
+  readonly inputs?: Inputs;
+
+  get ref() {
+    return this.id;
+  }
+
   constructor(
     parent: Construct,
-    protected readonly type: string,
-    protected readonly labels: string[],
-    readonly inputs?: Inputs,
+    readonly type: string,
+    readonly labels: string[],
+    inputs?: any,
     childBlocks?: (b: Block) => void,
   ) {
     super(parent, `${type}${labels.length > 0 ? `.${labels.join(".")}` : ""}`);
 
-    // deno-lint-ignore no-explicit-any
+    this.inputs = inputs ?? {};
+
+    for (const [k, v] of Object.entries(this.props)) {
+      if (v instanceof Block.Input) {
+        if (v.metadata?.default && !(this.inputs as any)[k]) {
+          (this.inputs as any)[k] = v.metadata?.default;
+        }
+      }
+    }
+
     if (childBlocks) childBlocks(this as any);
   }
 
@@ -43,7 +77,7 @@ export class Block<Inputs extends any = undefined, Outputs extends any = undefin
   async toHcl(fmt = true): Promise<string> {
     let childBlocks = "";
 
-    for (const block of this.blocks) {
+    for (const block of this.children.filter((_) => _ instanceof Block)) {
       childBlocks = outdent`
         ${childBlocks}
 

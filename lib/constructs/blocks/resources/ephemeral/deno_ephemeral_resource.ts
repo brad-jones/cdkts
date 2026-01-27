@@ -1,28 +1,22 @@
-import { Construct } from "../../../construct.ts";
-import { EphemeralResource, EphemeralResourceInputs } from "./ephemeral_resource.ts";
+import type { Construct } from "../../../construct.ts";
+import { EphemeralResource } from "./ephemeral_resource.ts";
 
-// deno-lint-ignore no-explicit-any
-export interface DenoEphemeralResourceInputs<Props extends any = any> extends EphemeralResourceInputs {
-  path: string;
-  props: Props;
-  permissions?: DenoPermissions;
-}
+export class DenoEphemeralResource<Self = typeof DenoEphemeralResource> extends EphemeralResource<Self> {
+  static override readonly Props = class extends EphemeralResource.Props {
+    id = new EphemeralResource.Output<string>();
+    props = new EphemeralResource.Input<any>();
+    result = new EphemeralResource.Output<any>();
+    path = new EphemeralResource.Input<string>();
+    permissions = new EphemeralResource.Input<
+      {
+        all?: boolean;
+        allow?: string[];
+        deny?: string[];
+      } | undefined
+    >();
+  };
 
-// deno-lint-ignore no-explicit-any
-export interface DenoEphemeralResourceOutputs<Result extends any = any> {
-  result: Result;
-}
-
-export interface DenoPermissions {
-  all?: boolean;
-  allow?: string[];
-  deny?: string[];
-}
-
-// deno-lint-ignore no-explicit-any
-export class DenoEphemeralResource<Props extends any = any, Result extends any = any>
-  extends EphemeralResource<DenoEphemeralResourceInputs<Props>, DenoEphemeralResourceOutputs<Result>> {
-  constructor(parent: Construct, label: string, inputs: DenoEphemeralResourceInputs<Props>) {
+  constructor(parent: Construct, label: string, inputs: DenoEphemeralResource["inputs"]) {
     super(parent, "denobridge_ephemeral_resource", label, inputs);
   }
 }

@@ -1,4 +1,3 @@
-export * from "./attribute.ts";
 export * from "./blocks/actions/action.ts";
 export * from "./blocks/actions/deno_action.ts";
 export * from "./blocks/backends/backend.ts";
@@ -9,8 +8,9 @@ export * from "./blocks/datasources/datasource.ts";
 export * from "./blocks/providers/denobridge.ts";
 export * from "./blocks/providers/provider.ts";
 export * from "./blocks/resources/deno_resource.ts";
-export * from "./blocks/resources/file_resource.ts";
+export * from "./blocks/resources/file_example_resource.ts";
 export * from "./blocks/resources/resource.ts";
 export * from "./blocks/terraform.ts";
 export * from "./construct.ts";
+export * from "./input_output/attribute.ts";
 export * from "./stack.ts";

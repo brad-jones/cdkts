@@ -2,11 +2,10 @@ import { Project } from "@brad-jones/cdkts/automate";
 import { Resource, Stack, Terraform } from "@brad-jones/cdkts/constructs";
 
 await new Project({
-  flavor: "tofu",
-  projectDir: "./out",
-  stack: new (class MyStack extends Stack {
+  projectDir: `${import.meta.dirname}/out`,
+  stack: new (class MyStack extends Stack<typeof MyStack> {
     constructor() {
-      super(MyStack.name);
+      super(`${import.meta.url}#${MyStack.name}`);
 
       new Terraform(this, {
         requiredVersion: ">=1,<2.0",

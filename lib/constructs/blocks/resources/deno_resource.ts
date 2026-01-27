@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-explicit-any
+
 import type { Construct } from "../../construct.ts";
 import { Resource } from "./resource.ts";
 

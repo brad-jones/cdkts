@@ -6,6 +6,7 @@ import { Block } from "./block.ts";
  */
 export class Output extends Block<typeof Output> {
   static override readonly Props = class extends Block.Props {
+    // deno-lint-ignore no-explicit-any
     value = new Block.Input<any>();
     description = new Block.Input<string | undefined>();
     sensitive = new Block.Input<boolean | undefined>();

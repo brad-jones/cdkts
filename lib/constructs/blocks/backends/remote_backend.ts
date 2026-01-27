@@ -1,5 +1,4 @@
 import type { Construct } from "../../construct.ts";
-import type { Input } from "../../input_output/types.ts";
 import { Backend } from "./backend.ts";
 
 /**

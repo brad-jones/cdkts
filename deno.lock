@@ -11,16 +11,16 @@
     "jsr:@david/dax@~0.44.2": "0.44.2",
     "jsr:@david/path@0.2": "0.2.0",
     "jsr:@david/which@~0.4.1": "0.4.1",
-    "jsr:@hono/hono@^4.11.4": "4.11.4",
+    "jsr:@hono/hono@^4.11.6": "4.11.6",
     "jsr:@mesqueeb/case-anything@^3.1.0": "3.1.0",
-    "jsr:@std/assert@^1.0.16": "1.0.16",
+    "jsr:@std/assert@^1.0.17": "1.0.17",
     "jsr:@std/bytes@^1.0.5": "1.0.6",
     "jsr:@std/encoding@^1.0.10": "1.0.10",
     "jsr:@std/fmt@1": "1.0.8",
     "jsr:@std/fmt@~1.0.2": "1.0.8",
-    "jsr:@std/fs@1": "1.0.21",
-    "jsr:@std/fs@^1.0.20": "1.0.21",
-    "jsr:@std/fs@^1.0.21": "1.0.21",
+    "jsr:@std/fs@1": "1.0.22",
+    "jsr:@std/fs@^1.0.20": "1.0.22",
+    "jsr:@std/fs@^1.0.22": "1.0.22",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/io@0.225": "0.225.2",
     "jsr:@std/path@1": "1.1.4",
@@ -90,14 +90,14 @@
     "@david/which@0.4.1": {
       "integrity": "896a682b111f92ab866cc70c5b4afab2f5899d2f9bde31ed00203b9c250f225e"
     },
-    "@hono/hono@4.11.4": {
-      "integrity": "aaf7b9d5a6b2422b0778c091b712ee1f018bc7e82138067d21eb27d7c2e1f5be"
+    "@hono/hono@4.11.6": {
+      "integrity": "e5833f86c819d564793f1f3548634ea53f4c94c0979b9ebdb51690becc9e1f11"
     },
     "@mesqueeb/case-anything@3.1.0": {
       "integrity": "0e463b752f95dbdfa42c97b0e60911170fd8206508522fffc23a9e83d63bb4c2"
     },
-    "@std/assert@1.0.16": {
-      "integrity": "6a7272ed1eaa77defe76e5ff63ca705d9c495077e2d5fd0126d2b53fc5bd6532",
+    "@std/assert@1.0.17": {
+      "integrity": "df5ebfffe77c03b3fa1401e11c762cc8f603d51021c56c4d15a8c7ab45e90dbe",
       "dependencies": [
         "jsr:@std/internal"
       ]
@@ -111,8 +111,8 @@
     "@std/fmt@1.0.8": {
       "integrity": "71e1fc498787e4434d213647a6e43e794af4fd393ef8f52062246e06f7e372b7"
     },
-    "@std/fs@1.0.21": {
-      "integrity": "d720fe1056d78d43065a4d6e0eeb2b19f34adb8a0bc7caf3a4dbf1d4178252cd",
+    "@std/fs@1.0.22": {
+      "integrity": "de0f277a58a867147a8a01bc1b181d0dfa80bfddba8c9cf2bacd6747bcec9308",
       "dependencies": [
         "jsr:@std/internal",
         "jsr:@std/path@^1.1.4"
@@ -180,11 +180,11 @@
       "jsr:@cliffy/command@1.0.0-rc.8",
       "jsr:@cspotcode/outdent@0.8",
       "jsr:@david/dax@~0.44.2",
-      "jsr:@hono/hono@^4.11.4",
+      "jsr:@hono/hono@^4.11.6",
       "jsr:@mesqueeb/case-anything@^3.1.0",
-      "jsr:@std/assert@^1.0.16",
+      "jsr:@std/assert@^1.0.17",
       "jsr:@std/encoding@^1.0.10",
-      "jsr:@std/fs@^1.0.21",
+      "jsr:@std/fs@^1.0.22",
       "jsr:@std/path@^1.1.4",
       "jsr:@zip-js/zip-js@^2.8.15",
       "npm:@cdktf/hcl-tools@0.21"

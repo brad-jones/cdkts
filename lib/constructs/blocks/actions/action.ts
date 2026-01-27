@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-explicit-any
+
 import type { Construct } from "../../construct.ts";
 import { Block } from "../block.ts";
 import type { Provider } from "../providers/provider.ts";

@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-explicit-any
+
 import { outdent } from "@cspotcode/outdent";
 import { Block } from "./blocks/block.ts";
 import { Output as OutputBlock } from "./blocks/output.ts";

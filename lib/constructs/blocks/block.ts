@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-explicit-any
+
 import { outdent } from "@cspotcode/outdent";
 import { Construct } from "../construct.ts";
 import { Attribute } from "../input_output/attribute.ts";
@@ -17,7 +19,7 @@ export class Block<
   };
 
   static readonly Output = class<ValueType = string> extends Output<ValueType> {
-    constructor(override readonly metadata?: {}) {
+    constructor(override readonly metadata?: Record<PropertyKey, never>) {
       super(metadata);
     }
   };

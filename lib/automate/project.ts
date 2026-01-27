@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-explicit-any
+
 import { snakeCase } from "@mesqueeb/case-anything";
 import { encodeHex } from "@std/encoding/hex";
 import { ensureDir, exists, walk } from "@std/fs";

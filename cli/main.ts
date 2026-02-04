@@ -1,11 +1,13 @@
 import { Command, EnumType } from "@cliffy/command";
+import { Confirm } from "@cliffy/prompt";
+import { outdent } from "@cspotcode/outdent";
+import { join } from "@std/path";
 import { Project } from "../lib/automate/project.ts";
 import { StackBundler, type Target } from "../lib/automate/stack_bundler/stack_bundler.ts";
 import { importStack } from "../lib/automate/utils.ts";
 
 await new Command()
   .name("cdkts")
-  .type("flavor", new EnumType(["tofu", "terraform"]))
   .description(`
     CDK for Terraform/OpenTofu (CDKTS) - Define infrastructure using TypeScript and synthesize to HCL
 
@@ -29,6 +31,7 @@ await new Command()
 
     This allows you to use any native tofu/terraform flags alongside CDKTS commands.
   `)
+  .globalType("flavor", new EnumType(["tofu", "terraform"]))
   .globalEnv(
     "CDKTS_FLAVOR=<value:flavor>",
     "Select infrastructure-as-code tool: 'tofu' for OpenTofu or 'terraform' for Terraform (default: tofu)",
@@ -374,5 +377,53 @@ await new Command()
     }
 
     await bundler.bundle(await Deno.realPath(stackFilePath), targetsToBundle);
+  })
+  // ---
+  .command("clean")
+  .description(`
+    Deletes all temporary data that CDKTS stores on your system.
+
+    This command removes:
+    - Temporary project directories created during command execution
+    - Downloaded tofu/terraform binaries cached in the system temp directory
+    - Any other CDKTS-related temporary files
+
+    Use this to free up disk space or reset CDKTS to a clean state.
+  `)
+  .action(async function () {
+    // Double check with the user that this is really what they want to do.
+    const confirmed = await Confirm.prompt({
+      message: outdent`
+        Are you sure you want to delete all CDKTS temporary data?
+
+        WARNING: This may delete state that you care about if you have not
+        configured a state backend or otherwise are using local state!
+      `,
+      default: false,
+    });
+
+    if (!confirmed) {
+      console.log("Clean operation cancelled.");
+      return;
+    }
+
+    // Delete downloaded tofu/terraform binaries
+    try {
+      await Deno.remove(
+        join(Deno.env.get("TMPDIR") || Deno.env.get("TEMP") || Deno.env.get("TMP") || "/tmp", "cdkts"),
+        {
+          recursive: true,
+        },
+      );
+    } catch (e) {
+      if (!(e instanceof Deno.errors.NotFound)) {
+        throw e;
+      }
+    }
+
+    // Also delete any cdkts-project- dirs
+    await Project.cleanUp();
+
+    console.log("Successfully cleaned CDKTS temporary data.");
   })
   .parse();

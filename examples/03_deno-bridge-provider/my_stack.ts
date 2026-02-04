@@ -2,7 +2,7 @@ import { DenoBridgeProvider, Stack, Terraform } from "@brad-jones/cdkts/construc
 import { EchoExampleAction } from "./blocks/echo_example_action.ts";
 import { FileExampleResource } from "./blocks/file_example_resource.ts";
 import { Sha256ExampleDataSource } from "./blocks/sha256_example_datasource.ts";
-import { UuidExampleEphemeralResource } from "./blocks/uuid_ephemeral_resource.ts";
+//import { UuidExampleEphemeralResource } from "./blocks/uuid_ephemeral_resource.ts";
 
 export default class MyStack extends Stack<typeof MyStack> {
   constructor() {

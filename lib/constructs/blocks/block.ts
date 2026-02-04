@@ -3,7 +3,7 @@
 import { outdent } from "@cspotcode/outdent";
 import type { z } from "@zod/zod";
 import { Construct } from "../construct.ts";
-import { Attribute } from "../input_output/attribute.ts";
+import { Attribute, createAttributeProxy } from "../input_output/attribute.ts";
 import type { InferInputs, InferOutputs } from "../input_output/types.ts";
 import { Input, Output } from "../input_output/types.ts";
 import { fmtHcl, toHcl } from "../utils.ts";
@@ -68,33 +68,7 @@ export class Block<
   }
 
   get outputs(): Outputs {
-    return new Proxy(new Attribute(this.id), {
-      get(target, propName, _) {
-        // Check if this is an actual property/method on the Attribute instance
-        if (propName in target) {
-          const value = (target as any)[propName];
-          if (typeof value === "function") {
-            return value.bind(target);
-          }
-          return value;
-        }
-        if (typeof propName === "string") {
-          return target.atMapKey(propName);
-        }
-        if (typeof propName === "number") {
-          return target.atIndex(propName);
-        }
-        if (propName === Symbol.toPrimitive) {
-          return function (hint: any) {
-            if (hint === "string") {
-              return target.toString();
-            }
-            throw new Error(`toPrimitive not supported: ${hint}`);
-          };
-        }
-        throw new Error(`atIndex not supported: ${String(propName)}`);
-      },
-    }) as Outputs;
+    return createAttributeProxy(new Attribute(this.id)) as Outputs;
   }
 
   readonly inputs?: Inputs;

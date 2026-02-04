@@ -1,6 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
 
 import { outdent } from "@cspotcode/outdent";
+import type { z } from "@zod/zod";
 import { Construct } from "../construct.ts";
 import { Attribute } from "../input_output/attribute.ts";
 import type { InferInputs, InferOutputs } from "../input_output/types.ts";
@@ -18,8 +19,44 @@ export class Block<
     }
   };
 
+  static readonly ZodInput = class<Schema extends z.ZodType> extends Block.Input<Schema> {
+    constructor(
+      /**
+       * NB: Reserved for future use.
+       *
+       * The schema is currently unused with-in CDKTS and is only here as a
+       * convenience to avoid using z.infer multiple times.
+       *
+       * But assuming you pass the same schema to denobridge providers,
+       * then validation will happen once all values are resolved by tf.
+       */
+      readonly schema: Schema,
+      metadata?: { default?: string },
+    ) {
+      super(metadata);
+    }
+  };
+
   static readonly Output = class<ValueType = string> extends Output<ValueType> {
     constructor(override readonly metadata?: Record<PropertyKey, never>) {
+      super(metadata);
+    }
+  };
+
+  static readonly ZodOutput = class<Schema extends z.ZodType> extends Block.Output<Schema> {
+    constructor(
+      /**
+       * NB: Reserved for future use.
+       *
+       * The schema is currently unused with-in CDKTS and is only here as a
+       * convenience to avoid using z.infer multiple times.
+       *
+       * But assuming you pass the same schema to denobridge providers,
+       * then validation will happen once all values are resolved by tf.
+       */
+      readonly schema: Schema,
+      metadata?: Record<PropertyKey, never>,
+    ) {
       super(metadata);
     }
   };
@@ -33,6 +70,14 @@ export class Block<
   get outputs(): Outputs {
     return new Proxy(new Attribute(this.id), {
       get(target, propName, _) {
+        // Check if this is an actual property/method on the Attribute instance
+        if (propName in target) {
+          const value = (target as any)[propName];
+          if (typeof value === "function") {
+            return value.bind(target);
+          }
+          return value;
+        }
         if (typeof propName === "string") {
           return target.atMapKey(propName);
         }
@@ -100,7 +145,7 @@ export class Block<
     return await fmtHcl(
       outdent`
         ${this.type} ${this.labels.map((labels) => `"${labels}"`).join(" ")} {
-          ${toHcl(this.mapInputsForHcl())}${childBlocks.length > 0 ? `\n\n${childBlocks}` : ""}
+          ${toHcl(this.mapInputsForHcl())}${childBlocks.length > 0 ? `\n${childBlocks}` : ""}
         }
       `,
       fmt,

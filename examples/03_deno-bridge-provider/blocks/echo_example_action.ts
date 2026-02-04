@@ -1,61 +1,24 @@
-import { type Action, type Construct, DenoAction, type DenoActionConfig } from "@brad-jones/cdkts/constructs";
+import { type Action, type Construct, DenoAction } from "@brad-jones/cdkts/constructs";
+import { ZodActionProvider } from "@brad-jones/terraform-provider-denobridge";
+import { z } from "@zod/zod";
 
-export interface EchoExampleActionProps {
-  /**
-   * A message that will be echoed back to you.
-   */
-  message: string;
+const Props = z.object({
+  message: z.string(),
+  count: z.number().optional().default(3),
+  delaySec: z.number().optional().default(1),
+});
 
-  /**
-   * The number of times the message should be echoed.
-   *
-   * Default: 3
-   */
-  count?: number;
-
-  /**
-   * How many seconds should the action wait before sending the message again.
-   *
-   * Default: 1
-   */
-  delaySec?: number;
-}
-
-/**
- * A working example of a DenoAction.
- *
- * Given a message this will repeat it back to you based on the settings provided.
- *
- * @example
- *
- * ```ts
- * import { Stack, EchoDenoAction } from "jsr:@brad-jones/cdkts/constructs";
- *
- * class MyStack extends Stack {
- *   constructor() {
- *     super(`${import.meta.url}#${MyStack.name}`);
- *
- *     new EchoDenoAction(this, "Example", {
- *       message: "Hello World"
- *     });
- *   }
- * }
- * ```
- */
 export class EchoExampleAction extends DenoAction<typeof EchoExampleAction> {
-  static override readonly Props = class extends DenoAction.Props {
-    override config = new DenoAction.Input<DenoActionConfig<EchoExampleActionProps>>();
-  };
-
-  constructor(parent: Construct, label: string, props: EchoExampleActionProps, options?: Action["inputs"]) {
+  constructor(
+    parent: Construct,
+    label: string,
+    props: z.input<typeof Props>,
+    options?: Omit<Action["inputs"], "config">,
+  ) {
     super(parent, label, {
       ...options,
       config: {
-        props: {
-          count: 3,
-          delaySec: 1,
-          ...props,
-        },
+        props,
         path: import.meta.url,
         permissions: {
           all: true,
@@ -63,4 +26,15 @@ export class EchoExampleAction extends DenoAction<typeof EchoExampleAction> {
       },
     });
   }
+}
+
+if (import.meta.main) {
+  new ZodActionProvider(Props, {
+    async invoke({ message, count, delaySec }, progressCallback) {
+      for (let i = 0; i < count; i++) {
+        await progressCallback(`${i}: ${message}`);
+        await new Promise((r) => setTimeout(r, delaySec * 1000));
+      }
+    },
+  });
 }

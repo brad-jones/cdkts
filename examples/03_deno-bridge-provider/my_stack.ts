@@ -1,6 +1,8 @@
 import { DenoBridgeProvider, Stack, Terraform } from "@brad-jones/cdkts/constructs";
+import { EchoExampleAction } from "./blocks/echo_example_action.ts";
 import { FileExampleResource } from "./blocks/file_example_resource.ts";
 import { Sha256ExampleDataSource } from "./blocks/sha256_example_datasource.ts";
+import { UuidExampleEphemeralResource } from "./blocks/uuid_ephemeral_resource.ts";
 
 export default class MyStack extends Stack<typeof MyStack> {
   constructor() {
@@ -11,19 +13,31 @@ export default class MyStack extends Stack<typeof MyStack> {
       requiredProviders: {
         denobridge: {
           source: "brad-jones/denobridge",
-          version: "0.1.1",
+          version: "0.2.6",
         },
       },
     });
 
     new DenoBridgeProvider(this);
 
-    //const foo = new Sha256ExampleDataSource(this, "foo", { value: "bar" });
+    const fooData = new Sha256ExampleDataSource(this, "foo", { value: "bar" });
+
+    // TODO: While CDKTS / denobridge can implement an ephemeral resource
+    // There is no way through denobridge to consume "write-only" props.
+    // So it's difficult to show a full example here.
+    //const specialId = new UuidExampleEphemeralResource(this, "special_id", { type: "v4" });
+
+    const echoAction = new EchoExampleAction(this, "echo", {
+      message: `Hello World`,
+    });
 
     new FileExampleResource(this, "hello", {
       path: `${import.meta.dirname}/message.txt`,
-      //content: `hash: ${foo.outputs.result.hash}`,
-      content: "hello",
+      content: `hash: ${fooData.outputs.result.hash}`,
+    }, {
+      actionTriggers: [
+        { actions: [echoAction], events: ["after_create", "after_update"] },
+      ],
     });
   }
 }

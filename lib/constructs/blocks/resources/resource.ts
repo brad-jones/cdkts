@@ -1,4 +1,5 @@
 import type { Construct } from "../../construct.ts";
+import { RawHcl } from "../../rawhcl.ts";
 import type { Action } from "../actions/action.ts";
 import { Block } from "../block.ts";
 import type { Provider } from "../providers/provider.ts";
@@ -48,19 +49,23 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
         ignore_changes: inputs.ignoreChanges,
         replace_triggered_by: inputs.replaceTriggeredBy,
       }, (b) => {
-        for (const trigger of inputs!.actionTriggers!) {
-          new Block(b, "action_trigger", [], {
-            events: trigger.events,
-            condition: trigger.condition,
-            actions: trigger.actions.map((_) => _.id),
-          });
+        if (Array.isArray(inputs!.actionTriggers!)) {
+          for (const trigger of inputs!.actionTriggers!) {
+            new Block(b, "action_trigger", [], {
+              events: trigger.events.map((_) => new RawHcl(_)),
+              condition: trigger.condition,
+              actions: trigger.actions,
+            });
+          }
         }
 
-        for (const lifecycle of inputs!.lifecycles!) {
-          new Block(b, `${lifecycle.when}condition`, [], {
-            condition: lifecycle.condition,
-            error_message: lifecycle.errorMessage,
-          });
+        if (Array.isArray(inputs!.lifecycles!)) {
+          for (const lifecycle of inputs!.lifecycles!) {
+            new Block(b, `${lifecycle.when}condition`, [], {
+              condition: lifecycle.condition,
+              error_message: lifecycle.errorMessage,
+            });
+          }
         }
       });
     }

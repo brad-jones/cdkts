@@ -2,31 +2,42 @@
   "version": "5",
   "specifiers": {
     "jsr:@brad-jones/jsr-dynamic-imports@~0.1.2": "0.1.2",
+    "jsr:@brad-jones/terraform-provider-denobridge@~0.2.6": "0.2.6",
+    "jsr:@cliffy/ansi@1.0.0-rc.8": "1.0.0-rc.8",
     "jsr:@cliffy/command@1.0.0-rc.8": "1.0.0-rc.8",
     "jsr:@cliffy/flags@1.0.0-rc.8": "1.0.0-rc.8",
     "jsr:@cliffy/internal@1.0.0-rc.8": "1.0.0-rc.8",
+    "jsr:@cliffy/keycode@1.0.0-rc.8": "1.0.0-rc.8",
+    "jsr:@cliffy/prompt@^1.0.0-rc.8": "1.0.0-rc.8",
     "jsr:@cliffy/table@1.0.0-rc.8": "1.0.0-rc.8",
     "jsr:@cspotcode/outdent@0.8": "0.8.0",
     "jsr:@david/console-static-text@0.3": "0.3.0",
-    "jsr:@david/dax@~0.44.2": "0.44.2",
+    "jsr:@david/dax@0.45": "0.45.0",
     "jsr:@david/path@0.2": "0.2.0",
     "jsr:@david/which@~0.4.1": "0.4.1",
-    "jsr:@hono/hono@^4.11.6": "4.11.6",
+    "jsr:@hono/hono@^4.11.7": "4.11.7",
     "jsr:@mesqueeb/case-anything@^3.1.0": "3.1.0",
-    "jsr:@std/assert@^1.0.17": "1.0.17",
+    "jsr:@std/assert@^1.0.18": "1.0.18",
+    "jsr:@std/assert@~1.0.6": "1.0.18",
     "jsr:@std/bytes@^1.0.5": "1.0.6",
+    "jsr:@std/bytes@^1.0.6": "1.0.6",
     "jsr:@std/encoding@^1.0.10": "1.0.10",
-    "jsr:@std/fmt@1": "1.0.8",
-    "jsr:@std/fmt@~1.0.2": "1.0.8",
+    "jsr:@std/encoding@~1.0.5": "1.0.10",
+    "jsr:@std/fmt@1": "1.0.9",
+    "jsr:@std/fmt@~1.0.2": "1.0.9",
     "jsr:@std/fs@1": "1.0.22",
-    "jsr:@std/fs@^1.0.20": "1.0.22",
     "jsr:@std/fs@^1.0.22": "1.0.22",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/io@0.225": "0.225.2",
+    "jsr:@std/io@~0.224.9": "0.224.9",
     "jsr:@std/path@1": "1.1.4",
     "jsr:@std/path@^1.1.4": "1.1.4",
-    "jsr:@std/text@~1.0.7": "1.0.16",
-    "jsr:@zip-js/zip-js@^2.8.15": "2.8.15",
+    "jsr:@std/path@~1.0.6": "1.0.9",
+    "jsr:@std/streams@^1.0.17": "1.0.17",
+    "jsr:@std/text@~1.0.7": "1.0.17",
+    "jsr:@yieldray/json-rpc-ts@~0.2.2": "0.2.2",
+    "jsr:@zip-js/zip-js@^2.8.16": "2.8.16",
+    "jsr:@zod/zod@^4.3.6": "4.3.6",
     "npm:@brad-jones/jsr-dynamic-imports@0.1.2": "0.1.2",
     "npm:@cdktf/hcl-tools@0.21": "0.21.0"
   },
@@ -35,6 +46,22 @@
       "integrity": "5e1da0bffe3ed4b8e9ca2cd2bb35c4508f94a711c77b1190f0190a29347b4b53",
       "dependencies": [
         "npm:@brad-jones/jsr-dynamic-imports@0.1.2"
+      ]
+    },
+    "@brad-jones/terraform-provider-denobridge@0.2.6": {
+      "integrity": "90920ceb0b986cd068a49d3266e15508dcef6a959861382f52d3cfb6501b1797",
+      "dependencies": [
+        "jsr:@std/streams",
+        "jsr:@yieldray/json-rpc-ts",
+        "jsr:@zod/zod"
+      ]
+    },
+    "@cliffy/ansi@1.0.0-rc.8": {
+      "integrity": "ba37f10ce55bbfbdd8ddd987f91f029b17bce88385b98ba3058870f3b007b80c",
+      "dependencies": [
+        "jsr:@cliffy/internal",
+        "jsr:@std/encoding@~1.0.5",
+        "jsr:@std/io@~0.224.9"
       ]
     },
     "@cliffy/command@1.0.0-rc.8": {
@@ -56,6 +83,22 @@
     "@cliffy/internal@1.0.0-rc.8": {
       "integrity": "34cdf2fad9b084b5aed493b138d573f52d4e988767215f7460daf0b918ff43d8"
     },
+    "@cliffy/keycode@1.0.0-rc.8": {
+      "integrity": "76dbf85a67ec0aea2e29ca049b8507b6b3f62a2a971bd744d8d3fc447c177cd9"
+    },
+    "@cliffy/prompt@1.0.0-rc.8": {
+      "integrity": "eba403ea1d47b9971bf2210fa35f4dc7ebd2aba87beec9540ae47552806e2f25",
+      "dependencies": [
+        "jsr:@cliffy/ansi",
+        "jsr:@cliffy/internal",
+        "jsr:@cliffy/keycode",
+        "jsr:@std/assert@~1.0.6",
+        "jsr:@std/fmt@~1.0.2",
+        "jsr:@std/io@~0.224.9",
+        "jsr:@std/path@~1.0.6",
+        "jsr:@std/text"
+      ]
+    },
     "@cliffy/table@1.0.0-rc.8": {
       "integrity": "8bbcdc2ba5e0061b4b13810a24e6f5c6ab19c09f0cce9eb691ccd76c7c6c9db5",
       "dependencies": [
@@ -68,15 +111,15 @@
     "@david/console-static-text@0.3.0": {
       "integrity": "2dfb46ecee525755f7989f94ece30bba85bd8ffe3e8666abc1bf926e1ee0698d"
     },
-    "@david/dax@0.44.2": {
-      "integrity": "26f5985f66a4340d55fb05ca90a0063bb5f0d670a326e14cb33a974aafcbb8d9",
+    "@david/dax@0.45.0": {
+      "integrity": "ac7565dc5c3e5be953a18b505e5dd0d8a30ed53656b65fd34a53bd8d2d5d6b1e",
       "dependencies": [
         "jsr:@david/console-static-text",
         "jsr:@david/path",
         "jsr:@david/which",
         "jsr:@std/fmt@1",
-        "jsr:@std/fs@^1.0.20",
-        "jsr:@std/io",
+        "jsr:@std/fs@1",
+        "jsr:@std/io@0.225",
         "jsr:@std/path@1"
       ]
     },
@@ -90,14 +133,14 @@
     "@david/which@0.4.1": {
       "integrity": "896a682b111f92ab866cc70c5b4afab2f5899d2f9bde31ed00203b9c250f225e"
     },
-    "@hono/hono@4.11.6": {
-      "integrity": "e5833f86c819d564793f1f3548634ea53f4c94c0979b9ebdb51690becc9e1f11"
+    "@hono/hono@4.11.7": {
+      "integrity": "2a0dc00088fbef98b76f575e3c4ab3d2c770d5e6095be215ae05c2aef25b363a"
     },
     "@mesqueeb/case-anything@3.1.0": {
       "integrity": "0e463b752f95dbdfa42c97b0e60911170fd8206508522fffc23a9e83d63bb4c2"
     },
-    "@std/assert@1.0.17": {
-      "integrity": "df5ebfffe77c03b3fa1401e11c762cc8f603d51021c56c4d15a8c7ab45e90dbe",
+    "@std/assert@1.0.18": {
+      "integrity": "270245e9c2c13b446286de475131dc688ca9abcd94fc5db41d43a219b34d1c78",
       "dependencies": [
         "jsr:@std/internal"
       ]
@@ -108,8 +151,8 @@
     "@std/encoding@1.0.10": {
       "integrity": "8783c6384a2d13abd5e9e87a7ae0520a30e9f56aeeaa3bdf910a3eaaf5c811a1"
     },
-    "@std/fmt@1.0.8": {
-      "integrity": "71e1fc498787e4434d213647a6e43e794af4fd393ef8f52062246e06f7e372b7"
+    "@std/fmt@1.0.9": {
+      "integrity": "2487343e8899fb2be5d0e3d35013e54477ada198854e52dd05ed0422eddcabe0"
     },
     "@std/fs@1.0.22": {
       "integrity": "de0f277a58a867147a8a01bc1b181d0dfa80bfddba8c9cf2bacd6747bcec9308",
@@ -121,11 +164,17 @@
     "@std/internal@1.0.12": {
       "integrity": "972a634fd5bc34b242024402972cd5143eac68d8dffaca5eaa4dba30ce17b027"
     },
+    "@std/io@0.224.9": {
+      "integrity": "4414664b6926f665102e73c969cfda06d2c4c59bd5d0c603fd4f1b1c840d6ee3"
+    },
     "@std/io@0.225.2": {
       "integrity": "3c740cd4ee4c082e6cfc86458f47e2ab7cb353dc6234d5e9b1f91a2de5f4d6c7",
       "dependencies": [
-        "jsr:@std/bytes"
+        "jsr:@std/bytes@^1.0.5"
       ]
+    },
+    "@std/path@1.0.9": {
+      "integrity": "260a49f11edd3db93dd38350bf9cd1b4d1366afa98e81b86167b4e3dd750129e"
     },
     "@std/path@1.1.4": {
       "integrity": "1d2d43f39efb1b42f0b1882a25486647cb851481862dc7313390b2bb044314b5",
@@ -133,11 +182,23 @@
         "jsr:@std/internal"
       ]
     },
-    "@std/text@1.0.16": {
-      "integrity": "ddb9853b75119a2473857d691cf1ec02ad90793a2e8b4a4ac49d7354281a0cf8"
+    "@std/streams@1.0.17": {
+      "integrity": "7859f3d9deed83cf4b41f19223d4a67661b3d3819e9fc117698f493bf5992140",
+      "dependencies": [
+        "jsr:@std/bytes@^1.0.6"
+      ]
     },
-    "@zip-js/zip-js@2.8.15": {
-      "integrity": "4b726f1f74d23d671c9f45fed4c8632916ddc552032f43e4c614eea02ebfd53d"
+    "@std/text@1.0.17": {
+      "integrity": "4b2c4ef67ae5b6c1dfd447c81c83a43718f52e3c7e748d8b33f694aba9895f95"
+    },
+    "@yieldray/json-rpc-ts@0.2.2": {
+      "integrity": "9bc60205c01ab7d629ebacade690dd02094011ad9eb9e5fb13f4debb85a891f3"
+    },
+    "@zip-js/zip-js@2.8.16": {
+      "integrity": "7ac61abedd9859b4d8ab99679561ac147228de010bfe102c373231310cbefc68"
+    },
+    "@zod/zod@4.3.6": {
+      "integrity": "7144e5e11f8ffc3cf6e2fca624f6597a8762898aac9868cc8938e9398b96ffe4"
     }
   },
   "npm": {
@@ -177,16 +238,19 @@
   "workspace": {
     "dependencies": [
       "jsr:@brad-jones/jsr-dynamic-imports@~0.1.2",
+      "jsr:@brad-jones/terraform-provider-denobridge@~0.2.6",
       "jsr:@cliffy/command@1.0.0-rc.8",
+      "jsr:@cliffy/prompt@^1.0.0-rc.8",
       "jsr:@cspotcode/outdent@0.8",
-      "jsr:@david/dax@~0.44.2",
-      "jsr:@hono/hono@^4.11.6",
+      "jsr:@david/dax@0.45",
+      "jsr:@hono/hono@^4.11.7",
       "jsr:@mesqueeb/case-anything@^3.1.0",
-      "jsr:@std/assert@^1.0.17",
+      "jsr:@std/assert@^1.0.18",
       "jsr:@std/encoding@^1.0.10",
       "jsr:@std/fs@^1.0.22",
       "jsr:@std/path@^1.1.4",
-      "jsr:@zip-js/zip-js@^2.8.15",
+      "jsr:@zip-js/zip-js@^2.8.16",
+      "jsr:@zod/zod@^4.3.6",
       "npm:@cdktf/hcl-tools@0.21"
     ]
   }

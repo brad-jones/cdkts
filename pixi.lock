@@ -9,36 +9,36 @@ environments:
     packages:
       linux-64:
       - conda: https://prefix.dev/brads-forge/linux-64/cocogitto-6.5.0-h81b34b9_2.conda
-      - conda: https://prefix.dev/brads-forge/linux-64/deno-2.6.6-h81b34b9_4.conda
+      - conda: https://prefix.dev/brads-forge/linux-64/deno-2.6.8-h81b34b9_4.conda
       - conda: https://prefix.dev/brads-forge/linux-64/dprint-0.51.1-h81b34b9_2.conda
-      - conda: https://prefix.dev/brads-forge/linux-64/lefthook-2.0.15-h81b34b9_2.conda
+      - conda: https://prefix.dev/brads-forge/linux-64/lefthook-2.0.16-h81b34b9_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/opentofu-1.11.4-ha770c72_0.conda
-      - conda: https://prefix.dev/brads-forge/linux-64/task-3.47.0-h81b34b9_2.conda
-      - conda: https://conda.anaconda.org/conda-forge/linux-64/terraform-1.14.3-h76a2195_0.conda
+      - conda: https://prefix.dev/brads-forge/linux-64/task-3.48.0-h81b34b9_2.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/terraform-1.14.4-h76a2195_0.conda
       osx-64:
       - conda: https://prefix.dev/brads-forge/osx-64/cocogitto-6.5.0-he0f4bc8_2.conda
-      - conda: https://prefix.dev/brads-forge/osx-64/deno-2.6.6-he0f4bc8_4.conda
+      - conda: https://prefix.dev/brads-forge/osx-64/deno-2.6.8-he0f4bc8_4.conda
       - conda: https://prefix.dev/brads-forge/osx-64/dprint-0.51.1-he0f4bc8_2.conda
-      - conda: https://prefix.dev/brads-forge/osx-64/lefthook-2.0.15-he0f4bc8_2.conda
+      - conda: https://prefix.dev/brads-forge/osx-64/lefthook-2.0.16-he0f4bc8_2.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/opentofu-1.11.4-h694c41f_0.conda
-      - conda: https://prefix.dev/brads-forge/osx-64/task-3.47.0-he0f4bc8_2.conda
-      - conda: https://conda.anaconda.org/conda-forge/osx-64/terraform-1.14.3-hfb6d0b5_0.conda
+      - conda: https://prefix.dev/brads-forge/osx-64/task-3.48.0-he0f4bc8_2.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-64/terraform-1.14.4-h31f4502_0.conda
       osx-arm64:
       - conda: https://prefix.dev/brads-forge/osx-arm64/cocogitto-6.5.0-he8ea13f_2.conda
-      - conda: https://prefix.dev/brads-forge/osx-arm64/deno-2.6.6-he8ea13f_4.conda
+      - conda: https://prefix.dev/brads-forge/osx-arm64/deno-2.6.8-he8ea13f_4.conda
       - conda: https://prefix.dev/brads-forge/osx-arm64/dprint-0.51.1-he8ea13f_2.conda
-      - conda: https://prefix.dev/brads-forge/osx-arm64/lefthook-2.0.15-he8ea13f_2.conda
+      - conda: https://prefix.dev/brads-forge/osx-arm64/lefthook-2.0.16-he8ea13f_2.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/opentofu-1.11.4-hce30654_0.conda
-      - conda: https://prefix.dev/brads-forge/osx-arm64/task-3.47.0-he8ea13f_2.conda
-      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/terraform-1.14.3-h4e0460a_0.conda
+      - conda: https://prefix.dev/brads-forge/osx-arm64/task-3.48.0-he8ea13f_2.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/terraform-1.14.4-h01237fd_0.conda
       win-64:
       - conda: https://prefix.dev/brads-forge/win-64/cocogitto-6.5.0-h3c70cbc_2.conda
-      - conda: https://prefix.dev/brads-forge/win-64/deno-2.6.6-h3c70cbc_4.conda
+      - conda: https://prefix.dev/brads-forge/win-64/deno-2.6.8-h3c70cbc_4.conda
       - conda: https://prefix.dev/brads-forge/win-64/dprint-0.51.1-h3c70cbc_2.conda
-      - conda: https://prefix.dev/brads-forge/win-64/lefthook-2.0.15-h3c70cbc_2.conda
+      - conda: https://prefix.dev/brads-forge/win-64/lefthook-2.0.16-h3c70cbc_2.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/opentofu-1.11.4-h57928b3_0.conda
-      - conda: https://prefix.dev/brads-forge/win-64/task-3.47.0-h3c70cbc_2.conda
-      - conda: https://conda.anaconda.org/conda-forge/win-64/terraform-1.14.3-h36e2d1d_0.conda
+      - conda: https://prefix.dev/brads-forge/win-64/task-3.48.0-h3c70cbc_2.conda
+      - conda: https://conda.anaconda.org/conda-forge/win-64/terraform-1.14.4-h36e2d1d_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/ucrt-10.0.26100.0-h57928b3_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/vc-14.3-h41ae7f8_34.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/vc14_runtime-14.44.35208-h818238b_34.conda
@@ -64,26 +64,26 @@ packages:
   license: MIT
   size: 2704361
   timestamp: 1762142477794
-- conda: https://prefix.dev/brads-forge/linux-64/deno-2.6.6-h81b34b9_4.conda
-  sha256: f99006f2ade1d9622ffaebe950e3fa060bd78fbc5605c2778dffc720b3ad2ca1
+- conda: https://prefix.dev/brads-forge/linux-64/deno-2.6.8-h81b34b9_4.conda
+  sha256: 7f6044f2a8c9bd6ea3092f3995fc1e127c75de169769cdc8542284369c29e749
   license: MIT
-  size: 40502216
-  timestamp: 1769142570322
-- conda: https://prefix.dev/brads-forge/osx-64/deno-2.6.6-he0f4bc8_4.conda
-  sha256: 8a00733d64e49b3c6a97b312fafabae1de81ab34bae4c5daee57aaa9606201f1
+  size: 40698578
+  timestamp: 1770095010207
+- conda: https://prefix.dev/brads-forge/osx-64/deno-2.6.8-he0f4bc8_4.conda
+  sha256: eb421b7374021d2f921109350a21368eab9960d16c4d84c388af189755913c2b
   license: MIT
-  size: 38116759
-  timestamp: 1769142634481
-- conda: https://prefix.dev/brads-forge/osx-arm64/deno-2.6.6-he8ea13f_4.conda
-  sha256: 8499c7380a6c0901a6be75cdf2a092c7b40f9fad0cfa128c855fea36676e8875
+  size: 38437401
+  timestamp: 1770095156113
+- conda: https://prefix.dev/brads-forge/osx-arm64/deno-2.6.8-he8ea13f_4.conda
+  sha256: 269bf11d503c6fd552b7d97cf33ba7ebaae7c7a02829b58108d65a2af53286fd
   license: MIT
-  size: 36921770
-  timestamp: 1769142617757
-- conda: https://prefix.dev/brads-forge/win-64/deno-2.6.6-h3c70cbc_4.conda
-  sha256: 04c802c29584203c4c43ba9e93b181588624a6e07dec5281531360c14beba96c
+  size: 37224794
+  timestamp: 1770095118702
+- conda: https://prefix.dev/brads-forge/win-64/deno-2.6.8-h3c70cbc_4.conda
+  sha256: 545dd41ec939a1ecf352bd0d4c4be55dc8350a73c1182c1838f3c91e5880a4df
   license: MIT
-  size: 40969919
-  timestamp: 1769142570608
+  size: 41235828
+  timestamp: 1770095071248
 - conda: https://prefix.dev/brads-forge/linux-64/dprint-0.51.1-h81b34b9_2.conda
   sha256: 9824785b5e115943e19c3948f98c7d158627c29073131837cc4e82ae5893558c
   license: MIT
@@ -104,26 +104,26 @@ packages:
   license: MIT
   size: 6710334
   timestamp: 1766982893001
-- conda: https://prefix.dev/brads-forge/linux-64/lefthook-2.0.15-h81b34b9_2.conda
-  sha256: 073f2064ecfaeff8de33677ea9aaa83d4c71d0266923712d88dce9efcd1c3bfb
+- conda: https://prefix.dev/brads-forge/linux-64/lefthook-2.0.16-h81b34b9_2.conda
+  sha256: dd99861310ad36903bdea477073418c5cebdfbfc2c478159f53d6a75cda69d8f
   license: MIT
-  size: 5464949
-  timestamp: 1768365318393
-- conda: https://prefix.dev/brads-forge/osx-64/lefthook-2.0.15-he0f4bc8_2.conda
-  sha256: 4c5b4f99d2c929729623e63f5a6005a418d8547bda9d3111898415aac6a0e3fd
+  size: 5467056
+  timestamp: 1769574914806
+- conda: https://prefix.dev/brads-forge/osx-64/lefthook-2.0.16-he0f4bc8_2.conda
+  sha256: 234a5b080dee9b010de276ca6f0a1943a4ba70ce464584ac64507fcaea8c3192
   license: MIT
-  size: 5578066
-  timestamp: 1768365255487
-- conda: https://prefix.dev/brads-forge/osx-arm64/lefthook-2.0.15-he8ea13f_2.conda
-  sha256: f3cc97ead2f64e6a4c706ecf8d352d2a36a8fa2d3dee5d89cbf582ac1eb53014
+  size: 5596771
+  timestamp: 1769574774226
+- conda: https://prefix.dev/brads-forge/osx-arm64/lefthook-2.0.16-he8ea13f_2.conda
+  sha256: a1542f53ced25bca25580ee315ed6b909bb3a6e848670069ae8bb7b780943af5
   license: MIT
-  size: 5144749
-  timestamp: 1768365252622
-- conda: https://prefix.dev/brads-forge/win-64/lefthook-2.0.15-h3c70cbc_2.conda
-  sha256: 929140bde898a9b1eb18ae2f8b38e379670cd1d7de5cd6ab777a6a1b88390dfa
+  size: 5139086
+  timestamp: 1769574709107
+- conda: https://prefix.dev/brads-forge/win-64/lefthook-2.0.16-h3c70cbc_2.conda
+  sha256: d5e30eba718c2f5fe42238f88d2caa9e8b0c93c05d9e0a9fc4c9704faff834ee
   license: MIT
-  size: 5620758
-  timestamp: 1768365277374
+  size: 5622378
+  timestamp: 1769574710902
 - conda: https://conda.anaconda.org/conda-forge/linux-64/opentofu-1.11.4-ha770c72_0.conda
   sha256: 90530affa8548b02bd20df8c281d5f7b6c37ea117069dbd5aceb97a77576bb07
   md5: 5f4bc1cd45a83182359b1b0837caf5c9
@@ -154,62 +154,62 @@ packages:
   license_family: MOZILLA
   size: 27199645
   timestamp: 1769084984817
-- conda: https://prefix.dev/brads-forge/linux-64/task-3.47.0-h81b34b9_2.conda
-  sha256: 5a14751552b2154ed787a95572b77a582bbc4e0a9be4ce673d6ae5597610c01e
+- conda: https://prefix.dev/brads-forge/linux-64/task-3.48.0-h81b34b9_2.conda
+  sha256: f962166089ef094aa1eb5e6452f54070758d43eedb914ad215007a770281bcea
   license: MIT
-  size: 12978881
-  timestamp: 1769315842197
-- conda: https://prefix.dev/brads-forge/osx-64/task-3.47.0-he0f4bc8_2.conda
-  sha256: 2e207222ffea08e84ff24d5d143c6282e68d3eaa64926bba75f0df3e35300178
+  size: 12981184
+  timestamp: 1769488457475
+- conda: https://prefix.dev/brads-forge/osx-64/task-3.48.0-he0f4bc8_2.conda
+  sha256: 6c0dabecec63a83b69c3ae8c22a3c1904a2adbed690f4eb08312aa18653e30a9
   license: MIT
-  size: 13377907
-  timestamp: 1769315825114
-- conda: https://prefix.dev/brads-forge/osx-arm64/task-3.47.0-he8ea13f_2.conda
-  sha256: 6c65c9eb074667bea9e08d8247b97f7f151d9b83aa3b251ace691a044bc805d5
+  size: 13378898
+  timestamp: 1769488382198
+- conda: https://prefix.dev/brads-forge/osx-arm64/task-3.48.0-he8ea13f_2.conda
+  sha256: 175149e32b7cc011dce66009a968425530734baa3a19a547cb016ee3fbffedc1
   license: MIT
-  size: 12518806
-  timestamp: 1769315821976
-- conda: https://prefix.dev/brads-forge/win-64/task-3.47.0-h3c70cbc_2.conda
-  sha256: ca8ea7e7f843afd3201f614b7ec1c9d79679cd72486b87e6d2d67a30e1a13c4e
+  size: 12517161
+  timestamp: 1769488374524
+- conda: https://prefix.dev/brads-forge/win-64/task-3.48.0-h3c70cbc_2.conda
+  sha256: c70dcb492f9888111de6b853d9fdaba2e08bd7c3dc9d2c313ebab0cbf83993a8
   license: MIT
-  size: 13364324
-  timestamp: 1769315845254
-- conda: https://conda.anaconda.org/conda-forge/linux-64/terraform-1.14.3-h76a2195_0.conda
-  sha256: ef06936cff14a708e3fb4ab59d8fc10ede346af9dac61cb8792be2e0d562b7ae
-  md5: e56624d2d7e0fd38dce71196d3e87ada
+  size: 13373271
+  timestamp: 1769488447128
+- conda: https://conda.anaconda.org/conda-forge/linux-64/terraform-1.14.4-h76a2195_0.conda
+  sha256: 3336a6084ee45bef2469ce5ea27a74f6b7ee16f671441f4f32436414194831b8
+  md5: 639b9a3e3bb3181b506e36b8c81c5f19
   depends:
   - __glibc >=2.17,<3.0.a0
   license: BUSL-1.1
-  size: 23720785
-  timestamp: 1765985069228
-- conda: https://conda.anaconda.org/conda-forge/osx-64/terraform-1.14.3-hfb6d0b5_0.conda
-  sha256: e6b1f4feb5bd02cd2f9ab9a07ba8a2c9b6fb12b74aa2aee473a292bd86132aa1
-  md5: 287e5088a01b65370fb2ef05ced9b5b4
+  size: 23709207
+  timestamp: 1769691735433
+- conda: https://conda.anaconda.org/conda-forge/osx-64/terraform-1.14.4-h31f4502_0.conda
+  sha256: 6eab913bce2ec1254547523dd71d3b4b0070a8049181bbe5c760385ac574b546
+  md5: af538ce1db2c4c2a8b06c93382779a17
   depends:
   - __osx >=10.13
   constrains:
   - __osx>=10.12
   license: BUSL-1.1
-  size: 22916968
-  timestamp: 1765985742144
-- conda: https://conda.anaconda.org/conda-forge/osx-arm64/terraform-1.14.3-h4e0460a_0.conda
-  sha256: f07509f6ca8283f11c3c54f202df8c6bc8b5671b02325b9bcc5b31f56141b1ff
-  md5: 20edc3037b3c7aec808efee8542bd51c
+  size: 22914337
+  timestamp: 1769692182152
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/terraform-1.14.4-h01237fd_0.conda
+  sha256: 8e71cf11fd5e71ec87029a193bd020a736722cc31f2778844db7e21249875c4f
+  md5: a5f9627844617b19845c3a26ec8e2eab
   depends:
   - __osx >=11.0
   license: BUSL-1.1
-  size: 21065561
-  timestamp: 1765985422872
-- conda: https://conda.anaconda.org/conda-forge/win-64/terraform-1.14.3-h36e2d1d_0.conda
-  sha256: 3ab91c59750dc3143e56f3a8951132211556eb4334ba1f818a7791a347e0d8db
-  md5: 10f4fd6f442722cab116747f4cc93c4f
+  size: 21060501
+  timestamp: 1769691918327
+- conda: https://conda.anaconda.org/conda-forge/win-64/terraform-1.14.4-h36e2d1d_0.conda
+  sha256: 07098c4b6ba9a8a3e55c86e182a26b1ce925fe28477e7f7e3a1cb281e261e146
+  md5: 99fe4b93acf004d481587ede9a13e710
   depends:
   - ucrt >=10.0.20348.0
   - vc >=14.3,<15
   - vc14_runtime >=14.44.35208
   license: BUSL-1.1
-  size: 22978682
-  timestamp: 1765986008782
+  size: 22980316
+  timestamp: 1769692315542
 - conda: https://conda.anaconda.org/conda-forge/win-64/ucrt-10.0.26100.0-h57928b3_0.conda
   sha256: 3005729dce6f3d3f5ec91dfc49fc75a0095f9cd23bab49efb899657297ac91a5
   md5: 71b24316859acd00bdb8b38f5e2ce328

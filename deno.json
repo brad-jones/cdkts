@@ -16,7 +16,6 @@
     "./constructs": "./lib/constructs/mod.ts"
   },
   "imports": {
-    "@brad-jones/deno-config": "jsr:@brad-jones/deno-config@^1.0.0",
     "@brad-jones/jsr-dynamic-imports": "jsr:@brad-jones/jsr-dynamic-imports@^0.1.2",
     "@brad-jones/terraform-provider-denobridge": "jsr:@brad-jones/terraform-provider-denobridge@^0.2.6",
     "@cdktf/hcl-tools": "npm:@cdktf/hcl-tools@^0.21.0",

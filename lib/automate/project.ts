@@ -171,7 +171,7 @@ export class Project<Self, Inputs, Outputs> {
                 relativePath = relativePath.substring(rootEmbeddedDir.length);
               }
               relativePath = relativePath.replace(/^[\\/]+/, "");
-              const scriptPathOnRealFs = join(this.#props.projectDir, "denobridge-scripts", relativePath);
+              const scriptPathOnRealFs = join(this.#props.projectDir, ".denobridge", relativePath);
               await ensureDir(dirname(scriptPathOnRealFs));
               await Deno.writeFile(scriptPathOnRealFs, await Deno.readFile(normalisedScriptPath));
 
@@ -238,7 +238,7 @@ export class Project<Self, Inputs, Outputs> {
         if (!entry.isFile) continue;
 
         if (entry.path.includes("tf-mirror")) {
-          pluginDir = join(this.projectDir, "providers");
+          pluginDir = join(this.projectDir, ".providers");
           const parts = entry.path.split(/tf-mirror[\\/]/);
           const relativePath = parts[parts.length - 1];
           const dstPath = join(pluginDir, relativePath);

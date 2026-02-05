@@ -1,4 +1,3 @@
-//import { findDenoConfigFile } from "@brad-jones/deno-config";
 import { outdent } from "@cspotcode/outdent";
 import { $ } from "@david/dax";
 import { basename, join, normalize } from "@std/path";
@@ -30,7 +29,6 @@ export interface BundleOptions {
   target?: Target;
   outPath?: string;
   denoBinPath?: string;
-  denoConfigPath?: string;
 }
 
 export class StackBundler {
@@ -153,7 +151,7 @@ export class StackBundler {
   }
 
   async createBundle(options: BundleOptions): Promise<void> {
-    const { stackFilePath, tfBinPath, tfLockFilePath, tfMirrorDir, denoBinPath, denoConfigPath } = options;
+    const { stackFilePath, tfBinPath, tfLockFilePath, tfMirrorDir, denoBinPath } = options;
     const target = options?.target ?? this.#props.currentTarget;
     const exeSuffix = this.#targetToOs(target) === "windows" ? ".exe" : "";
     const outPath = options?.outPath ?? `${stackFilePath.replace(".ts", `_${target}`)}${exeSuffix}`;
@@ -171,9 +169,6 @@ export class StackBundler {
     if (denoBinPath) {
       args.push("--include", denoBinPath);
     }
-    if (denoConfigPath) {
-      args.push("--config", denoConfigPath);
-    }
     args = [...args, "-A", "-o", outPath, stackFilePath];
     await $`${Deno.execPath()} ${args}`;
   }
@@ -190,7 +185,7 @@ export class StackBundler {
       return stackFilePath;
     }
 
-    const tmpEntryPointPath = stackFilePath.replace(".ts", "_entrypoint.ts");
+    const tmpEntryPointPath = stackFilePath.replace(".ts", "_cdkts_entrypoint.ts");
     await Deno.writeTextFile(
       tmpEntryPointPath,
       outdent`
@@ -204,7 +199,6 @@ export class StackBundler {
   }
 
   async bundle(stackFilePath: string, targets?: Target[]): Promise<void> {
-    //const denoConfigPath = await findDenoConfigFile(stackFilePath);
     const stackEntrypoint = await this.getStackEntrypoint(stackFilePath);
     try {
       const tfLockFilePath = await this.generateLockFile(stackFilePath);
@@ -222,13 +216,11 @@ export class StackBundler {
           tfLockFilePath,
           tfMirrorDir,
           denoBinPath,
-          //denoConfigPath,
         });
       }
     } finally {
-      if (stackEntrypoint.endsWith("_entrypoint.ts")) {
-        // Dont delete for now while we debug
-        // await Deno.remove(stackEntrypoint);
+      if (stackEntrypoint.endsWith("_cdkts_entrypoint.ts")) {
+        await Deno.remove(stackEntrypoint);
       }
     }
   }

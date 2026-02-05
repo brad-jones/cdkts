@@ -6,7 +6,7 @@ import { DenoDownloader } from "../downloader/deno.ts";
 import { OpenTofuDownloader } from "../downloader/opentofu.ts";
 import { TerraformDownloader } from "../downloader/terraform.ts";
 import { Project } from "../project.ts";
-import { importStack, tempDir } from "../utils.ts";
+import { importStack } from "../utils.ts";
 
 export interface StackBundlerProps {
   flavor?: "tofu" | "terraform";
@@ -178,7 +178,6 @@ export class StackBundler {
     return tsSrc.includes("import.meta.main");
   }
 
-  // TODO: Make sure our build process replaces this with the actual version from deno.json
   readonly #CDKTS_VERSION = "0.1.0";
 
   async getStackEntrypoint(stackFilePath: string) {

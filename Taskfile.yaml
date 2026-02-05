@@ -19,6 +19,17 @@ tasks:
       - "{{if .CI}}git config --global user.name github-actions[bot]{{end}}"
       - "{{if .CI}}git config --global user.email github-actions[bot]@users.noreply.github.com{{end}}"
 
+  install-go-tools:
+    desc: Installs all the golang dev tooling that vscode needs (for some reason the auto install that VsCode tries to run fails)
+    env:
+      GOBIN: "{{.ROOT_DIR}}/.pixi/envs/default/bin"
+    cmds:
+      - go install -v github.com/cweill/gotests/gotests@v1.6.0
+      - go install -v github.com/josharian/impl@v1.4.0
+      - go install -v github.com/haya14busa/goplay/cmd/goplay@v1.0.0
+      - go install -v github.com/go-delve/delve/cmd/dlv@latest
+      - go install -v golang.org/x/tools/gopls@latest
+
   lint:
     desc: Lints our code to ensure it remains of a high quality.
     cmds:
@@ -35,6 +46,11 @@ tasks:
     desc: Executes our lib test suite
     cmds:
       - deno test -A ./lib/**/*.test.ts
+
+  build:
+    desc: Builds the cli for all platforms
+    cmds:
+      - deno run -qA ./scripts/build-cdkts.ts
 
   cog:
     desc: Executes 'cog bump' which orchestrates the release process.
@@ -55,11 +71,18 @@ tasks:
         - VERSION
     cmds:
       - >-
-          echo '
-            const config = JSON.parse(Deno.readTextFileSync("deno.json"));
-            config.version = "{{.VERSION}}";
-            Deno.writeTextFileSync("deno.json", JSON.stringify(config, null, 2));
-          ' | deno run -A -
+        echo '
+          const config = JSON.parse(Deno.readTextFileSync("deno.json"));
+          config.version = "{{.VERSION}}";
+          Deno.writeTextFileSync("deno.json", JSON.stringify(config, null, 2));
+        ' | deno run -A -
+      - >-
+        echo '
+          let src = Deno.readTextFileSync("./lib/automate/stack_bundler/stack_bundler.ts");
+          src = src.replace(/readonly #CDKTS_VERSION = ".*?"/g, `readonly #CDKTS_VERSION = "{{.VERSION}}"`);
+          Deno.writeTextFileSync("./lib/automate/stack_bundler/stack_bundler.ts", src);
+        ' | deno run -A -
+      - task: build
 
   publish:
     desc: This is triggered by cog as a post_bump_hook to publish all the final publishable artifacts
@@ -70,4 +93,4 @@ tasks:
       - deno publish --allow-slow-types
       - git push && git push --tags
       - cog changelog --at v{{.VERSION}} > GITHUB_CHANGELOG.md
-      - gh release create v{{.VERSION}} -F GITHUB_CHANGELOG.md
+      - gh release create v{{.VERSION}} -F GITHUB_CHANGELOG.md ./bin/*

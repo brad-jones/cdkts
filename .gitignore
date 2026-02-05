@@ -144,3 +144,7 @@ terraform.rc
 # pixi environments
 .pixi/*
 !.pixi/config.toml
+
+bin/
+cli/wrapper/deno
+cli/wrapper/deno.gz

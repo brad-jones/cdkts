@@ -1,7 +1,7 @@
-import { findDenoConfigFile } from "@brad-jones/deno-config";
+//import { findDenoConfigFile } from "@brad-jones/deno-config";
 import { outdent } from "@cspotcode/outdent";
 import { $ } from "@david/dax";
-import { join, normalize, toFileUrl } from "@std/path";
+import { basename, join, normalize } from "@std/path";
 import { DenoBridgeProvider } from "../../constructs/blocks/providers/denobridge.ts";
 import { DenoDownloader } from "../downloader/deno.ts";
 import { OpenTofuDownloader } from "../downloader/opentofu.ts";
@@ -190,11 +190,11 @@ export class StackBundler {
       return stackFilePath;
     }
 
-    const tmpEntryPointPath = await Deno.makeTempFile({ prefix: "cdkts-stack-entrypoint-", suffix: ".ts" });
+    const tmpEntryPointPath = stackFilePath.replace(".ts", "_entrypoint.ts");
     await Deno.writeTextFile(
       tmpEntryPointPath,
       outdent`
-        import Stack from "${toFileUrl(stackFilePath)}";
+        import Stack from "./${basename(stackFilePath)}";
         import { Project } from "jsr:@brad-jones/cdkts@${this.#CDKTS_VERSION}/automate";
         await new Project({ stack: new Stack() }).apply();
       `,
@@ -204,7 +204,7 @@ export class StackBundler {
   }
 
   async bundle(stackFilePath: string, targets?: Target[]): Promise<void> {
-    const denoConfigPath = await findDenoConfigFile(stackFilePath);
+    //const denoConfigPath = await findDenoConfigFile(stackFilePath);
     const stackEntrypoint = await this.getStackEntrypoint(stackFilePath);
     try {
       const tfLockFilePath = await this.generateLockFile(stackFilePath);
@@ -222,12 +222,13 @@ export class StackBundler {
           tfLockFilePath,
           tfMirrorDir,
           denoBinPath,
-          denoConfigPath,
+          //denoConfigPath,
         });
       }
     } finally {
-      if (stackEntrypoint.includes("cdkts-stack-entrypoint-")) {
-        await Deno.remove(stackEntrypoint);
+      if (stackEntrypoint.endsWith("_entrypoint.ts")) {
+        // Dont delete for now while we debug
+        // await Deno.remove(stackEntrypoint);
       }
     }
   }

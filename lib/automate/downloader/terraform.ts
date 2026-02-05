@@ -1,7 +1,5 @@
-import { encodeHex } from "@std/encoding";
 import { ensureDir } from "@std/fs";
 import { join } from "@std/path";
-import { BlobReader, BlobWriter, ZipReader } from "@zip-js/zip-js";
 import { z } from "@zod/zod";
 import ky from "ky";
 import { Downloader } from "./downloader.ts";

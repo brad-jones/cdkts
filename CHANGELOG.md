@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.2.4](https://github.com/brad-jones/cdkts/compare/096c0d2b84a41a191066b5942ffbaee83a3eab91..v0.2.4) - 2026-02-05
+#### Bug Fixes
+- (**bundler**) debug why getDenoCompileRootDir is not working - ([096c0d2](https://github.com/brad-jones/cdkts/commit/096c0d2b84a41a191066b5942ffbaee83a3eab91)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.2.3](https://github.com/brad-jones/cdkts/compare/ad91f99979d0359e071c0997687735f9fbb052ee..v0.2.3) - 2026-02-05
 #### Bug Fixes
 - (**bundler**) create the entrypoint alongside the stackfile so that deno compile actually bundles the stackfile - ([ad91f99](https://github.com/brad-jones/cdkts/commit/ad91f99979d0359e071c0997687735f9fbb052ee)) - [@brad-jones](https://github.com/brad-jones)

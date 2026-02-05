@@ -1,6 +1,7 @@
 #!/usr/bin/env -S deno run -qA --ext=ts
 import { Command } from "@cliffy/command";
 import { $ } from "@david/dax";
+import { ensureDir } from "@std/fs";
 import { DenoDownloader } from "../lib/automate/downloader/deno.ts";
 
 function toGOARCH(arch: "x86_64" | "aarch64"): string {
@@ -16,6 +17,8 @@ await new Command()
   .name("build-cdkts")
   .action(async () => {
     const binDir = await Deno.realPath(`${import.meta.dirname}/../bin`);
+    await ensureDir(binDir);
+
     const cliDir = await Deno.realPath(`${import.meta.dirname}/../cli/wrapper`);
 
     // Read version from deno.json

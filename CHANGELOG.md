@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.2.1](https://github.com/brad-jones/cdkts/compare/16c278fa7e3c6c221ca8b462a324b3056a343fd6..v0.2.1) - 2026-02-05
+#### Bug Fixes
+- (**bundler**) use correct import syntax - ([16c278f](https://github.com/brad-jones/cdkts/commit/16c278fa7e3c6c221ca8b462a324b3056a343fd6)) - [@brad-jones](https://github.com/brad-jones)
+- (**cli**) wrapper now injects the deno config file for the stackfile if found - ([de823a8](https://github.com/brad-jones/cdkts/commit/de823a859a9207160dfc501280d5e1bfada664ac)) - [@brad-jones](https://github.com/brad-jones)
+#### Style
+- new line on deno.json to pass linting - ([d3edf34](https://github.com/brad-jones/cdkts/commit/d3edf3458daa464fb6092e60c08f82d7b4e8f8d8)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.2.0](https://github.com/brad-jones/cdkts/compare/15a079add708d547101caf18a69962601b3f9d26..v0.2.0) - 2026-02-05
 #### Features
 - (**bundler**) auto generate a main entrypoint as per the example suggests - ([cbb6b42](https://github.com/brad-jones/cdkts/commit/cbb6b42b7d1ae9f786399e57acd8c23b66b9cdab)) - github-actions[bot]

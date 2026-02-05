@@ -2,6 +2,7 @@
 import { Command } from "@cliffy/command";
 import { $ } from "@david/dax";
 import { ensureDir } from "@std/fs";
+import { join } from "@std/path";
 import { DenoDownloader } from "../lib/automate/downloader/deno.ts";
 
 function toGOARCH(arch: "x86_64" | "aarch64"): string {
@@ -16,7 +17,7 @@ function toGOARCH(arch: "x86_64" | "aarch64"): string {
 await new Command()
   .name("build-cdkts")
   .action(async () => {
-    const binDir = await Deno.realPath(`${import.meta.dirname}/../bin`);
+    const binDir = join(import.meta.dirname!, "../bin");
     await ensureDir(binDir);
 
     const cliDir = await Deno.realPath(`${import.meta.dirname}/../cli/wrapper`);

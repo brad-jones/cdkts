@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.2.2](https://github.com/brad-jones/cdkts/compare/9cd9c52cada165d7b9a436a6a7adc978364e5e03..v0.2.2) - 2026-02-05
+#### Bug Fixes
+- (**bundler**) inject the config of the stackfile at compile time - ([9cd9c52](https://github.com/brad-jones/cdkts/commit/9cd9c52cada165d7b9a436a6a7adc978364e5e03)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.2.1](https://github.com/brad-jones/cdkts/compare/16c278fa7e3c6c221ca8b462a324b3056a343fd6..v0.2.1) - 2026-02-05
 #### Bug Fixes
 - (**bundler**) use correct import syntax - ([16c278f](https://github.com/brad-jones/cdkts/commit/16c278fa7e3c6c221ca8b462a324b3056a343fd6)) - [@brad-jones](https://github.com/brad-jones)

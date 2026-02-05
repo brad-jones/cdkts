@@ -22,10 +22,10 @@ export default class MyStack extends Stack<typeof MyStack> {
 
     const fooData = new Sha256ExampleDataSource(this, "foo", { value: "bar" });
 
-    // TODO: While CDKTS / denobridge can implement an ephemeral resource
-    // There is no way through denobridge to consume "write-only" props.
+    // TODO: Update denobridge to support write-only props so we can show an example of an ephemeral resource here.
+    // While CDKTS / denobridge can implement an ephemeral resource, there is no way through denobridge to consume "write-only" props.
     // So it's difficult to show a full example here.
-    //const specialId = new UuidExampleEphemeralResource(this, "special_id", { type: "v4" });
+    // const specialId = new UuidExampleEphemeralResource(this, "special_id", { type: "v4" });
 
     const echoAction = new EchoExampleAction(this, "echo", {
       message: `Hello World`,

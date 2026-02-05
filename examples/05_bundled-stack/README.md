@@ -4,6 +4,29 @@ This example shows off the `StackBundler` functionality that enables one to crea
 completely self-contained single file binaries that can be dropped into air-gapped
 environments (ie: no or limited internet access) & still deploy your infra.
 
+## 🎉 New: DenoBridge Provider Support
+
+As of the latest release, the bundler now **fully supports stacks that use the denobridge provider**!
+
+This means you can bundle stacks that include custom TypeScript-based provider logic written with the denobridge provider. The bundler will:
+
+- Automatically detect if your stack uses the `DenoBridgeProvider`
+- Download and embed the appropriate Deno runtime binary for your target platform(s)
+- Copy all denobridge script files (actions, data sources, resources, ephemeral resources) into the bundle
+- Reconfigure paths so everything works in the compiled standalone binary
+
+**The result?** A truly self-contained executable that includes:
+
+- The OpenTofu/Terraform binary
+- All required providers (including the denobridge provider)
+- The Deno runtime for executing your TypeScript provider logic
+- Your denobridge script implementations
+- Your infrastructure stack configuration
+
+This creates a completely unified TypeScript infrastructure-as-code solution that can run anywhere, even in air-gapped environments with zero external dependencies.
+
+> _Note: Yes, it might seem unusual to bundle Deno inside a compiled Deno binary, but since the denobridge provider needs to `deno run` your custom scripts at runtime, we need the actual Deno binary included._
+
 ## Deno Compilation
 
 This technology is built on top of `deno compile`.

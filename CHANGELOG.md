@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.2.6](https://github.com/brad-jones/cdkts/compare/f785c32ef4424d87a53725adb9c8af771d2ac5e6..v0.2.6) - 2026-02-05
+#### Bug Fixes
+- (**bundler**) now working with JSR as intended - ([f785c32](https://github.com/brad-jones/cdkts/commit/f785c32ef4424d87a53725adb9c8af771d2ac5e6)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.2.5](https://github.com/brad-jones/cdkts/compare/b7ecad3d07e09d57f712f3070ed14aa12f04a3c6..v0.2.5) - 2026-02-05
 #### Bug Fixes
 - (**bundler**) update getDenoCompileRootDir to not rely on import.meta - ([b7ecad3](https://github.com/brad-jones/cdkts/commit/b7ecad3d07e09d57f712f3070ed14aa12f04a3c6)) - [@brad-jones](https://github.com/brad-jones)

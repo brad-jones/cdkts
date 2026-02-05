@@ -2,6 +2,15 @@ import { Project } from "@brad-jones/cdkts/automate";
 import { Resource, Stack, Terraform } from "@brad-jones/cdkts/constructs";
 import { dirname } from "@std/path";
 
+// To ensure the project directory is always relative to your
+// stack script (or it's compiled binary) this is the code you can use.
+//
+// Or not set the projectDir at all and let CDKTS create it in the systems
+// TEMP dir if you don't care to see it.
+const rootDir = Deno.build.standalone
+  ? dirname(Deno.execPath()) // Used when compiled
+  : import.meta.dirname; // Used when executed with "deno run"
+
 // A compiled stack must also be a "Stack File".
 // ie: Have a default export of a class that extends Stack
 export default class MyStack extends Stack<typeof MyStack> {
@@ -19,7 +28,7 @@ export default class MyStack extends Stack<typeof MyStack> {
     });
 
     new Resource(this, "local_file", "hello", {
-      filename: "${path.module}/message.txt",
+      filename: `${rootDir}/message.txt`,
       content: "Hello World",
     });
   }
@@ -30,14 +39,5 @@ export default class MyStack extends Stack<typeof MyStack> {
 // NB: If you forget to add this section, CDKTS will generate it for you.
 //     You only bother to add this section if you wanted to do something custom.
 if (import.meta.main) {
-  // To ensure the project directory is always relative to your
-  // stack script (or it's compiled binary) this is the code you can use.
-  //
-  // Or not set the projectDir at all and let CDKTS create it in the systems
-  // TEMP dir if you don't care to see it.
-  const rootDir = Deno.build.standalone
-    ? dirname(Deno.execPath()) // Used when compiled
-    : import.meta.dirname; // Used when executed with "deno run"
-
   await new Project({ projectDir: `${rootDir}/out`, stack: new MyStack() }).apply();
 }

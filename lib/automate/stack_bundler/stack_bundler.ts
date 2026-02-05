@@ -1,3 +1,4 @@
+import { outdent } from "@cspotcode/outdent";
 import { $ } from "@david/dax";
 import { join, normalize } from "@std/path";
 import { DenoBridgeProvider } from "../../constructs/blocks/providers/denobridge.ts";
@@ -5,7 +6,7 @@ import { DenoDownloader } from "../downloader/deno.ts";
 import { OpenTofuDownloader } from "../downloader/opentofu.ts";
 import { TerraformDownloader } from "../downloader/terraform.ts";
 import { Project } from "../project.ts";
-import { importStack } from "../utils.ts";
+import { importStack, tempDir } from "../utils.ts";
 
 export interface StackBundlerProps {
   flavor?: "tofu" | "terraform";
@@ -172,16 +173,56 @@ export class StackBundler {
     await $`${Deno.execPath()} ${args}`;
   }
 
+  async stackHasEntrypoint(stackFilePath: string): Promise<boolean> {
+    const tsSrc = await Deno.readTextFile(stackFilePath);
+    return tsSrc.includes("import.meta.main");
+  }
+
+  // TODO: Make sure our build process replaces this with the actual version from deno.json
+  readonly #CDKTS_VERSION = "0.1.0";
+
+  async getStackEntrypoint(stackFilePath: string) {
+    if (await this.stackHasEntrypoint(stackFilePath)) {
+      return stackFilePath;
+    }
+
+    const tmpEntryPointPath = await Deno.makeTempFile({ prefix: "cdkts-stack-entrypoint-", suffix: ".ts" });
+    await Deno.writeTextFile(
+      tmpEntryPointPath,
+      outdent`
+        import Stack from "${stackFilePath}";
+        import { Project } from "jsr:@brad-jones/cdkts/automate@${this.#CDKTS_VERSION}";
+        await new Project({ stack: new Stack() }).apply();
+      `,
+    );
+
+    return tmpEntryPointPath;
+  }
+
   async bundle(stackFilePath: string, targets?: Target[]): Promise<void> {
-    const tfLockFilePath = await this.generateLockFile(stackFilePath);
-    for (const target of targets ?? [this.#props.currentTarget]) {
-      const tfBinPath = await this.downloadTfBin(target);
-      const tfMirrorDir = await this.downloadProviders(stackFilePath, target);
-      let denoBinPath: string | undefined;
-      if (await this.needsDeno(stackFilePath)) {
-        denoBinPath = await this.downloadDenoBin(target);
+    const stackEntrypoint = await this.getStackEntrypoint(stackFilePath);
+    try {
+      const tfLockFilePath = await this.generateLockFile(stackFilePath);
+      for (const target of targets ?? [this.#props.currentTarget]) {
+        const tfBinPath = await this.downloadTfBin(target);
+        const tfMirrorDir = await this.downloadProviders(stackFilePath, target);
+        let denoBinPath: string | undefined;
+        if (await this.needsDeno(stackFilePath)) {
+          denoBinPath = await this.downloadDenoBin(target);
+        }
+        await this.createBundle({
+          target,
+          stackFilePath: stackEntrypoint,
+          tfBinPath,
+          tfLockFilePath,
+          tfMirrorDir,
+          denoBinPath,
+        });
       }
-      await this.createBundle({ target, stackFilePath, tfBinPath, tfLockFilePath, tfMirrorDir, denoBinPath });
+    } finally {
+      if (stackEntrypoint.includes("cdkts-stack-entrypoint-")) {
+        await Deno.remove(stackEntrypoint);
+      }
     }
   }
 }

@@ -3,7 +3,9 @@ import { dirname, join } from "@std/path";
 import { toFileUrl } from "@std/path/to-file-url";
 import { Stack } from "../constructs/stack.ts";
 
-export function getDenoCompileRootDir(currentDir: string): string {
+export function getDenoCompileRootDir(meta: ImportMeta): string {
+  console.log(meta);
+  const currentDir = dirname(meta.url);
   const pathSegments = currentDir.split(/[\\/]/);
   const denoCompileIndex = pathSegments.findIndex((seg) => seg.startsWith("deno-compile-"));
   return denoCompileIndex >= 0

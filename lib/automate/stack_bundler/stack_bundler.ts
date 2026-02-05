@@ -1,6 +1,7 @@
+import { findDenoConfigFile } from "@brad-jones/deno-config";
 import { outdent } from "@cspotcode/outdent";
 import { $ } from "@david/dax";
-import { join, normalize } from "@std/path";
+import { join, normalize, toFileUrl } from "@std/path";
 import { DenoBridgeProvider } from "../../constructs/blocks/providers/denobridge.ts";
 import { DenoDownloader } from "../downloader/deno.ts";
 import { OpenTofuDownloader } from "../downloader/opentofu.ts";
@@ -29,6 +30,7 @@ export interface BundleOptions {
   target?: Target;
   outPath?: string;
   denoBinPath?: string;
+  denoConfigPath?: string;
 }
 
 export class StackBundler {
@@ -151,7 +153,7 @@ export class StackBundler {
   }
 
   async createBundle(options: BundleOptions): Promise<void> {
-    const { stackFilePath, tfBinPath, tfLockFilePath, tfMirrorDir, denoBinPath } = options;
+    const { stackFilePath, tfBinPath, tfLockFilePath, tfMirrorDir, denoBinPath, denoConfigPath } = options;
     const target = options?.target ?? this.#props.currentTarget;
     const exeSuffix = this.#targetToOs(target) === "windows" ? ".exe" : "";
     const outPath = options?.outPath ?? `${stackFilePath.replace(".ts", `_${target}`)}${exeSuffix}`;
@@ -168,6 +170,9 @@ export class StackBundler {
     ];
     if (denoBinPath) {
       args.push("--include", denoBinPath);
+    }
+    if (denoConfigPath) {
+      args.push("--config", denoConfigPath);
     }
     args = [...args, "-A", "-o", outPath, stackFilePath];
     await $`${Deno.execPath()} ${args}`;
@@ -189,7 +194,7 @@ export class StackBundler {
     await Deno.writeTextFile(
       tmpEntryPointPath,
       outdent`
-        import Stack from "${stackFilePath}";
+        import Stack from "${toFileUrl(stackFilePath)}";
         import { Project } from "jsr:@brad-jones/cdkts@${this.#CDKTS_VERSION}/automate";
         await new Project({ stack: new Stack() }).apply();
       `,
@@ -199,6 +204,7 @@ export class StackBundler {
   }
 
   async bundle(stackFilePath: string, targets?: Target[]): Promise<void> {
+    const denoConfigPath = await findDenoConfigFile(stackFilePath);
     const stackEntrypoint = await this.getStackEntrypoint(stackFilePath);
     try {
       const tfLockFilePath = await this.generateLockFile(stackFilePath);
@@ -216,6 +222,7 @@ export class StackBundler {
           tfLockFilePath,
           tfMirrorDir,
           denoBinPath,
+          denoConfigPath,
         });
       }
     } finally {

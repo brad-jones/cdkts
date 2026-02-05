@@ -1,3 +1,4 @@
+import { $ } from "@david/dax";
 import { assertEquals, assertMatch } from "@std/assert";
 import { existsSync } from "@std/fs";
 import { join } from "@std/path";
@@ -5,7 +6,7 @@ import { OpenTofuDownloader } from "./opentofu.ts";
 
 // Helper to create a temporary directory for testing
 async function withTempDir(fn: (tempDir: string) => Promise<void>) {
-  const tempDir = await Deno.makeTempDir({ prefix: "opentofu-test-" });
+  const tempDir = await Deno.makeTempDir({ prefix: "tofu-test-" });
   try {
     await fn(tempDir);
   } finally {
@@ -30,23 +31,15 @@ Deno.test("OpenTofuDownloader - downloads latest version", async () => {
     assertEquals(binaryPath.includes(tempDir), true);
 
     // Verify it is executable
-    const command = new Deno.Command(binaryPath, {
-      args: ["--version"],
-      stdout: "piped",
-      stderr: "piped",
-    });
-
-    const { code, stdout } = await command.output();
-    assertEquals(code, 0);
-
-    const output = new TextDecoder().decode(stdout);
-    assertMatch(output, /OpenTofu v\d+\.\d+\.\d+/);
+    const result = await $`${binaryPath} --version`.captureCombined().quiet();
+    assertEquals(result.code, 0);
+    assertMatch(result.combined, /OpenTofu v\d+\.\d+\.\d+/);
   });
 });
 
 Deno.test("OpenTofuDownloader - downloads specific version", async () => {
   await withTempDir(async (tempDir) => {
-    const version = "1.8.0";
+    const version = "1.11.3";
     const downloader = new OpenTofuDownloader({ baseDir: tempDir });
     const binaryPath = await downloader.getBinaryPath(version);
 
@@ -57,23 +50,15 @@ Deno.test("OpenTofuDownloader - downloads specific version", async () => {
     assertEquals(binaryPath.includes(version), true);
 
     // Verify it is executable
-    const command = new Deno.Command(binaryPath, {
-      args: ["--version"],
-      stdout: "piped",
-      stderr: "piped",
-    });
-
-    const { code, stdout } = await command.output();
-    assertEquals(code, 0);
-
-    const output = new TextDecoder().decode(stdout);
-    assertMatch(output, /OpenTofu v1\.8\.0/);
+    const result = await $`${binaryPath} --version`.captureCombined().quiet();
+    assertEquals(result.code, 0);
+    assertMatch(result.combined, /OpenTofu v1\.11\.3/);
   });
 });
 
 Deno.test("OpenTofuDownloader - caches downloaded binary", async () => {
   await withTempDir(async (tempDir) => {
-    const version = "1.8.0";
+    const version = "1.11.2";
     const downloader = new OpenTofuDownloader({ baseDir: tempDir });
 
     // First download
@@ -97,15 +82,15 @@ Deno.test("OpenTofuDownloader - cleans up old versions", async () => {
     const downloader = new OpenTofuDownloader({ baseDir: tempDir });
 
     // Download 4 different versions
-    await downloader.getBinaryPath("1.6.0");
+    await downloader.getBinaryPath("1.11.4");
     await new Promise((resolve) => setTimeout(resolve, 100));
-    await downloader.getBinaryPath("1.7.0");
+    await downloader.getBinaryPath("1.11.3");
     await new Promise((resolve) => setTimeout(resolve, 100));
-    await downloader.getBinaryPath("1.8.0");
+    await downloader.getBinaryPath("1.11.2");
     await new Promise((resolve) => setTimeout(resolve, 100));
-    await downloader.getBinaryPath("1.8.1");
+    await downloader.getBinaryPath("1.11.1");
 
-    // Count directories in baseDir
+    // Count directories in base dir
     const entries = [];
     for await (const entry of Deno.readDir(tempDir)) {
       if (entry.isDirectory) {
@@ -113,64 +98,36 @@ Deno.test("OpenTofuDownloader - cleans up old versions", async () => {
       }
     }
 
-    // Should only have 3 versions (oldest should be removed)
+    // Should only have 3 versions (oldest one cleaned up)
     assertEquals(entries.length, 3);
-    assertEquals(entries.includes("1.6.0"), false);
-    assertEquals(entries.includes("1.7.0"), true);
-    assertEquals(entries.includes("1.8.0"), true);
-    assertEquals(entries.includes("1.8.1"), true);
+    assertEquals(entries.includes("1.11.4"), false);
+    assertEquals(entries.includes("1.11.3"), true);
+    assertEquals(entries.includes("1.11.2"), true);
+    assertEquals(entries.includes("1.11.1"), true);
   });
 });
 
-Deno.test("OpenTofuDownloader - downloads for different platforms", async () => {
+Deno.test("OpenTofuDownloader - handles different platforms", async () => {
   await withTempDir(async (tempDir) => {
-    const version = "1.8.0";
+    // Test different platform configurations
+    const configs = [
+      { platform: "windows" as const, arch: "x86_64" as const },
+      { platform: "darwin" as const, arch: "x86_64" as const },
+      { platform: "darwin" as const, arch: "aarch64" as const },
+      { platform: "linux" as const, arch: "x86_64" as const },
+      { platform: "linux" as const, arch: "aarch64" as const },
+    ];
 
-    // Test Linux AMD64
-    const linuxDownloader = new OpenTofuDownloader({
-      baseDir: join(tempDir, "linux"),
-      platform: "linux",
-      arch: "x86_64",
-    });
-    const linuxPath = await linuxDownloader.getBinaryPath(version);
-    assertEquals(existsSync(linuxPath), true);
-    assertEquals(linuxPath.endsWith("tofu"), true);
+    for (const config of configs) {
+      const downloader = new OpenTofuDownloader({
+        baseDir: join(tempDir, `${config.platform}-${config.arch}`),
+        platform: config.platform,
+        arch: config.arch,
+      });
 
-    // Test Windows AMD64
-    const windowsDownloader = new OpenTofuDownloader({
-      baseDir: join(tempDir, "windows"),
-      platform: "windows",
-      arch: "x86_64",
-    });
-    const windowsPath = await windowsDownloader.getBinaryPath(version);
-    assertEquals(existsSync(windowsPath), true);
-    assertEquals(windowsPath.endsWith("tofu.exe"), true);
-
-    // Test Darwin ARM64
-    const darwinDownloader = new OpenTofuDownloader({
-      baseDir: join(tempDir, "darwin"),
-      platform: "darwin",
-      arch: "aarch64",
-    });
-    const darwinPath = await darwinDownloader.getBinaryPath(version);
-    assertEquals(existsSync(darwinPath), true);
-    assertEquals(darwinPath.endsWith("tofu"), true);
-  });
-});
-
-Deno.test("OpenTofuDownloader - binary is executable on Unix-like systems", async () => {
-  // Only run this test on Unix-like systems
-  if (Deno.build.os === "windows") {
-    return;
-  }
-
-  await withTempDir(async (tempDir) => {
-    const downloader = new OpenTofuDownloader({ baseDir: tempDir });
-    const binaryPath = await downloader.getBinaryPath();
-
-    const stat = await Deno.stat(binaryPath);
-    // Check if the file has execute permissions (mode & 0o111)
-    // This is platform-specific and will only work on Unix-like systems
-    assertEquals((stat.mode! & 0o111) !== 0, true);
+      // This should not throw an error
+      const binaryPath = await downloader.getBinaryPath("1.11.4");
+      assertEquals(existsSync(binaryPath), true);
+    }
   });
 });

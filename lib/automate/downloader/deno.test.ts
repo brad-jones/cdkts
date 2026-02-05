@@ -2,11 +2,11 @@ import { $ } from "@david/dax";
 import { assertEquals, assertMatch } from "@std/assert";
 import { existsSync } from "@std/fs";
 import { join } from "@std/path";
-import { TerraformDownloader } from "./terraform.ts";
+import { DenoDownloader } from "./deno.ts";
 
 // Helper to create a temporary directory for testing
 async function withTempDir(fn: (tempDir: string) => Promise<void>) {
-  const tempDir = await Deno.makeTempDir({ prefix: "terraform-test-" });
+  const tempDir = await Deno.makeTempDir({ prefix: "deno-test-" });
   try {
     await fn(tempDir);
   } finally {
@@ -19,9 +19,9 @@ async function withTempDir(fn: (tempDir: string) => Promise<void>) {
   }
 }
 
-Deno.test("TerraformDownloader - downloads latest version", async () => {
+Deno.test("DenoDownloader - downloads latest version", async () => {
   await withTempDir(async (tempDir) => {
-    const downloader = new TerraformDownloader({ baseDir: tempDir });
+    const downloader = new DenoDownloader({ baseDir: tempDir });
     const binaryPath = await downloader.getBinaryPath();
 
     // Verify binary exists
@@ -33,14 +33,14 @@ Deno.test("TerraformDownloader - downloads latest version", async () => {
     // Verify it is executable
     const result = await $`${binaryPath} --version`.captureCombined().quiet();
     assertEquals(result.code, 0);
-    assertMatch(result.combined, /Terraform v\d+\.\d+\.\d+/);
+    assertMatch(result.combined, /deno \d+\.\d+\.\d+/);
   });
 });
 
-Deno.test("TerraformDownloader - downloads specific version", async () => {
+Deno.test("DenoDownloader - downloads specific version", async () => {
   await withTempDir(async (tempDir) => {
-    const version = "1.14.3";
-    const downloader = new TerraformDownloader({ baseDir: tempDir });
+    const version = "2.6.7";
+    const downloader = new DenoDownloader({ baseDir: tempDir });
     const binaryPath = await downloader.getBinaryPath(version);
 
     // Verify binary exists
@@ -52,14 +52,14 @@ Deno.test("TerraformDownloader - downloads specific version", async () => {
     // Verify it is executable
     const result = await $`${binaryPath} --version`.captureCombined().quiet();
     assertEquals(result.code, 0);
-    assertMatch(result.combined, /Terraform v1\.14\.3/);
+    assertMatch(result.combined, /deno 2\.6\.7/);
   });
 });
 
-Deno.test("TerraformDownloader - caches downloaded binary", async () => {
+Deno.test("DenoDownloader - caches downloaded binary", async () => {
   await withTempDir(async (tempDir) => {
-    const version = "1.14.2";
-    const downloader = new TerraformDownloader({ baseDir: tempDir });
+    const version = "2.6.6";
+    const downloader = new DenoDownloader({ baseDir: tempDir });
 
     // First download
     const binaryPath1 = await downloader.getBinaryPath(version);
@@ -77,18 +77,18 @@ Deno.test("TerraformDownloader - caches downloaded binary", async () => {
   });
 });
 
-Deno.test("TerraformDownloader - cleans up old versions", async () => {
+Deno.test("DenoDownloader - cleans up old versions", async () => {
   await withTempDir(async (tempDir) => {
-    const downloader = new TerraformDownloader({ baseDir: tempDir });
+    const downloader = new DenoDownloader({ baseDir: tempDir });
 
     // Download 4 different versions
-    await downloader.getBinaryPath("1.14.4");
+    await downloader.getBinaryPath("2.6.8");
     await new Promise((resolve) => setTimeout(resolve, 100));
-    await downloader.getBinaryPath("1.14.3");
+    await downloader.getBinaryPath("2.6.7");
     await new Promise((resolve) => setTimeout(resolve, 100));
-    await downloader.getBinaryPath("1.14.2");
+    await downloader.getBinaryPath("2.6.6");
     await new Promise((resolve) => setTimeout(resolve, 100));
-    await downloader.getBinaryPath("1.14.1");
+    await downloader.getBinaryPath("2.6.5");
 
     // Count directories in base dir
     const entries = [];
@@ -100,14 +100,14 @@ Deno.test("TerraformDownloader - cleans up old versions", async () => {
 
     // Should only have 3 versions (oldest one cleaned up)
     assertEquals(entries.length, 3);
-    assertEquals(entries.includes("1.14.4"), false);
-    assertEquals(entries.includes("1.14.3"), true);
-    assertEquals(entries.includes("1.14.2"), true);
-    assertEquals(entries.includes("1.14.1"), true);
+    assertEquals(entries.includes("2.6.8"), false);
+    assertEquals(entries.includes("2.6.7"), true);
+    assertEquals(entries.includes("2.6.6"), true);
+    assertEquals(entries.includes("2.6.5"), true);
   });
 });
 
-Deno.test("TerraformDownloader - handles different platforms", async () => {
+Deno.test("DenoDownloader - handles different platforms", async () => {
   await withTempDir(async (tempDir) => {
     // Test different platform configurations
     const configs = [
@@ -119,14 +119,14 @@ Deno.test("TerraformDownloader - handles different platforms", async () => {
     ];
 
     for (const config of configs) {
-      const downloader = new TerraformDownloader({
+      const downloader = new DenoDownloader({
         baseDir: join(tempDir, `${config.platform}-${config.arch}`),
         platform: config.platform,
         arch: config.arch,
       });
 
       // This should not throw an error
-      const binaryPath = await downloader.getBinaryPath("1.14.4");
+      const binaryPath = await downloader.getBinaryPath("2.6.8");
       assertEquals(existsSync(binaryPath), true);
     }
   });

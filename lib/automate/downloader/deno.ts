@@ -1,16 +1,16 @@
 import { GithubDownloader } from "./downloader.ts";
 
 /**
- * Downloads and manages OpenTofu binary versions.
+ * Downloads and manages Deno binary versions.
  *
- * This class handles downloading tofu binaries from GitHub releases, caching them locally,
+ * This class handles downloading Deno binaries from GitHub releases, caching them locally,
  * verifying checksums, and managing multiple versions. It automatically cleans up older
  * versions to keep only the most recently used binaries.
  *
  * @example
  * ```ts
- * const downloader = new OpenTofuDownloader();
- * const tofuPath = await downloader.getBinaryPath(); // Gets latest version
+ * const downloader = new DenoDownloader();
+ * const denoPath = await downloader.getBinaryPath(); // Gets latest version
  * const specificVersion = await downloader.getBinaryPath("1.40.0"); // Gets specific version
  * ```
  *
@@ -21,35 +21,35 @@ import { GithubDownloader } from "./downloader.ts";
  * - Cross-compilation support via platform/arch overrides
  * - Respects GH_TOKEN/GITHUB_TOKEN environment variables for API rate limits
  */
-export class OpenTofuDownloader extends GithubDownloader {
+export class DenoDownloader extends GithubDownloader {
   /**
-   * Creates a new OpenTofuDownloader instance.
+   * Creates a new DenoDownloader instance.
    *
    * @param options - Optional configuration for the downloader
-   * @param options.baseDir - The directory to store downloaded tofu binaries. Defaults to a temporary directory under the system temp folder.
+   * @param options.baseDir - The directory to store downloaded Deno binaries. Defaults to a temporary directory under the system temp folder.
    * @param options.platform - Platform override for testing or cross-compilation. If not specified, uses the current platform.
    * @param options.arch - Architecture override for testing or cross-compilation. If not specified, uses the current architecture.
    */
   constructor(options?: { baseDir?: string; platform?: typeof Deno.build.os; arch?: typeof Deno.build.arch }) {
-    super("opentofu", options);
+    super("deno", options);
   }
 
   /**
-   * Gets the path to the tofu binary, downloading it if necessary.
+   * Gets the path to the Deno binary, downloading it if necessary.
    *
    * This method will fetch the specified version (or latest GA release if not specified)
    * from GitHub, download and verify it if not already cached, and clean up old versions
    * to keep only the most recent 3 versions.
    *
-   * @param version - Optional specific tofu version to download (e.g., "1.40.0"). If not provided, downloads the latest GA release.
-   * @returns The absolute path to the tofu binary executable
+   * @param version - Optional specific Deno version to download (e.g., "1.40.0"). If not provided, downloads the latest GA release.
+   * @returns The absolute path to the Deno binary executable
    * @throws {Error} If the release cannot be found, download fails, or checksum verification fails
    */
   async getBinaryPath(version?: string): Promise<string> {
-    const targetRelease = await this.getRelease("opentofu", "opentofu", version);
+    const targetRelease = await this.getRelease("denoland", "deno", version);
     const binaryPath = await this.downloadIfNeeded(
-      "tofu",
-      `tofu_${this.getVersionFromRelease(targetRelease)}_${this.getPlatform()}_${this.getArch()}.zip`,
+      "deno",
+      `deno-${this.getArch()}-${this.getPlatform()}.zip`,
       targetRelease,
     );
     await this.cleanupOldVersions();
@@ -60,15 +60,11 @@ export class OpenTofuDownloader extends GithubDownloader {
     const os = this.platformOverride ?? Deno.build.os;
     switch (os) {
       case "windows":
-        return "windows";
+        return "pc-windows-msvc";
       case "darwin":
-        return "darwin";
+        return "apple-darwin";
       case "linux":
-        return "linux";
-      case "freebsd":
-        return "freebsd";
-      case "solaris":
-        return "solaris";
+        return "unknown-linux-gnu";
       default:
         throw new Error(`Unsupported platform: ${os}`);
     }
@@ -78,9 +74,9 @@ export class OpenTofuDownloader extends GithubDownloader {
     const arch = this.archOverride ?? Deno.build.arch;
     switch (arch) {
       case "x86_64":
-        return "amd64";
+        return "x86_64";
       case "aarch64":
-        return "arm64";
+        return "aarch64";
       default:
         throw new Error(`Unsupported architecture: ${arch}`);
     }

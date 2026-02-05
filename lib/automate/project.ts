@@ -3,7 +3,12 @@
 import { snakeCase } from "@mesqueeb/case-anything";
 import { encodeHex } from "@std/encoding/hex";
 import { ensureDir, exists, walk } from "@std/fs";
-import { dirname, join, normalize } from "@std/path";
+import { dirname, fromFileUrl, join, normalize } from "@std/path";
+import { DenoAction } from "../constructs/blocks/actions/deno_action.ts";
+import { DenoDataSource } from "../constructs/blocks/datasources/deno_datasource.ts";
+import { DenoBridgeProvider } from "../constructs/blocks/providers/denobridge.ts";
+import { DenoResource } from "../constructs/blocks/resources/deno_resource.ts";
+import { DenoEphemeralResource } from "../constructs/blocks/resources/ephemeral/deno_ephemeral_resource.ts";
 import type { Stack } from "../constructs/stack.ts";
 import { OpenTofuDownloader } from "./downloader/opentofu.ts";
 import { TerraformDownloader } from "./downloader/terraform.ts";
@@ -14,7 +19,7 @@ import type { PlanOptions } from "./types/plan_options.ts";
 import type { OutputValue, State } from "./types/state.ts";
 import type { ValidateOptions } from "./types/validate_options.ts";
 import type { ValidateResult } from "./types/validate_result.ts";
-import { getDenoCompileRootDir } from "./utils.ts";
+import { getDenoCompileRootDir, tempDir } from "./utils.ts";
 
 export interface ProjectProps<Self, Inputs, Outputs> {
   flavor?: "tofu" | "terraform";
@@ -51,8 +56,7 @@ export class Project<Self, Inputs, Outputs> {
         const data = encoder.encode(this.#props.stack.id);
         const hashBuffer = await crypto.subtle.digest("SHA-256", data);
         const hashHex = encodeHex(hashBuffer);
-        const tempDir = Deno.env.get("TMPDIR") || Deno.env.get("TEMP") || Deno.env.get("TMP") || "/tmp";
-        this.#props.projectDir = join(tempDir, `cdkts-project-${hashHex}`);
+        this.#props.projectDir = tempDir(`cdkts-project-${hashHex}`);
       } else {
         // Fall back to random temp directory if no stack id
         this.#props.projectDir = await Deno.makeTempDir({ prefix: "cdkts-project-" });
@@ -84,8 +88,7 @@ export class Project<Self, Inputs, Outputs> {
           // Create deterministic temp file path based on binary hash
           const embeddedBytes = await Deno.readFile(embeddedPath);
           const hashHex = encodeHex(await crypto.subtle.digest("SHA-256", embeddedBytes));
-          const tempDir = Deno.env.get("TMPDIR") || Deno.env.get("TEMP") || Deno.env.get("TMP") || "/tmp";
-          this.#props.tfBinaryPath = join(tempDir, `cdkts-embedded-${hashHex}${suffix}`);
+          this.#props.tfBinaryPath = tempDir(`cdkts-embedded-${hashHex}${suffix}`);
 
           // Only write if file doesn't exist
           // And yes we have to write the embedded binary to the file system
@@ -110,6 +113,79 @@ export class Project<Self, Inputs, Outputs> {
 
     // Handle stack: either use provided stack or verify .tf files exist
     if (this.#props.stack) {
+      // Extract bundled deno & any denobridge scripts
+      if (Deno.build.standalone) {
+        const suffix = Deno.build.os === "windows" ? ".exe" : "";
+        const rootEmbeddedDir = getDenoCompileRootDir(import.meta.dirname!);
+
+        // The included binary could have any path based on the original compilation context
+        let embeddedPath: string | undefined = undefined;
+        for await (const entry of walk(rootEmbeddedDir)) {
+          if (!entry.isFile) continue;
+          if (entry.name === `deno${suffix}`) {
+            embeddedPath = entry.path;
+            break;
+          }
+        }
+
+        let denoBinaryPath: string | undefined = undefined;
+        if (embeddedPath) {
+          // Create deterministic temp file path based on binary hash
+          const embeddedBytes = await Deno.readFile(embeddedPath);
+          const hashHex = encodeHex(await crypto.subtle.digest("SHA-256", embeddedBytes));
+          denoBinaryPath = tempDir(`cdkts-embedded-${hashHex}${suffix}`);
+
+          // Only write if file doesn't exist
+          // And yes we have to write the embedded binary to the file system
+          // even though it looks like we just read it from the filesystem.
+          // This is because Deno writes embedded assets to an in memory
+          // filesystem which we can't execute binaries from.
+          if (!await exists(denoBinaryPath)) {
+            await Deno.writeFile(denoBinaryPath, embeddedBytes);
+            if (Deno.build.os !== "windows") {
+              await Deno.chmod(denoBinaryPath, 0o755);
+            }
+          }
+        }
+
+        for (const construct of this.#props.stack.descendants) {
+          // Overwrite the deno path with our embedded version
+          if (construct instanceof DenoBridgeProvider && denoBinaryPath) {
+            construct.inputs!.denoBinaryPath = denoBinaryPath;
+            continue;
+          }
+
+          // Copy the deno bridge scripts to the real filesystem so we can run them
+          if (
+            construct instanceof DenoAction || construct instanceof DenoDataSource ||
+            construct instanceof DenoEphemeralResource || construct instanceof DenoResource
+          ) {
+            const scriptPath = construct instanceof DenoAction
+              ? construct.inputs?.config?.path
+              : construct.inputs?.path as string | undefined;
+
+            if (scriptPath && scriptPath.includes("deno-compile-")) {
+              const normalisedScriptPath = scriptPath.startsWith("file://") ? fromFileUrl(scriptPath) : scriptPath;
+              let relativePath = normalisedScriptPath;
+              if (relativePath.startsWith(rootEmbeddedDir)) {
+                relativePath = relativePath.substring(rootEmbeddedDir.length);
+              }
+              relativePath = relativePath.replace(/^[\\/]+/, "");
+              const scriptPathOnRealFs = join(this.#props.projectDir, "denobridge-scripts", relativePath);
+              await ensureDir(dirname(scriptPathOnRealFs));
+              await Deno.writeFile(scriptPathOnRealFs, await Deno.readFile(normalisedScriptPath));
+
+              if (construct instanceof DenoAction) {
+                construct.inputs!.config!.path = scriptPathOnRealFs;
+              } else {
+                construct.inputs!.path = scriptPathOnRealFs;
+              }
+            }
+          }
+        }
+      }
+
+      // Finally write the stack hcl
       const hcl = await this.#props.stack.toHcl();
       const mainTfPath = join(this.#props.projectDir, "main.tf");
       await Deno.writeTextFile(mainTfPath, hcl);
@@ -329,13 +405,13 @@ export class Project<Self, Inputs, Outputs> {
   }
 
   static async cleanUp(): Promise<void> {
-    const tempDir = Deno.env.get("TMPDIR") || Deno.env.get("TEMP") || Deno.env.get("TMP") || "/tmp";
+    const tmpDir = tempDir();
     const prefix = "cdkts-project-";
 
     try {
-      for await (const entry of Deno.readDir(tempDir)) {
+      for await (const entry of Deno.readDir(tmpDir)) {
         if (entry.isDirectory && entry.name.startsWith(prefix)) {
-          const dirPath = join(tempDir, entry.name);
+          const dirPath = join(tmpDir, entry.name);
           try {
             await Deno.remove(dirPath, { recursive: true });
           } catch (error) {

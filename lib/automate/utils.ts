@@ -1,5 +1,5 @@
 import { importModule } from "@brad-jones/jsr-dynamic-imports";
-import { join } from "@std/path";
+import { dirname, join } from "@std/path";
 import { toFileUrl } from "@std/path/to-file-url";
 import { Stack } from "../constructs/stack.ts";
 
@@ -30,4 +30,15 @@ export async function importStack(stackFilePath: string): Promise<Stack> {
   }
 
   return stack;
+}
+
+let _tmpDir: string | undefined = undefined;
+
+export function tempDir(...parts: string[]): string {
+  if (!_tmpDir) {
+    const tmpFile = Deno.makeTempFileSync();
+    _tmpDir = dirname(tmpFile);
+    Deno.removeSync(tmpFile);
+  }
+  return join(_tmpDir, ...parts);
 }

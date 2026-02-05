@@ -1,5 +1,7 @@
 import { $ } from "@david/dax";
 import { join, normalize } from "@std/path";
+import { DenoBridgeProvider } from "../../constructs/blocks/providers/denobridge.ts";
+import { DenoDownloader } from "../downloader/deno.ts";
 import { OpenTofuDownloader } from "../downloader/opentofu.ts";
 import { TerraformDownloader } from "../downloader/terraform.ts";
 import { Project } from "../project.ts";
@@ -8,6 +10,7 @@ import { importStack } from "../utils.ts";
 export interface StackBundlerProps {
   flavor?: "tofu" | "terraform";
   tfVersion?: string;
+  denoVersion?: string;
 }
 
 export type Target =
@@ -24,6 +27,7 @@ export interface BundleOptions {
   tfLockFilePath: string;
   target?: Target;
   outPath?: string;
+  denoBinPath?: string;
 }
 
 export class StackBundler {
@@ -127,12 +131,45 @@ export class StackBundler {
     return await downloader.getBinaryPath(this.#props.tfVersion);
   }
 
+  async downloadDenoBin(target?: Target): Promise<string> {
+    target ??= this.#props.currentTarget;
+    const platform = this.#targetToOs(target);
+    const arch = this.#targetToArch(target);
+    const downloader = new DenoDownloader({ platform, arch });
+    return await downloader.getBinaryPath(this.#props.denoVersion);
+  }
+
+  async needsDeno(stackFilePath: string): Promise<boolean> {
+    const stack = await importStack(stackFilePath);
+    for (const construct of stack.descendants) {
+      if (construct instanceof DenoBridgeProvider) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   async createBundle(options: BundleOptions): Promise<void> {
-    const { stackFilePath, tfBinPath, tfLockFilePath, tfMirrorDir } = options;
+    const { stackFilePath, tfBinPath, tfLockFilePath, tfMirrorDir, denoBinPath } = options;
     const target = options?.target ?? this.#props.currentTarget;
     const exeSuffix = this.#targetToOs(target) === "windows" ? ".exe" : "";
     const outPath = options?.outPath ?? `${stackFilePath.replace(".ts", `_${target}`)}${exeSuffix}`;
-    await $`${Deno.execPath()} compile --target ${target} --include ${tfBinPath} --include ${tfLockFilePath} --include ${tfMirrorDir} -A -o ${outPath} ${stackFilePath}`;
+    let args = [
+      "compile",
+      "--target",
+      target,
+      "--include",
+      tfBinPath,
+      "--include",
+      tfLockFilePath,
+      "--include",
+      tfMirrorDir,
+    ];
+    if (denoBinPath) {
+      args.push("--include", denoBinPath);
+    }
+    args = [...args, "-A", "-o", outPath, stackFilePath];
+    await $`${Deno.execPath()} ${args}`;
   }
 
   async bundle(stackFilePath: string, targets?: Target[]): Promise<void> {
@@ -140,7 +177,11 @@ export class StackBundler {
     for (const target of targets ?? [this.#props.currentTarget]) {
       const tfBinPath = await this.downloadTfBin(target);
       const tfMirrorDir = await this.downloadProviders(stackFilePath, target);
-      await this.createBundle({ target, stackFilePath, tfBinPath, tfLockFilePath, tfMirrorDir });
+      let denoBinPath: string | undefined;
+      if (await this.needsDeno(stackFilePath)) {
+        denoBinPath = await this.downloadDenoBin(target);
+      }
+      await this.createBundle({ target, stackFilePath, tfBinPath, tfLockFilePath, tfMirrorDir, denoBinPath });
     }
   }
 }

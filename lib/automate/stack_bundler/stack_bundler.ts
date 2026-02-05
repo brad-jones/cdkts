@@ -190,7 +190,7 @@ export class StackBundler {
       tmpEntryPointPath,
       outdent`
         import Stack from "${stackFilePath}";
-        import { Project } from "jsr:@brad-jones/cdkts/automate@${this.#CDKTS_VERSION}";
+        import { Project } from "jsr:@brad-jones/cdkts@${this.#CDKTS_VERSION}/automate";
         await new Project({ stack: new Stack() }).apply();
       `,
     );

@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.2.3](https://github.com/brad-jones/cdkts/compare/ad91f99979d0359e071c0997687735f9fbb052ee..v0.2.3) - 2026-02-05
+#### Bug Fixes
+- (**bundler**) create the entrypoint alongside the stackfile so that deno compile actually bundles the stackfile - ([ad91f99](https://github.com/brad-jones/cdkts/commit/ad91f99979d0359e071c0997687735f9fbb052ee)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.2.2](https://github.com/brad-jones/cdkts/compare/9cd9c52cada165d7b9a436a6a7adc978364e5e03..v0.2.2) - 2026-02-05
 #### Bug Fixes
 - (**bundler**) inject the config of the stackfile at compile time - ([9cd9c52](https://github.com/brad-jones/cdkts/commit/9cd9c52cada165d7b9a436a6a7adc978364e5e03)) - [@brad-jones](https://github.com/brad-jones)

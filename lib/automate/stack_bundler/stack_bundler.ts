@@ -183,7 +183,7 @@ export class StackBundler {
     return tsSrc.includes("import.meta.main");
   }
 
-  readonly #CDKTS_VERSION = "0.2.2";
+  readonly #CDKTS_VERSION = "0.2.3";
 
   async getStackEntrypoint(stackFilePath: string) {
     if (await this.stackHasEntrypoint(stackFilePath)) {

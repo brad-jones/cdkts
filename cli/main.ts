@@ -4,7 +4,7 @@ import { outdent } from "@cspotcode/outdent";
 import { join } from "@std/path";
 import { Project } from "../lib/automate/project.ts";
 import { StackBundler, type Target } from "../lib/automate/stack_bundler/stack_bundler.ts";
-import { importStack } from "../lib/automate/utils.ts";
+import { importStack, tempDir } from "../lib/automate/utils.ts";
 
 await new Command()
   .name("cdkts")
@@ -409,12 +409,7 @@ await new Command()
 
     // Delete downloaded tofu/terraform binaries
     try {
-      await Deno.remove(
-        join(Deno.env.get("TMPDIR") || Deno.env.get("TEMP") || Deno.env.get("TMP") || "/tmp", "cdkts"),
-        {
-          recursive: true,
-        },
-      );
+      await Deno.remove(tempDir("cdkts"), { recursive: true });
     } catch (e) {
       if (!(e instanceof Deno.errors.NotFound)) {
         throw e;
@@ -423,6 +418,20 @@ await new Command()
 
     // Also delete any cdkts-project- dirs
     await Project.cleanUp();
+
+    // Remove any cdkts-embedded- files (these are extracted from the CDKTS binary when running bundled projects)
+    const tmpDir = tempDir();
+    for await (const entry of Deno.readDir(tmpDir)) {
+      if (entry.name.startsWith("cdkts-embedded-")) {
+        const filePath = join(tmpDir, entry.name);
+        try {
+          await Deno.remove(filePath, { recursive: true });
+        } catch (error) {
+          // Ignore errors for individual file (e.g., permission issues, in-use files)
+          console.warn(`Failed to remove ${filePath}:`, error);
+        }
+      }
+    }
 
     console.log("Successfully cleaned CDKTS temporary data.");
   })

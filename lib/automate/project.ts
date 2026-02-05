@@ -72,7 +72,7 @@ export class Project<Self, Inputs, Outputs> {
         const suffix = Deno.build.os === "windows" ? ".exe" : "";
 
         // Strip back to the deno-compile root directory
-        const rootEmbeddedDir = getDenoCompileRootDir(import.meta);
+        const rootEmbeddedDir = getDenoCompileRootDir();
 
         // The included binary could have any path based on the original compilation context
         let embeddedPath: string | undefined = undefined;
@@ -116,7 +116,7 @@ export class Project<Self, Inputs, Outputs> {
       // Extract bundled deno & any denobridge scripts
       if (Deno.build.standalone) {
         const suffix = Deno.build.os === "windows" ? ".exe" : "";
-        const rootEmbeddedDir = getDenoCompileRootDir(import.meta);
+        const rootEmbeddedDir = getDenoCompileRootDir();
 
         // The included binary could have any path based on the original compilation context
         let embeddedPath: string | undefined = undefined;
@@ -223,7 +223,7 @@ export class Project<Self, Inputs, Outputs> {
     // Extract embedded lockfile & providers
     let pluginDir: string | undefined = undefined;
     if (Deno.build.standalone) {
-      const rootEmbeddedDir = getDenoCompileRootDir(import.meta);
+      const rootEmbeddedDir = getDenoCompileRootDir();
 
       for await (const entry of walk(rootEmbeddedDir)) {
         if (!entry.isFile) continue;

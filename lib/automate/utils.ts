@@ -1,16 +1,10 @@
 import { importModule } from "@brad-jones/jsr-dynamic-imports";
-import { dirname, join } from "@std/path";
+import { basename, dirname, join } from "@std/path";
 import { toFileUrl } from "@std/path/to-file-url";
 import { Stack } from "../constructs/stack.ts";
 
-export function getDenoCompileRootDir(meta: ImportMeta): string {
-  console.log(meta);
-  const currentDir = dirname(meta.url);
-  const pathSegments = currentDir.split(/[\\/]/);
-  const denoCompileIndex = pathSegments.findIndex((seg) => seg.startsWith("deno-compile-"));
-  return denoCompileIndex >= 0
-    ? join(...pathSegments.slice(0, denoCompileIndex + 1) as [string, ...string[]])
-    : currentDir;
+export function getDenoCompileRootDir(): string {
+  return tempDir(`deno-compile-${basename(Deno.execPath())}`);
 }
 
 export async function importStack(stackFilePath: string): Promise<Stack> {

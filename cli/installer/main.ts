@@ -23,7 +23,7 @@ import { join } from "@std/path";
 import { GithubDownloader } from "../../lib/automate/downloader/downloader.ts";
 
 /** The default version to install, updated by the build process */
-const DEFAULT_VERSION = "0.3.2";
+const DEFAULT_VERSION = "0.3.3";
 
 /**
  * CDKTS CLI installer that downloads the CLI binary from GitHub releases.

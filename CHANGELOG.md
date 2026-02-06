@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.2.8](https://github.com/brad-jones/cdkts/compare/5cd7fe1241aa06cdeb2c8fa580b31d0a6deb571b..v0.2.8) - 2026-02-06
+#### Documentation
+- added a readme - ([5cd7fe1](https://github.com/brad-jones/cdkts/commit/5cd7fe1241aa06cdeb2c8fa580b31d0a6deb571b)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.2.7](https://github.com/brad-jones/cdkts/compare/0eaeea96c40569008fbbf5d47e586fc043a4c3cd..v0.2.7) - 2026-02-06
 #### Documentation
 - (**examples**) added notes about some limitations the system currently has - ([7cfca51](https://github.com/brad-jones/cdkts/commit/7cfca51b3a76d23865cc5f1bc4cea7c8f86d2be7)) - [@brad-jones](https://github.com/brad-jones)

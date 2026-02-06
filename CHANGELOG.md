@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.3.2](https://github.com/brad-jones/cdkts/compare/c45b3030845cd99eccc5786709dfc6899385af9c..v0.3.2) - 2026-02-06
+#### Bug Fixes
+- (**cli**) logic for default install dir was incorrect, we ended up with bin/bin paths - ([c45b303](https://github.com/brad-jones/cdkts/commit/c45b3030845cd99eccc5786709dfc6899385af9c)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.3.1](https://github.com/brad-jones/cdkts/compare/30c8b8573a015c6b8359d8d7ea8ca8fbf0aca429..v0.3.1) - 2026-02-06
 #### Bug Fixes
 - (**cli**) need to override the cliffy version option in the installer - ([30c8b85](https://github.com/brad-jones/cdkts/commit/30c8b8573a015c6b8359d8d7ea8ca8fbf0aca429)) - [@brad-jones](https://github.com/brad-jones)

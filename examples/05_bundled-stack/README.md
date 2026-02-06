@@ -27,6 +27,24 @@ This creates a completely unified TypeScript infrastructure-as-code solution tha
 
 > _Note: Yes, it might seem unusual to bundle Deno inside a compiled Deno binary, but since the denobridge provider needs to `deno run` your custom scripts at runtime, we need the actual Deno binary included._
 
+### ⚠️ Important Caveat: Remote Modules and Air-Gapped Deployments
+
+When using denobridge providers from **remote sources** (such as JSR modules like `https://jsr.io/@brad-jones/cdkts-provider-local/0.0.1/lib/local_file_resource.ts`), there is an important limitation to understand:
+
+- **Construct Portion:** The TypeScript code that defines your infrastructure constructs _will_ be compiled into the bundle by `deno compile`.
+- **Provider Portion:** The actual provider implementation scripts _will NOT_ be compiled or embedded in the bundle.
+
+This happens because the denobridge provider uses `import.meta.url` for the `path` property. When you import a remote module, the synthesized HCL will instruct denobridge to execute the HTTP URL of that module directly (e.g., `https://jsr.io/@brad-jones/...`).
+
+**What this means:**
+
+- ✅ The bundle will work if you have network access to download the remote module at deployment time
+- ❌ The bundle is **not truly air-gapped** when using remote denobridge providers
+
+**For truly air-gapped deployments with denobridge providers:**
+
+You must use **local provider scripts only**. Local TypeScript files are included as standard files within the `deno compile` binary, which we can extract at runtime and provide to denobridge for execution. This ensures all provider logic is embedded in the bundle and requires no external network access.
+
 ## Deno Compilation
 
 This technology is built on top of `deno compile`.

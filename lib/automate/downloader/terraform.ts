@@ -13,7 +13,7 @@ const TerraformRelease = z.object({
     z.object({
       os: z.string(),
       arch: z.string(),
-      url: z.string().url(),
+      url: z.url(),
     }),
   ),
 });

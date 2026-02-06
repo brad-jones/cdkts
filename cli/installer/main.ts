@@ -107,12 +107,12 @@ class CdktsInstaller extends GithubDownloader {
 
 /**
  * Determines the default installation directory.
- * Uses DENO_INSTALL_ROOT if set, otherwise defaults to $HOME/.deno/bin
+ * Uses DENO_INSTALL_ROOT if set, otherwise defaults to $HOME/.deno
  */
 function getDefaultInstallDir(): string {
   const denoInstallRoot = Deno.env.get("DENO_INSTALL_ROOT");
   if (denoInstallRoot) {
-    return join(denoInstallRoot, "bin");
+    return denoInstallRoot;
   }
 
   const home = Deno.env.get("HOME") ?? Deno.env.get("USERPROFILE");
@@ -120,7 +120,7 @@ function getDefaultInstallDir(): string {
     throw new Error("Could not determine home directory");
   }
 
-  return join(home, ".deno", "bin");
+  return join(home, ".deno");
 }
 
 await new Command()
@@ -133,7 +133,7 @@ await new Command()
   )
   .option(
     "-d, --dir <directory:string>",
-    "Installation directory. Defaults to DENO_INSTALL_ROOT/bin or $HOME/.deno/bin",
+    "Installation directory. Defaults to DENO_INSTALL_ROOT or $HOME/.deno",
     { default: getDefaultInstallDir() },
   )
   .action(async ({ version, dir }) => {

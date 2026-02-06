@@ -1,4 +1,6 @@
-// https://developer.hashicorp.com/terraform/internals/json-format#state-representation
+/**
+ * @see https://developer.hashicorp.com/terraform/internals/json-format#state-representation
+ */
 export interface State<Outputs> {
   /** Format version for the state JSON structure */
   format_version?: string;
@@ -12,7 +14,7 @@ export interface State<Outputs> {
 
 /**
  * Values representation describes the current state or planned state
- * https://developer.hashicorp.com/terraform/internals/json-format#values-representation
+ * @see https://developer.hashicorp.com/terraform/internals/json-format#values-representation
  */
 export interface ValuesRepresentation<Outputs> {
   /** Outputs from the root module */

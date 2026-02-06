@@ -4,10 +4,26 @@ import { Block } from "./blocks/block.ts";
 import { Attribute } from "./input_output/attribute.ts";
 import { RawHcl } from "./rawhcl.ts";
 
+/**
+ * Formats HCL (HashiCorp Configuration Language) code.
+ *
+ * @param hcl - The HCL code string to format.
+ * @param enabled - Whether formatting is enabled. Defaults to true.
+ * @returns A promise that resolves to the formatted HCL string, or the original string if formatting is disabled.
+ */
 export async function fmtHcl(hcl: string, enabled = true): Promise<string> {
   return enabled ? await format(hcl) : hcl;
 }
 
+/**
+ * Escapes a string for use in HCL syntax.
+ *
+ * Handles special characters like backslashes, quotes, newlines, and interpolation markers.
+ * Preserves CDKTS interpolation markers while escaping other special characters.
+ *
+ * @param str - The string to escape.
+ * @returns The escaped string safe for use in HCL.
+ */
 export function escapeHclString(str: string): string {
   // Extract interpolation markers and replace with placeholders
   const interpolations: string[] = [];
@@ -38,6 +54,19 @@ export function escapeHclString(str: string): string {
   );
 }
 
+/**
+ * Converts a JavaScript/TypeScript object to HCL syntax.
+ *
+ * Handles various data types including primitives, arrays, objects, and special CDKTS types.
+ * - Converts object keys from camelCase to snake_case
+ * - Handles RawHcl, Block, and Attribute instances specially
+ * - Recursively processes nested structures
+ *
+ * @param obj - The object to convert to HCL.
+ * @param root - Whether this is a root-level object. Defaults to true.
+ * @returns The HCL string representation of the object.
+ * @throws {Error} If an unhandled type is encountered.
+ */
 export function toHcl(obj: unknown, root = true): string {
   if (obj === null || typeof obj === "undefined") {
     return "null";

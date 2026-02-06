@@ -21,14 +21,56 @@ import type { ValidateOptions } from "./types/validate_options.ts";
 import type { ValidateResult } from "./types/validate_result.ts";
 import { getDenoCompileRootDir, tempDir } from "./utils.ts";
 
+/**
+ * Configuration options for creating a Project instance.
+ *
+ * @template Self - The type of the stack itself
+ * @template Inputs - The type of the stack inputs
+ * @template Outputs - The type of the stack outputs
+ */
 export interface ProjectProps<Self, Inputs, Outputs> {
+  /**
+   * The IaC tool flavor to use. Defaults to "tofu"
+   */
   flavor?: "tofu" | "terraform";
+
+  /**
+   * The directory where the project files will be stored.
+   * If not provided, a temporary directory will be created.
+   *
+   * The project directory is where we synthesize the stack into .tf files,
+   * keep any state related files & is ultimately the working directory for
+   * the terraform/opentofu commands that we run for you.
+   */
   projectDir?: string;
+
+  /**
+   * The stack to deploy. If not provided, existing .tf files in projectDir will be used.
+   * That is you can use the Project class to manage existing Terraform/OpenTofu projects.
+   */
   stack?: Stack<Self, Inputs, Outputs>;
+
+  /**
+   * Path to the terraform/opentofu binary.
+   * If not provided, it will be downloaded or extracted from embedded assets.
+   */
   tfBinaryPath?: string;
+
+  /**
+   * The version of terraform/opentofu to use.
+   * Only applicable when tfBinaryPath is not provided.
+   */
   tfVersion?: string;
 }
 
+/**
+ * Manages a Terraform/OpenTofu project lifecycle including initialization,
+ * planning, applying, and destroying infrastructure.
+ *
+ * @template Self - The type of the stack itself
+ * @template Inputs - The type of the stack inputs
+ * @template Outputs - The type of the stack outputs
+ */
 export class Project<Self, Inputs, Outputs> {
   #initialized = false;
 
@@ -36,6 +78,11 @@ export class Project<Self, Inputs, Outputs> {
     flavor: "tofu" | "terraform";
   };
 
+  /**
+   * Gets the project directory path.
+   *
+   * @throws {Error} If preInit has not been called yet
+   */
   get projectDir(): string {
     if (!this.#props.projectDir) {
       throw new Error("Ensure preInit has been called to set the temp projectDir");
@@ -43,10 +90,24 @@ export class Project<Self, Inputs, Outputs> {
     return this.#props.projectDir;
   }
 
+  /**
+   * Creates a new Project instance.
+   *
+   * @param props - Configuration options for the project
+   */
   constructor(props: ProjectProps<Self, Inputs, Outputs>) {
     this.#props = { flavor: "tofu", ...props };
   }
 
+  /**
+   * Prepares the project directory and downloads/extracts required binaries.
+   *
+   * This method:
+   * - Creates a temporary project directory if not provided
+   * - Downloads or extracts the terraform/opentofu binary
+   * - Writes the stack HCL to main.tf if a stack is provided
+   * - Extracts embedded deno binary and denobridge scripts if running as a standalone executable
+   */
   async preInit(): Promise<void> {
     // Handle projectDir: create temp dir if not provided
     if (!this.#props.projectDir) {
@@ -203,6 +264,14 @@ export class Project<Self, Inputs, Outputs> {
     }
   }
 
+  /**
+   * Initializes the Terraform/OpenTofu project by running the init command.
+   * This downloads providers and sets up the backend.
+   *
+   * @param options - Initialization options
+   * @param options.reInit - If true, removes existing initialization state before reinitializing
+   * @param options.passThroughArgs - Additional arguments to pass to the init command
+   */
   async init(options?: InitOptions): Promise<void> {
     await this.preInit();
 
@@ -263,6 +332,13 @@ export class Project<Self, Inputs, Outputs> {
     this.#initialized = true;
   }
 
+  /**
+   * Validates the Terraform/OpenTofu configuration.
+   *
+   * @param options - Validation options
+   * @param options.json - If true, Produce output in a machine-readable JSON format.
+   * @param options.passThroughArgs - Additional arguments to pass to the validate command
+   */
   async validate(options: ValidateOptions & { json: true }): Promise<ValidateResult>;
   async validate(options?: ValidateOptions): Promise<void>;
   async validate(options?: ValidateOptions): Promise<ValidateResult | void> {
@@ -282,6 +358,15 @@ export class Project<Self, Inputs, Outputs> {
     await this.exec(args);
   }
 
+  /**
+   * Creates an execution plan showing what actions will be taken.
+   *
+   * @param options - Planning options
+   * @param options.destroy - If true, creates a plan to destroy all resources
+   * @param options.quiet - If true, suppresses command output
+   * @param options.passThroughArgs - Additional arguments to pass to the plan command
+   * @returns A Plan object containing the binary plan file path and JSON representation
+   */
   async plan(options?: PlanOptions): Promise<Plan> {
     await this.init();
 
@@ -311,6 +396,16 @@ export class Project<Self, Inputs, Outputs> {
     return { binaryPlanFilePath, planJsonObject };
   }
 
+  /**
+   * Applies the changes to create/update/destroy infrastructure.
+   *
+   * @param plan - Optional plan to apply. If not provided, will generate and apply a new plan
+   * @param options - Apply options
+   * @param options.destroy - If true, destroys all resources
+   * @param options.quiet - If true, suppresses command output
+   * @param options.passThroughArgs - Additional arguments to pass to the apply command
+   * @returns The current state after applying changes, including output values
+   */
   async apply(plan?: Plan, options?: ApplyOptions): Promise<State<Outputs>> {
     await this.init();
 
@@ -344,6 +439,11 @@ export class Project<Self, Inputs, Outputs> {
     return await this.exec(["show", "-json"], { json: true });
   }
 
+  /**
+   * Retrieves the output values from the current state.
+   *
+   * @returns An object containing all output values defined in the stack
+   */
   async outputs(): Promise<Outputs> {
     await this.init();
     const rawOutputs: Record<string, OutputValue<any>> = await this.exec(["output", "-json"], { json: true });
@@ -356,13 +456,41 @@ export class Project<Self, Inputs, Outputs> {
     return output as Outputs;
   }
 
+  /**
+   * Destroys all resources managed by this project.
+   *
+   * @param plan - Optional destroy plan to execute
+   * @param options - Apply options (destroy flag will be automatically set to true)
+   * @returns The final state after destroying resources
+   */
   async destroy(plan?: Plan, options?: ApplyOptions): Promise<State<Outputs>> {
     await this.init();
     return await this.apply(plan, { ...options, destroy: true });
   }
 
+  /**
+   * Executes a Terraform/OpenTofu command and returns the parsed JSON output.
+   *
+   * @template T - The expected type of the JSON output
+   * @param args - Command arguments to pass to the binary
+   * @param options - Execution options with json=true and optional environment variables
+   * @returns Parsed JSON output of the command
+   */
   async exec<T>(args: string[], options: { json: true; env?: Record<string, string | undefined> }): Promise<T>;
+
+  /**
+   * Executes a Terraform/OpenTofu command with optional quiet mode.
+   *
+   * @param args - Command arguments to pass to the binary
+   * @param options - Execution options including quiet mode and environment variables
+   */
   async exec(args: string[], options: { quiet?: boolean; env?: Record<string, string | undefined> }): Promise<void>;
+
+  /**
+   * Executes a Terraform/OpenTofu command.
+   *
+   * @param args - Command arguments to pass to the binary
+   */
   async exec(args: string[]): Promise<void>;
   async exec(
     args: string[],
@@ -398,12 +526,23 @@ export class Project<Self, Inputs, Outputs> {
     }
   }
 
+  /**
+   * Removes the project directory and all its contents.
+   * This is useful for cleaning up temporary directories after project completion.
+   */
   async cleanUp(): Promise<void> {
     if (this.#props.projectDir) {
       await Deno.remove(this.#props.projectDir, { recursive: true });
     }
   }
 
+  /**
+   * Cleans up all temporary project directories created by cdkts.
+   * This static method removes all directories in the temp folder
+   * that start with "cdkts-project-".
+   *
+   * @throws {Error} If the cleanup operation fails
+   */
   static async cleanUp(): Promise<void> {
     const tmpDir = tempDir();
     const prefix = "cdkts-project-";

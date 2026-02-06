@@ -1,175 +1,204 @@
 import type { Construct } from "../../construct.ts";
 import { Action } from "./action.ts";
 
+/**
+ * Configuration for a DenoAction that bridges Terraform actions to Deno scripts.
+ *
+ * @template Props - Type of the input properties to pass to the Deno script
+ *
+ * @example
+ * ```ts
+ * const config: DenoActionConfig<{ message: string }> = {
+ *   path: "${path.module}/action.ts",
+ *   props: { message: "Hello World" },
+ *   permissions: {
+ *     allow: ["read", "net=example.com:443"]
+ *   }
+ * };
+ * ```
+ */
 // deno-lint-ignore no-explicit-any
 export interface DenoActionConfig<Props = any> {
   /**
    * Path to the Deno script to execute.
    *
-   * @see https://registry.terraform.io/providers/brad-jones/denobridge/latest/docs/actions/action#path-1
+   * This can be a local file path or a remote HTTP URL. Any valid value that
+   * `deno run` accepts is supported.
+   *
+   * @example
+   * ```ts
+   * // Local file
+   * path: "${path.module}/action.ts"
+   *
+   * // Remote URL
+   * path: "https://example.com/action.ts"
+   *
+   * // Using import.meta.url
+   * path: import.meta.url
+   * ```
    */
   path: string;
 
   /**
    * Input properties to pass to the Deno script.
    *
-   * @see https://registry.terraform.io/providers/brad-jones/denobridge/latest/docs/actions/action#props-1
+   * These props are provided to the `ActionProvider.invoke()` method in your
+   * Deno script implementation.
+   *
+   * @example
+   * ```ts
+   * props: {
+   *   destination: "mars",
+   *   launchDate: "2026-03-15"
+   * }
+   * ```
    */
   props: Props;
 
   /**
    * Deno runtime permissions for the script.
    *
-   * @see https://registry.terraform.io/providers/brad-jones/denobridge/latest/docs/actions/action#permissions-1
+   * Controls what system resources the Deno script can access at runtime.
+   * Following Deno's security model, scripts have no permissions by default.
+   *
+   * @see {@link https://registry.terraform.io/providers/brad-jones/denobridge/latest/docs/guides/deno-permissions | Deno Permissions Guide}
+   * @see {@link https://docs.deno.com/runtime/fundamentals/security/#permissions | Deno Security Documentation}
+   *
+   * @example
+   * ```ts
+   * // Grant all permissions (use with caution!)
+   * permissions: { all: true }
+   *
+   * // Fine-grained control
+   * permissions: {
+   *   allow: [
+   *     "read",                    // --allow-read (all paths)
+   *     "write=/tmp",              // --allow-write=/tmp
+   *     "net=example.com:443",     // --allow-net=example.com:443
+   *     "env=HOME,USER",           // --allow-env=HOME,USER
+   *     "run=curl,whoami",         // --allow-run=curl,whoami
+   *   ]
+   * }
+   *
+   * // Deny specific permissions (deny takes precedence over allow)
+   * permissions: {
+   *   allow: ["net"],              // Allow all network access
+   *   deny: ["net=evil.com"]       // Except evil.com
+   * }
+   * ```
    */
   permissions?: {
-    /**
-     * Grant all permissions.
-     *
-     * @see https://registry.terraform.io/providers/brad-jones/denobridge/latest/docs/actions/action#all-1
-     */
+    /** Grant all permissions to the Deno script (maps to `--allow-all`). Use with caution. */
     all?: boolean;
 
-    /**
-     * List of permissions to allow (e.g., 'read', 'write', 'net').
-     *
-     * @see https://registry.terraform.io/providers/brad-jones/denobridge/latest/docs/actions/action#allow-1
-     */
+    /** List of permissions to allow (e.g., `read`, `write=/tmp`, `net=example.com:443`). */
     allow?: string[];
 
-    /**
-     * List of permissions to deny.
-     *
-     * @see https://registry.terraform.io/providers/brad-jones/denobridge/latest/docs/actions/action#deny-1
-     */
+    /** List of permissions to deny. Deny rules take precedence over allow rules. */
     deny?: string[];
   };
 }
 
 /**
- * Proxies the "action" Invoke GRPC call to a Deno script over standard HTTP.
+ * A Terraform action that executes a Deno TypeScript script.
  *
- * @see https://registry.terraform.io/providers/brad-jones/denobridge/latest/docs/actions/action
+ * `DenoAction` bridges the Terraform plugin framework's action concept to Deno
+ * scripts, allowing you to invoke TypeScript-based automations from Terraform.
+ * Actions are preset operations that can be triggered via the Terraform CLI or
+ * during an apply operation.
  *
- * _NB: Unsupported by OpenTofu <https://github.com/opentofu/opentofu/issues/3309>_
+ * The Deno script should implement an `ActionProvider` from the
+ * `@brad-jones/terraform-provider-denobridge` package.
+ *
+ * @template Self - The derived class type for proper type inference
+ *
+ * @see {@link https://registry.terraform.io/providers/brad-jones/denobridge/latest/docs/actions/action | denobridge_action Documentation}
+ * @see {@link https://developer.hashicorp.com/terraform/plugin/framework/actions | Terraform Actions Framework}
+ *
+ * @remarks
+ * - Actions are supported in Terraform 1.14 and later
+ * - Unsupported by OpenTofu (see https://github.com/opentofu/opentofu/issues/3309)
  *
  * @example
- *
- * Unmanaged Example
- *
- * Here we show how you might use this construct directly, you are solely
- * responsible for the implementation of the underlying deno script.
- *
- * Refer to the denobridge provider documentation which explains how to do this.
- *
+ * Combined pattern - Construct and Provider Implementation in one file!
  * ```ts
- * import { Stack, DenoAction } from "jsr:@brad-jones/cdkts/constructs";
+ * import { type Action, type Construct, DenoAction } from "@brad-jones/cdkts/constructs";
+ * import { ZodActionProvider } from "@brad-jones/terraform-provider-denobridge";
+ * import { z } from "@zod/zod";
  *
- * class MyStack extends Stack {
- *   constructor() {
- *     super(`${import.meta.url}#${MyStack.name}`);
+ * const Props = z.object({
+ *   message: z.string(),
+ *   count: z.number().optional().default(3),
+ *   delaySec: z.number().optional().default(1),
+ * });
  *
- *     new DenoAction(this, "MyAction", {
- *       path: "/path/to/action/server/script.ts",
- *       props: {
- *         foo: "bar",
+ * export class EchoExampleAction extends DenoAction<typeof EchoExampleAction> {
+ *   constructor(
+ *     parent: Construct,
+ *     label: string,
+ *     props: z.input<typeof Props>,
+ *     options?: Omit<Action["inputs"], "config">
+ *   ) {
+ *     super(parent, label, {
+ *       ...options,
+ *       config: {
+ *         props,
+ *         path: import.meta.url, // References this same file!
+ *         permissions: { all: true }
  *       }
  *     });
  *   }
  * }
- * ```
  *
- * @example
- *
- * Integrated Example
- *
- * In this example you extend the DenoAction construct & implement the
- * Invoke GRPC call (via the denobridge HTTP proxy) directly in the same
- * deno script.
- *
- * This is the whole purpose for the denobridge provider :)
- *
- * _my_action.ts_
- * ```ts
- * import { z } from "@zod/zod";
- * import { Construct, Stack, DenoAction } from "jsr:@brad-jones/cdkts/constructs";
- *
- * const MyActionInputs = z.object({
- *   foo: z.string(),
- * });
- *
- * export class MyAction extends DenoAction {
- *   constructor(
- *     parent: Construct,
- *     label: string,
- *     props: z.input<typeof MyActionInputs>,
- *     options?: Omit<MyAction["inputType"], "config">,
- *   ) {
- *     super(
- *       parent,
- *       label,
- *       {
- *         config: {
- *           // The properties that will eventually be resolved
- *           // and sent to your invoke method below.
- *           props,
- *
- *           // This file also exports a default export which acts
- *           // as the HTTP server for denobridge to call.
- *           path: import.meta.url,
- *
- *           permissions: {
- *             all: true, // - use with caution !
- *
- *             // Prefer setting more specific permissions
- *             // that your action actually needs
- *             allow: ["read", "write", "etc..."],
- *             deny: ["net=evil.com"]
- *           },
- *         },
- *         ...options,
- *       },
- *       DenoActionInputs(ExampleDenoActionInputs),
- *     );
- *   }
- * }
- *
- * export default MyAction.provider({
- *   propsSchema: MyActionInputs,
- *
- *   // Ultimately this method is the implementation for the Invoke method in the Terraform Plugin Framework.
- *   // see: https://developer.hashicorp.com/terraform/plugin/framework/actions/implementation#invoke-method
- *   async invoke(props, progress) {
- *     // Finally do something with your properties.
- *     props.foo;
- *
- *     // And optionally emit some progress updates, if your action is long running.
- *     await progress("Hello World");
- *   },
- * });
- * ```
- *
- * _my_stack.ts_
- * ```ts
- * import { Stack } from "jsr:@brad-jones/cdkts/constructs";
- * import { MyAction } from "./my_action.ts";
- *
- * class MyStack extends Stack {
- *   constructor() {
- *     super(`${import.meta.url}#${MyStack.name}`);
- *
- *     new MyAction(this, "Action1", {
- *       foo: "bar"
- *     });
- *   }
+ * // The ActionProvider implementation runs when executed by Terraform
+ * if (import.meta.main) {
+ *   new ZodActionProvider(Props, {
+ *     async invoke({ message, count, delaySec }, progressCallback) {
+ *       for (let i = 0; i < count; i++) {
+ *         await progressCallback(`${i}: ${message}`);
+ *         await new Promise((r) => setTimeout(r, delaySec * 1000));
+ *       }
+ *     }
+ *   });
  * }
  * ```
  */
 export class DenoAction<Self = typeof DenoAction> extends Action<Self> {
+  /**
+   * Properties class defining the inputs and outputs for DenoAction.
+   *
+   * Extends the base Action.Props with a typed config input for DenoAction specifics.
+   */
   static override readonly Props = class extends Action.Props {
+    /**
+     * Configuration for the denobridge_action.
+     *
+     * Specifies the Deno script to execute, the props to pass to it,
+     * and the runtime permissions it requires.
+     *
+     * @see {@link DenoActionConfig}
+     */
     override config = new Action.Input<DenoActionConfig>();
   };
 
+  /**
+   * Creates a new DenoAction instance.
+   *
+   * @param parent - The parent construct in the construct tree
+   * @param label - Unique label for this action within its parent scope
+   * @param inputs - Input properties including config with path, props, and permissions
+   *
+   * @example
+   * ```ts
+   * new DenoAction(myStack, "my_action", {
+   *   config: {
+   *     path: "./scripts/action.ts",
+   *     props: { key: "value" },
+   *     permissions: { allow: ["read", "write=/tmp"] }
+   *   }
+   * });
+   * ```
+   */
   constructor(parent: Construct, label: string, inputs: DenoAction["inputs"]) {
     super(parent, "denobridge_action", label, inputs);
   }

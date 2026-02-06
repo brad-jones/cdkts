@@ -8,12 +8,21 @@ import { TerraformDownloader } from "../downloader/terraform.ts";
 import { Project } from "../project.ts";
 import { importStack } from "../utils.ts";
 
+/**
+ * Configuration properties for the StackBundler.
+ */
 export interface StackBundlerProps {
+  /** The infrastructure tool flavor to use. Defaults to "tofu". */
   flavor?: "tofu" | "terraform";
+  /** The version of Terraform/OpenTofu to use. */
   tfVersion?: string;
+  /** The version of Deno to use. */
   denoVersion?: string;
 }
 
+/**
+ * Supported compilation targets for cross-platform bundling.
+ */
 export type Target =
   | "x86_64-pc-windows-msvc"
   | "x86_64-apple-darwin"
@@ -21,22 +30,46 @@ export type Target =
   | "x86_64-unknown-linux-gnu"
   | "aarch64-unknown-linux-gnu";
 
+/**
+ * Options for creating a single bundle.
+ */
 export interface BundleOptions {
+  /** Path to the TypeScript stack file to bundle. */
   stackFilePath: string;
+  /** Path to the Terraform/OpenTofu binary. */
   tfBinPath: string;
+  /** Path to the Terraform provider mirror directory. */
   tfMirrorDir: string;
+  /** Path to the Terraform lock file (.terraform.lock.hcl). */
   tfLockFilePath: string;
+  /** Target platform for compilation. */
   target?: Target;
+  /** Output path for the compiled executable. */
   outPath?: string;
+  /** Path to the Deno binary, if needed. */
   denoBinPath?: string;
 }
 
+/**
+ * Bundles CDKTS stacks into standalone executables with all dependencies included.
+ *
+ * The StackBundler handles:
+ * - Generating Terraform lock files for provider versions
+ * - Downloading providers for target platforms
+ * - Downloading Terraform/OpenTofu and Deno binaries
+ * - Creating self-contained executable bundles using Deno compile
+ */
 export class StackBundler {
   readonly #props: StackBundlerProps & {
     flavor: "tofu" | "terraform";
     currentTarget: Target;
   };
 
+  /**
+   * Creates a new StackBundler instance.
+   *
+   * @param props - Configuration properties for the bundler.
+   */
   constructor(props?: StackBundlerProps) {
     this.#props = {
       flavor: "tofu",
@@ -67,6 +100,15 @@ export class StackBundler {
     return `${this.#targetToOs(target)}_${this.#targetToGOARCH(target)}`;
   }
 
+  /**
+   * Generates a Terraform lock file (.terraform.lock.hcl) for the given stack.
+   *
+   * This lock file pins provider versions and contains checksums for the specified target platforms.
+   *
+   * @param stackFilePath - Path to the TypeScript stack file.
+   * @param targets - Array of target platforms to include in the lock file. Defaults to current platform.
+   * @returns Path to the generated lock file.
+   */
   async generateLockFile(stackFilePath: string, targets?: Target[]): Promise<string> {
     stackFilePath = normalize(stackFilePath);
 
@@ -96,6 +138,15 @@ export class StackBundler {
     return join(project.projectDir, ".terraform.lock.hcl");
   }
 
+  /**
+   * Downloads all Terraform providers required by the stack for a specific target platform.
+   *
+   * Providers are downloaded to a mirror directory that can be included in the bundle.
+   *
+   * @param stackFilePath - Path to the TypeScript stack file.
+   * @param target - Target platform to download providers for. Defaults to current platform.
+   * @returns Path to the provider mirror directory.
+   */
   async downloadProviders(stackFilePath: string, target?: Target): Promise<string> {
     target ??= this.#props.currentTarget;
     stackFilePath = normalize(stackFilePath);
@@ -120,6 +171,12 @@ export class StackBundler {
     return tfMirrorDir;
   }
 
+  /**
+   * Downloads the Terraform or OpenTofu binary for a specific target platform.
+   *
+   * @param target - Target platform to download the binary for. Defaults to current platform.
+   * @returns Path to the downloaded binary.
+   */
   async downloadTfBin(target?: Target): Promise<string> {
     target ??= this.#props.currentTarget;
     const platform = this.#targetToOs(target);
@@ -132,6 +189,12 @@ export class StackBundler {
     return await downloader.getBinaryPath(this.#props.tfVersion);
   }
 
+  /**
+   * Downloads the Deno binary for a specific target platform.
+   *
+   * @param target - Target platform to download the binary for. Defaults to current platform.
+   * @returns Path to the downloaded Deno binary.
+   */
   async downloadDenoBin(target?: Target): Promise<string> {
     target ??= this.#props.currentTarget;
     const platform = this.#targetToOs(target);
@@ -140,6 +203,14 @@ export class StackBundler {
     return await downloader.getBinaryPath(this.#props.denoVersion);
   }
 
+  /**
+   * Determines if the stack requires the Deno runtime.
+   *
+   * A stack needs Deno if it uses any DenoBridgeProvider constructs.
+   *
+   * @param stackFilePath - Path to the TypeScript stack file.
+   * @returns True if the stack requires Deno, false otherwise.
+   */
   async needsDeno(stackFilePath: string): Promise<boolean> {
     const stack = await importStack(stackFilePath);
     for (const construct of stack.descendants) {
@@ -150,6 +221,14 @@ export class StackBundler {
     return false;
   }
 
+  /**
+   * Creates a bundled executable from the stack using Deno's compile command.
+   *
+   * The bundle includes the stack code, Terraform/OpenTofu binary, provider mirror,
+   * lock file, and optionally the Deno binary if needed.
+   *
+   * @param options - Bundle creation options including all required paths.
+   */
   async createBundle(options: BundleOptions): Promise<void> {
     const { stackFilePath, tfBinPath, tfLockFilePath, tfMirrorDir, denoBinPath } = options;
     const target = options?.target ?? this.#props.currentTarget;
@@ -173,6 +252,12 @@ export class StackBundler {
     await $`${Deno.execPath()} ${args}`;
   }
 
+  /**
+   * Checks if the stack file contains its own entrypoint (import.meta.main check).
+   *
+   * @param stackFilePath - Path to the TypeScript stack file.
+   * @returns True if the stack has an entrypoint, false otherwise.
+   */
   async stackHasEntrypoint(stackFilePath: string): Promise<boolean> {
     const tsSrc = await Deno.readTextFile(stackFilePath);
     return tsSrc.includes("import.meta.main");
@@ -180,6 +265,15 @@ export class StackBundler {
 
   readonly #CDKTS_VERSION = "0.2.6";
 
+  /**
+   * Gets the entrypoint file for the stack.
+   *
+   * If the stack doesn't have its own entrypoint, creates a temporary entrypoint file
+   * that imports the stack and runs it with the Project class.
+   *
+   * @param stackFilePath - Path to the TypeScript stack file.
+   * @returns Path to the entrypoint file (either the original or a generated temporary one).
+   */
   async getStackEntrypoint(stackFilePath: string) {
     if (await this.stackHasEntrypoint(stackFilePath)) {
       return stackFilePath;
@@ -198,6 +292,19 @@ export class StackBundler {
     return tmpEntryPointPath;
   }
 
+  /**
+   * Bundles a CDKTS stack into standalone executables for one or more target platforms.
+   *
+   * This is the main entry point that orchestrates the entire bundling process:
+   * 1. Generates a lock file for all target platforms
+   * 2. Downloads the Terraform/OpenTofu binary for each target
+   * 3. Downloads providers for each target
+   * 4. Downloads Deno binary if needed for each target
+   * 5. Creates a compiled executable for each target
+   *
+   * @param stackFilePath - Path to the TypeScript stack file to bundle.
+   * @param targets - Array of target platforms to bundle for. Defaults to current platform.
+   */
   async bundle(stackFilePath: string, targets?: Target[]): Promise<void> {
     const stackEntrypoint = await this.getStackEntrypoint(stackFilePath);
     try {

@@ -2,23 +2,55 @@ import type { Construct } from "../../construct.ts";
 import { Backend } from "./backend.ts";
 
 /**
+ * Remote backend configuration for storing Terraform/OpenTofu state in HCP Terraform (formerly Terraform Cloud).
+ *
+ * The remote backend stores state in HCP Terraform, supports remote operations,
+ * and provides features like workspace management, run history, and team collaboration.
+ * It enables secure, centralized state management with built-in locking and versioning.
+ *
+ * This backend can be configured to work with a single workspace or multiple workspaces
+ * using a naming prefix. All configuration properties are optional to allow for CLI-based
+ * configuration via `terraform login` or environment variables.
+ *
  * @see https://developer.hashicorp.com/terraform/language/backend/remote
+ *
+ * @example
+ * ```typescript
+ * // Single workspace configuration
+ * new RemoteBackend(terraform, {
+ *   organization: "my-org",
+ *   workspaces: [{ name: "my-workspace" }],
+ * });
+ *
+ * // Multiple workspaces with prefix
+ * new RemoteBackend(terraform, {
+ *   organization: "my-org",
+ *   workspaces: [{ prefix: "my-app-" }],
+ * });
+ *
+ * // Minimal configuration (relies on CLI authentication)
+ * new RemoteBackend(terraform);
+ * ```
  */
 export class RemoteBackend extends Backend<typeof RemoteBackend> {
   /**
-   * _NB: All properties are optional here to allow for configurations that read
-   * everything from the CLI but regardless of how the data is given to terraform,
-   * it will be validated as per the hints in the comments._
+   * Configuration properties for the remote backend.
    *
+   * All properties are optional to support CLI-based configuration where values
+   * are provided through `terraform login`, environment variables, or interactive
+   * prompts. However, when provided through code, Terraform will validate the
+   * configuration according to the requirements documented for each property.
+   *
+   * @see https://developer.hashicorp.com/terraform/language/backend/remote#using-cli-input
+   *
+   * @example
    * ```hcl
-   * # main.tf
+   * # Equivalent HCL for minimal configuration
    * terraform {
    *   required_version = "~> 0.12.0"
    *   backend "remote" {}
    * }
    * ```
-   *
-   * @see: https://developer.hashicorp.com/terraform/language/backend/remote#using-cli-input
    */
   static override readonly Props = class extends Backend.Props {
     /**
@@ -70,6 +102,13 @@ export class RemoteBackend extends Backend<typeof RemoteBackend> {
     >();
   };
 
+  /**
+   * Creates a new remote backend configuration block.
+   *
+   * @param parent - The parent construct (typically a Terraform block)
+   * @param inputs - Optional configuration properties for the remote backend.
+   *                 Can be omitted to rely on CLI-based configuration.
+   */
   constructor(parent: Construct, inputs?: RemoteBackend["inputs"]) {
     super(parent, "remote", inputs);
   }

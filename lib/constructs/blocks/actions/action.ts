@@ -50,6 +50,23 @@ export class Action<Self = typeof Action> extends Block<Self> {
     provider = new Block.Input<Provider | undefined>();
   };
 
+  /**
+   * Creates a new Action block.
+   *
+   * @param parent - The parent construct that will contain this action
+   * @param typeName - The provider-specific action type (e.g., "denobridge_action")
+   * @param label - A unique identifier for this action instance within its parent scope
+   * @param inputs - Configuration inputs for the action, including config, count, forEach, and provider
+   * @param childBlocks - Optional callback to define additional nested blocks within the action
+   *
+   * @example
+   * ```typescript
+   * new Action(stack, "my_provider_action", "my_action", {
+   *   config: { key: "value" },
+   *   count: 3,
+   * });
+   * ```
+   */
   constructor(
     parent: Construct,
     readonly typeName: string,
@@ -61,6 +78,15 @@ export class Action<Self = typeof Action> extends Block<Self> {
     new Block(this, "config", [], inputs!.config);
   }
 
+  /**
+   * Maps action inputs to HCL format by filtering out the config input.
+   *
+   * The config input is handled separately as a nested block rather than
+   * an inline property, so it must be excluded from the main inputs object
+   * during HCL serialization.
+   *
+   * @returns The inputs object without the config property
+   */
   protected override mapInputsForHcl(): unknown {
     const inputs = { ...this.inputs };
     delete inputs["config"];

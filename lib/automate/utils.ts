@@ -1,4 +1,5 @@
-import { importModule } from "@brad-jones/jsr-dynamic-imports";
+import { readDenoConfigFile } from "@brad-jones/deno-config";
+import { ImportMapImporter } from "@lambdalisue/import-map-importer";
 import { basename, dirname, join } from "@std/path";
 import { toFileUrl } from "@std/path/to-file-url";
 import { Stack } from "../constructs/stack.ts";
@@ -27,7 +28,10 @@ export function getDenoCompileRootDir(): string {
  */
 export async function importStack(stackFilePath: string): Promise<Stack> {
   // Import the stack from the stack file
-  const module = await importModule(toFileUrl(stackFilePath).toString());
+  const config = await readDenoConfigFile(stackFilePath);
+  const importer = new ImportMapImporter({ imports: config?.imports ?? {} });
+  // deno-lint-ignore no-explicit-any
+  const module = await importer.import<any>(toFileUrl(stackFilePath).toString());
   const defaultValue = module.default;
 
   // Validate that the default export is a constructor

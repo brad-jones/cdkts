@@ -69,7 +69,45 @@ import { Project } from "jsr:@brad-jones/cdkts/automate";
 
 ### Using the CLI
 
-Coming Soon...
+The CLI is actually a Go binary with Deno embedded inside it.
+To install it, run the following.
+
+```bash
+deno run -A jsr:@brad-jones/cdkts/cli-installer
+
+# set a custom version to download instead of the version encoded into the installer
+deno run -A jsr:@brad-jones/cdkts/cli-installer --version 1.2.3
+
+# set a custom installation directory
+deno run -A jsr:@brad-jones/cdkts/cli-installer --dir ~/.local/bin
+```
+
+This will download the compiled binary from Github Releases and place it into
+the same directory that `deno install` would have used. eg: $HOME/.deno/bin
+
+_Do not use `deno install`, you will likely encounter issues due to missing import maps, etc._
+
+We use this over the normal `deno install` approach because it allows us to
+inject any deno config files of the imported stackfile.
+
+To do what our CLI does, you would need to run a command like this:
+
+```bash
+deno run --config /path/to/config/for/stackfile/deno.json jsr:@brad-jones/cdkts/cli apply /path/to/stackfile.ts
+```
+
+In contrast `deno install` creates shell scripts that execute commands like:
+
+```bash
+deno run --no-config jsr:@brad-jones/cdkts/cli apply /path/to/stackfile.ts
+```
+
+And then your import map for `stackfile.ts` won't be found and the whole thing blows up.
+
+The other advantage is that our CLI can be used inside CI pipelines and similar environments,
+without requiring you to also install deno _(or terraform / tofu for that matter)_.
+
+Commands like this should work as you would expect: `cdkts apply https://acme.co/mystack.ts`
 
 ## Quick Start
 

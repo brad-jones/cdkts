@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.2.7](https://github.com/brad-jones/cdkts/compare/0eaeea96c40569008fbbf5d47e586fc043a4c3cd..v0.2.7) - 2026-02-06
+#### Documentation
+- (**examples**) added notes about some limitations the system currently has - ([7cfca51](https://github.com/brad-jones/cdkts/commit/7cfca51b3a76d23865cc5f1bc4cea7c8f86d2be7)) - [@brad-jones](https://github.com/brad-jones)
+- add jsdocs to basically everything that was missing docs - ([8a508c7](https://github.com/brad-jones/cdkts/commit/8a508c731205c590e2c5085c8ce7477907597cc0)) - [@brad-jones](https://github.com/brad-jones)
+#### Refactoring
+- don't use deprecated zod url validation - ([894d225](https://github.com/brad-jones/cdkts/commit/894d2256011d336712e803bd38c7e7497a3068a3)) - [@brad-jones](https://github.com/brad-jones)
+#### Miscellaneous Chores
+- bump pixi lock file - ([0eaeea9](https://github.com/brad-jones/cdkts/commit/0eaeea96c40569008fbbf5d47e586fc043a4c3cd)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.2.6](https://github.com/brad-jones/cdkts/compare/f785c32ef4424d87a53725adb9c8af771d2ac5e6..v0.2.6) - 2026-02-05
 #### Bug Fixes
 - (**bundler**) now working with JSR as intended - ([f785c32](https://github.com/brad-jones/cdkts/commit/f785c32ef4424d87a53725adb9c8af771d2ac5e6)) - [@brad-jones](https://github.com/brad-jones)

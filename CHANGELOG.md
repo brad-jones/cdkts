@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.3.1](https://github.com/brad-jones/cdkts/compare/30c8b8573a015c6b8359d8d7ea8ca8fbf0aca429..v0.3.1) - 2026-02-06
+#### Bug Fixes
+- (**cli**) need to override the cliffy version option in the installer - ([30c8b85](https://github.com/brad-jones/cdkts/commit/30c8b8573a015c6b8359d8d7ea8ca8fbf0aca429)) - [@brad-jones](https://github.com/brad-jones)
+#### Documentation
+- (**readme**) added CLI install instructions - ([c693c8b](https://github.com/brad-jones/cdkts/commit/c693c8b6ef48e81a919d6b547fe96495696a71bb)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.3.0](https://github.com/brad-jones/cdkts/compare/0c9c2be483375075cb0c4000090937acab7eca58..v0.3.0) - 2026-02-06
 #### Features
 - (**cli**) added an installer - ([0c9c2be](https://github.com/brad-jones/cdkts/commit/0c9c2be483375075cb0c4000090937acab7eca58)) - [@brad-jones](https://github.com/brad-jones)

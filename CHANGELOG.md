@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.3.4](https://github.com/brad-jones/cdkts/compare/e33ba887d3e1819a4efea04a962ac21444bf35be..v0.3.4) - 2026-02-06
+#### Documentation
+- (**readme**) added CLI install instructions for pixi - ([e33ba88](https://github.com/brad-jones/cdkts/commit/e33ba887d3e1819a4efea04a962ac21444bf35be)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.3.3](https://github.com/brad-jones/cdkts/compare/e00fc0bbfd894aca5f6a999e67471e105b48021a..v0.3.3) - 2026-02-06
 #### Bug Fixes
 - (**cli**) inject version into cliffy - ([e00fc0b](https://github.com/brad-jones/cdkts/commit/e00fc0bbfd894aca5f6a999e67471e105b48021a)) - [@brad-jones](https://github.com/brad-jones)

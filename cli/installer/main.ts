@@ -125,12 +125,11 @@ function getDefaultInstallDir(): string {
 
 await new Command()
   .name("cdkts-installer")
-  .version(DEFAULT_VERSION)
   .description("Install the CDKTS CLI from GitHub releases")
   .option(
     "-v, --version <version:string>",
     "Specific version to install (e.g., 0.2.8). If not specified, installs the same version as the installer.",
-    { default: DEFAULT_VERSION },
+    { default: DEFAULT_VERSION, override: true },
   )
   .option(
     "-d, --dir <directory:string>",

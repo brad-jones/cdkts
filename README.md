@@ -109,6 +109,23 @@ without requiring you to also install deno _(or terraform / tofu for that matter
 
 Commands like this should work as you would expect: `cdkts apply https://acme.co/mystack.ts`
 
+#### Install via pixi
+
+The CLI is also packaged as a conda package installable through `pixi`.
+
+Add my channel: <https://prefix.dev/channels/brads-forge/packages/cdkts>
+
+```bash
+# Add just to your current pixi workspace
+pixi workspace channel add https://prefix.dev/brads-forge
+
+# Or add to your global config
+pixi --global config append default-channels https://prefix.dev/brads-forge
+
+# Then install
+pixi add cdkts
+```
+
 ## Quick Start
 
 ### 1. Create Your First Stack

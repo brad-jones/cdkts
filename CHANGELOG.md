@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.3.5](https://github.com/brad-jones/cdkts/compare/256129db035ecfaa4fbc1d90468af10f6e1fa46b..v0.3.5) - 2026-02-06
+#### Bug Fixes
+- (**examples**) use RawHcl for direct hcl interpolation - ([256129d](https://github.com/brad-jones/cdkts/commit/256129db035ecfaa4fbc1d90468af10f6e1fa46b)) - [@brad-jones](https://github.com/brad-jones)
+#### Refactoring
+- swap out @brad-jones/jsr-dynamic-imports for @lambdalisue/import-map-importer - ([3ad8112](https://github.com/brad-jones/cdkts/commit/3ad8112afe6556272280f450a281206031e9567c)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.3.4](https://github.com/brad-jones/cdkts/compare/e33ba887d3e1819a4efea04a962ac21444bf35be..v0.3.4) - 2026-02-06
 #### Documentation
 - (**readme**) added CLI install instructions for pixi - ([e33ba88](https://github.com/brad-jones/cdkts/commit/e33ba887d3e1819a4efea04a962ac21444bf35be)) - [@brad-jones](https://github.com/brad-jones)

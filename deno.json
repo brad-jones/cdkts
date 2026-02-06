@@ -12,6 +12,7 @@
   },
   "exports": {
     "./cli": "./cli/main.ts",
+    "./cli-installer": "./cli/installer/main.ts",
     "./automate": "./lib/automate/mod.ts",
     "./constructs": "./lib/constructs/mod.ts"
   },

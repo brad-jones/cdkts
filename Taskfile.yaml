@@ -82,6 +82,12 @@ tasks:
           src = src.replace(/readonly #CDKTS_VERSION = ".*?"/g, `readonly #CDKTS_VERSION = "{{.VERSION}}"`);
           Deno.writeTextFileSync("./lib/automate/stack_bundler/stack_bundler.ts", src);
         ' | deno run -A -
+      - >-
+        echo '
+          let src = Deno.readTextFileSync("./cli/installer/main.ts");
+          src = src.replace(/const DEFAULT_VERSION = ".*?"/g, `const DEFAULT_VERSION = "{{.VERSION}}"`);
+          Deno.writeTextFileSync("./cli/installer/main.ts", src);
+        ' | deno run -A -
       - task: build
 
   publish:

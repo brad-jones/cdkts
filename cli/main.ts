@@ -27,8 +27,12 @@ import { Project } from "../lib/automate/project.ts";
 import { StackBundler, type Target } from "../lib/automate/stack_bundler/stack_bundler.ts";
 import { importStack, tempDir } from "../lib/automate/utils.ts";
 
+/** The version, updated by the build process */
+const VERSION = "0.3.1";
+
 await new Command()
   .name("cdkts")
+  .version(VERSION)
   .description(`
     CDK for Terraform/OpenTofu (CDKTS) - Define infrastructure using TypeScript and synthesize to HCL
 

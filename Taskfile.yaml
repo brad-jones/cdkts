@@ -84,6 +84,12 @@ tasks:
         ' | deno run -A -
       - >-
         echo '
+          let src = Deno.readTextFileSync("./cli/main.ts");
+          src = src.replace(/const VERSION = ".*?"/g, `const VERSION = "{{.VERSION}}"`);
+          Deno.writeTextFileSync("./cli/main.ts", src);
+        ' | deno run -A -
+      - >-
+        echo '
           let src = Deno.readTextFileSync("./cli/installer/main.ts");
           src = src.replace(/const DEFAULT_VERSION = ".*?"/g, `const DEFAULT_VERSION = "{{.VERSION}}"`);
           Deno.writeTextFileSync("./cli/installer/main.ts", src);

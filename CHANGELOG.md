@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.2.9](https://github.com/brad-jones/cdkts/compare/5d36172c5b0b395de454a76f887983ca807c0377..v0.2.9) - 2026-02-06
+#### Documentation
+- added module doc comments to bump up our score on jsr :) - ([5d36172](https://github.com/brad-jones/cdkts/commit/5d36172c5b0b395de454a76f887983ca807c0377)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.2.8](https://github.com/brad-jones/cdkts/compare/5cd7fe1241aa06cdeb2c8fa580b31d0a6deb571b..v0.2.8) - 2026-02-06
 #### Documentation
 - added a readme - ([5cd7fe1](https://github.com/brad-jones/cdkts/commit/5cd7fe1241aa06cdeb2c8fa580b31d0a6deb571b)) - [@brad-jones](https://github.com/brad-jones)

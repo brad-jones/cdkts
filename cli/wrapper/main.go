@@ -19,7 +19,7 @@ import (
 //go:embed deno.gz
 var denoGzippedBytes []byte
 
-var cdkTsVersion = "0.2.8"
+var cdkTsVersion = "0.2.9"
 
 func sha256Sum(data []byte) string {
 	hash := sha256.Sum256(data)

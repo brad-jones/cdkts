@@ -1,4 +1,4 @@
-import { Resource, Stack, Terraform } from "@brad-jones/cdkts/constructs";
+import { RawHcl, Resource, Stack, Terraform } from "@brad-jones/cdkts/constructs";
 
 export default class MyStack extends Stack<typeof MyStack> {
   constructor() {
@@ -15,7 +15,7 @@ export default class MyStack extends Stack<typeof MyStack> {
     });
 
     new Resource(this, "local_file", "hello", {
-      filename: "${path.module}/message.txt",
+      filename: new RawHcl('"${path.module}/message.txt"'),
       content: "Hello World",
     });
   }

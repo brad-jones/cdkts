@@ -1,4 +1,4 @@
-import { Resource, Stack, Terraform } from "@brad-jones/cdkts/constructs";
+import { RawHcl, Resource, Stack, Terraform } from "@brad-jones/cdkts/constructs";
 
 export default class MyStack1 extends Stack<typeof MyStack1> {
   static override readonly Props = class extends Stack.Props {
@@ -19,7 +19,7 @@ export default class MyStack1 extends Stack<typeof MyStack1> {
     });
 
     const helloFile = new Resource(this, "local_file", "hello", {
-      filename: "${path.module}/message.txt",
+      filename: new RawHcl('"${path.module}/message.txt"'),
       content: "Hello World",
     });
 

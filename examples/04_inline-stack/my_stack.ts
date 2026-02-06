@@ -1,5 +1,5 @@
 import { Project } from "@brad-jones/cdkts/automate";
-import { Resource, Stack, Terraform } from "@brad-jones/cdkts/constructs";
+import { RawHcl, Resource, Stack, Terraform } from "@brad-jones/cdkts/constructs";
 
 await new Project({
   projectDir: `${import.meta.dirname}/out`,
@@ -18,7 +18,7 @@ await new Project({
       });
 
       new Resource(this, "local_file", "hello", {
-        filename: "${path.module}/message.txt",
+        filename: new RawHcl('"${path.module}/message.txt"'),
         content: "Hello World",
       });
     }

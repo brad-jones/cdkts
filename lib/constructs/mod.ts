@@ -47,4 +47,5 @@ export * from "./blocks/resources/resource.ts";
 export * from "./blocks/terraform.ts";
 export * from "./construct.ts";
 export * from "./input_output/attribute.ts";
+export * from "./rawhcl.ts";
 export * from "./stack.ts";

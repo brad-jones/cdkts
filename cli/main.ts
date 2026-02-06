@@ -1,3 +1,24 @@
+/**
+ * CLI tool for CDKTS - CDK for Terraform/OpenTofu
+ *
+ * This module provides a command-line interface for executing CDKTS stacks,
+ * including init, plan, apply, destroy, and other Terraform/OpenTofu operations.
+ *
+ * @example
+ * ```bash
+ * # Initialize and apply a stack
+ * cdkts apply ./my_stack.ts
+ *
+ * # Plan changes with pass-through arguments
+ * cdkts plan ./my_stack.ts -- -var="instance_type=t3.micro"
+ *
+ * # Use as an escape hatch for any terraform command
+ * cdkts state list ./my_stack.ts
+ * ```
+ *
+ * @module
+ */
+
 import { Command, EnumType } from "@cliffy/command";
 import { Confirm } from "@cliffy/prompt";
 import { outdent } from "@cspotcode/outdent";

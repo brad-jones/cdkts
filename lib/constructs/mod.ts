@@ -1,3 +1,35 @@
+/**
+ * Core constructs for defining infrastructure as code
+ *
+ * This module provides the fundamental building blocks for defining infrastructure
+ * using CDKTS. It includes constructs for stacks, resources, providers, data sources,
+ * backends, and more. All constructs are type-safe and synthesize to clean HCL.
+ *
+ * @example
+ * ```ts
+ * import { Stack, Resource, Terraform } from "@brad-jones/cdkts/constructs";
+ *
+ * export default class MyStack extends Stack<typeof MyStack> {
+ *   constructor() {
+ *     super(`${import.meta.url}#${MyStack.name}`);
+ *
+ *     new Terraform(this, {
+ *       requiredProviders: {
+ *         local: { source: "hashicorp/local", version: "2.6.1" }
+ *       }
+ *     });
+ *
+ *     new Resource(this, "local_file", "hello", {
+ *       filename: "${path.module}/message.txt",
+ *       content: "Hello World"
+ *     });
+ *   }
+ * }
+ * ```
+ *
+ * @module
+ */
+
 export * from "./blocks/actions/action.ts";
 export * from "./blocks/actions/deno_action.ts";
 export * from "./blocks/backends/backend.ts";

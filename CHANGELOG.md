@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.4.1](https://github.com/brad-jones/cdkts/compare/8cbccaf03e0284709e7ad351eabc8b16670dc22d..v0.4.1) - 2026-02-09
+#### Miscellaneous Chores
+- update deno  lockfile - ([6107d10](https://github.com/brad-jones/cdkts/commit/6107d100a67fae8b4b100fbdb3440e0ff0358ed4)) - [@brad-jones](https://github.com/brad-jones)
+- bump deno-ts-importer version - ([8cbccaf](https://github.com/brad-jones/cdkts/commit/8cbccaf03e0284709e7ad351eabc8b16670dc22d)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.4.0](https://github.com/brad-jones/cdkts/compare/4e922060b96fc65de4c8213befe003149b3c0652..v0.4.0) - 2026-02-09
 #### Features
 - remove go cli wrapper - ([4e92206](https://github.com/brad-jones/cdkts/commit/4e922060b96fc65de4c8213befe003149b3c0652)) - [@brad-jones](https://github.com/brad-jones)

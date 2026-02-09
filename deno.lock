@@ -21,6 +21,7 @@
     "jsr:@david/which@~0.4.1": "0.4.1",
     "jsr:@deno-library/progress@^1.5.1": "1.5.1",
     "jsr:@deno/cache-dir@~0.13.2": "0.13.2",
+    "jsr:@deno/graph@~0.73.1": "0.73.1",
     "jsr:@deno/graph@~0.96.2": "0.96.2",
     "jsr:@fcrozatier/type-strip@^1.4.1": "1.4.1",
     "jsr:@hono/hono@^4.11.9": "4.11.9",
@@ -48,6 +49,7 @@
     "jsr:@std/io@0.223": "0.223.0",
     "jsr:@std/io@0.225": "0.225.0",
     "jsr:@std/io@0.225.0": "0.225.0",
+    "jsr:@std/io@~0.224.9": "0.224.9",
     "jsr:@std/path@0.223": "0.223.0",
     "jsr:@std/path@1": "1.1.4",
     "jsr:@std/path@^1.0.1": "1.1.4",
@@ -89,7 +91,7 @@
         "jsr:@brad-jones/deno-config",
         "jsr:@core/unknownutil",
         "jsr:@deno/cache-dir",
-        "jsr:@deno/graph",
+        "jsr:@deno/graph@~0.96.2",
         "jsr:@fcrozatier/type-strip",
         "jsr:@std/crypto",
         "jsr:@std/fs@^1.0.1",
@@ -107,14 +109,16 @@
       "integrity": "90920ceb0b986cd068a49d3266e15508dcef6a959861382f52d3cfb6501b1797",
       "dependencies": [
         "jsr:@std/streams",
-        "jsr:@yieldray/json-rpc-ts"
+        "jsr:@yieldray/json-rpc-ts",
+        "jsr:@zod/zod@^4.3.6"
       ]
     },
     "@cliffy/ansi@1.0.0-rc.8": {
       "integrity": "ba37f10ce55bbfbdd8ddd987f91f029b17bce88385b98ba3058870f3b007b80c",
       "dependencies": [
         "jsr:@cliffy/internal",
-        "jsr:@std/encoding@~1.0.5"
+        "jsr:@std/encoding@~1.0.5",
+        "jsr:@std/io@~0.224.9"
       ]
     },
     "@cliffy/command@1.0.0-rc.8": {
@@ -147,6 +151,7 @@
         "jsr:@cliffy/keycode",
         "jsr:@std/assert@~1.0.6",
         "jsr:@std/fmt@~1.0.2",
+        "jsr:@std/io@~0.224.9",
         "jsr:@std/path@~1.0.6",
         "jsr:@std/text"
       ]
@@ -198,11 +203,15 @@
     "@deno/cache-dir@0.13.2": {
       "integrity": "c22419dfe27ab85f345bee487aaaadba498b005cce3644e9d2528db035c5454d",
       "dependencies": [
+        "jsr:@deno/graph@~0.73.1",
         "jsr:@std/fmt@0.223",
         "jsr:@std/fs@0.223",
         "jsr:@std/io@0.223",
         "jsr:@std/path@0.223"
       ]
+    },
+    "@deno/graph@0.73.1": {
+      "integrity": "cd69639d2709d479037d5ce191a422eabe8d71bb68b0098344f6b07411c84d41"
     },
     "@deno/graph@0.96.2": {
       "integrity": "db21e52fc5b2850cc5fe92528f4f84dd460c5e40678a6bd23ece5c9c53193090"
@@ -222,7 +231,7 @@
       "dependencies": [
         "jsr:@core/unknownutil",
         "jsr:@deno/cache-dir",
-        "jsr:@deno/graph",
+        "jsr:@deno/graph@~0.96.2",
         "jsr:@std/crypto",
         "jsr:@std/fs@^1.0.1",
         "jsr:@std/path@^1.0.1"
@@ -280,6 +289,9 @@
         "jsr:@std/assert@0.223",
         "jsr:@std/bytes@0.223"
       ]
+    },
+    "@std/io@0.224.9": {
+      "integrity": "4414664b6926f665102e73c969cfda06d2c4c59bd5d0c603fd4f1b1c840d6ee3"
     },
     "@std/io@0.225.0": {
       "integrity": "c1db7c5e5a231629b32d64b9a53139445b2ca640d828c26bf23e1c55f8c079b3",

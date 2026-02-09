@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.4.0](https://github.com/brad-jones/cdkts/compare/4e922060b96fc65de4c8213befe003149b3c0652..v0.4.0) - 2026-02-09
+#### Features
+- remove go cli wrapper - ([4e92206](https://github.com/brad-jones/cdkts/commit/4e922060b96fc65de4c8213befe003149b3c0652)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.3.5](https://github.com/brad-jones/cdkts/compare/256129db035ecfaa4fbc1d90468af10f6e1fa46b..v0.3.5) - 2026-02-06
 #### Bug Fixes
 - (**examples**) use RawHcl for direct hcl interpolation - ([256129d](https://github.com/brad-jones/cdkts/commit/256129db035ecfaa4fbc1d90468af10f6e1fa46b)) - [@brad-jones](https://github.com/brad-jones)

@@ -249,7 +249,14 @@ export class StackBundler {
       args.push("--include", denoBinPath);
     }
     args = [...args, "-A", "-o", outPath, stackFilePath];
-    await $`${Deno.execPath()} ${args}`;
+
+    // If we are running from inside a compiled binary, we need to download the
+    // real deno binary to run the compile command, since the Deno.compile API
+    // is not available in the compiled runtime. If we are running from the Deno
+    // runtime, we can just use Deno.execPath() to get the path to the current Deno binary.
+    const denoBin = Deno.build.standalone ? await new DenoDownloader().getBinaryPath() : Deno.execPath();
+
+    await $`${denoBin} ${args}`;
   }
 
   /**

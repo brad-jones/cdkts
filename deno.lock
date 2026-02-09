@@ -3,6 +3,7 @@
   "specifiers": {
     "jsr:@brad-jones/deno-config@1": "1.0.0",
     "jsr:@brad-jones/deno-net-container@0.4": "0.4.0",
+    "jsr:@brad-jones/deno-ts-importer@~0.2.1": "0.2.1",
     "jsr:@brad-jones/jsr-dynamic-imports@~0.1.1": "0.1.2",
     "jsr:@brad-jones/terraform-provider-denobridge@~0.2.6": "0.2.6",
     "jsr:@cliffy/ansi@1.0.0-rc.8": "1.0.0-rc.8",
@@ -22,6 +23,7 @@
     "jsr:@deno/cache-dir@~0.13.2": "0.13.2",
     "jsr:@deno/graph@~0.73.1": "0.73.1",
     "jsr:@deno/graph@~0.96.2": "0.96.2",
+    "jsr:@fcrozatier/type-strip@^1.4.1": "1.4.1",
     "jsr:@hono/hono@^4.11.7": "4.11.7",
     "jsr:@lambdalisue/import-map-importer@~0.5.1": "0.5.1",
     "jsr:@mesqueeb/case-anything@^3.1.0": "3.1.0",
@@ -51,6 +53,7 @@
     "jsr:@std/path@0.223": "0.223.0",
     "jsr:@std/path@1": "1.1.4",
     "jsr:@std/path@^1.0.1": "1.1.4",
+    "jsr:@std/path@^1.1.1": "1.1.4",
     "jsr:@std/path@^1.1.2": "1.1.4",
     "jsr:@std/path@^1.1.4": "1.1.4",
     "jsr:@std/path@~1.0.6": "1.0.9",
@@ -62,7 +65,9 @@
     "jsr:@zod/zod@^4.3.6": "4.3.6",
     "npm:@brad-jones/jsr-dynamic-imports@0.1.2": "0.1.2",
     "npm:@cdktf/hcl-tools@0.21": "0.21.0",
-    "npm:ky@^1.14.3": "1.14.3"
+    "npm:ky@^1.14.3": "1.14.3",
+    "npm:typescript@^5.8.3": "5.9.3",
+    "npm:typescript@^5.9.3": "5.9.3"
   },
   "jsr": {
     "@brad-jones/deno-config@1.0.0": {
@@ -78,6 +83,20 @@
       "dependencies": [
         "jsr:@brad-jones/jsr-dynamic-imports@~0.1.1",
         "jsr:@std/fs@^1.0.19"
+      ]
+    },
+    "@brad-jones/deno-ts-importer@0.2.1": {
+      "integrity": "84c9a9d9034976aaaaf9c5a90028c34c84292dc13435fa6965842ea0e119f20a",
+      "dependencies": [
+        "jsr:@brad-jones/deno-config",
+        "jsr:@core/unknownutil",
+        "jsr:@deno/cache-dir",
+        "jsr:@deno/graph@~0.96.2",
+        "jsr:@fcrozatier/type-strip",
+        "jsr:@std/crypto",
+        "jsr:@std/fs@^1.0.1",
+        "jsr:@std/path@^1.0.1",
+        "npm:typescript@^5.9.3"
       ]
     },
     "@brad-jones/jsr-dynamic-imports@0.1.2": {
@@ -196,6 +215,13 @@
     },
     "@deno/graph@0.96.2": {
       "integrity": "db21e52fc5b2850cc5fe92528f4f84dd460c5e40678a6bd23ece5c9c53193090"
+    },
+    "@fcrozatier/type-strip@1.4.1": {
+      "integrity": "4081f88fce0e4396c19b67112161af9abdfe3efa0c67a3bf25cc0358e202c9ac",
+      "dependencies": [
+        "jsr:@std/path@^1.1.1",
+        "npm:typescript@^5.8.3"
+      ]
     },
     "@hono/hono@4.11.7": {
       "integrity": "2a0dc00088fbef98b76f575e3c4ab3d2c770d5e6095be215ae05c2aef25b363a"
@@ -340,6 +366,10 @@
     "ky@1.14.3": {
       "integrity": "sha512-9zy9lkjac+TR1c2tG+mkNSVlyOpInnWdSMiue4F+kq8TwJSgv6o8jhLRg8Ho6SnZ9wOYUq/yozts9qQCfk7bIw=="
     },
+    "typescript@5.9.3": {
+      "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
+      "bin": true
+    },
     "universalify@2.0.1": {
       "integrity": "sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw=="
     }
@@ -347,6 +377,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@brad-jones/deno-config@1",
+      "jsr:@brad-jones/deno-ts-importer@~0.2.1",
       "jsr:@brad-jones/terraform-provider-denobridge@~0.2.6",
       "jsr:@cliffy/command@1.0.0-rc.8",
       "jsr:@cliffy/prompt@^1.0.0-rc.8",

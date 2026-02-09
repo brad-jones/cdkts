@@ -32,8 +32,5 @@
   },
   "[markdown]": {
     "editor.defaultFormatter": "dprint.dprint"
-  },
-  "[go]": {
-    "editor.defaultFormatter": "dprint.dprint"
   }
 }

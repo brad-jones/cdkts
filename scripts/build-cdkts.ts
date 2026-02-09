@@ -3,14 +3,14 @@ import { Command } from "@cliffy/command";
 import { $ } from "@david/dax";
 import { ensureDir } from "@std/fs";
 import { join } from "@std/path";
-import { DenoDownloader } from "../lib/automate/downloader/deno.ts";
 
-function toGOARCH(arch: "x86_64" | "aarch64"): string {
-  switch (arch) {
-    case "x86_64":
-      return "amd64";
-    case "aarch64":
-      return "arm64";
+function toTARGET(platform: "windows" | "linux" | "darwin", arch: "x86_64" | "aarch64"): string {
+  if (platform === "windows") {
+    return "x86_64-pc-windows-msvc";
+  } else if (platform === "darwin") {
+    return arch === "x86_64" ? "x86_64-apple-darwin" : "aarch64-apple-darwin";
+  } else {
+    return arch === "x86_64" ? "x86_64-unknown-linux-gnu" : "aarch64-unknown-linux-gnu";
   }
 }
 
@@ -19,24 +19,6 @@ await new Command()
   .action(async () => {
     const binDir = join(import.meta.dirname!, "../bin");
     await ensureDir(binDir);
-
-    const cliDir = await Deno.realPath(`${import.meta.dirname}/../cli/wrapper`);
-
-    // Read version from deno.json
-    const denoJsonPath = await Deno.realPath(`${import.meta.dirname}/../deno.json`);
-    const denoJson = JSON.parse(await Deno.readTextFile(denoJsonPath));
-    const version = denoJson.version;
-
-    // Update the version in main.go
-    const mainGoPath = `${cliDir}/main.go`;
-    let mainGoContent = await Deno.readTextFile(mainGoPath);
-    mainGoContent = mainGoContent.replace(
-      /var cdkTsVersion = ".*"/,
-      `var cdkTsVersion = "${version}"`,
-    );
-    await Deno.writeTextFile(mainGoPath, mainGoContent);
-
-    console.log(`Updated main.go with version ${version}`);
 
     const targets = [
       { platform: "windows" as const, arch: "x86_64" as const },
@@ -48,21 +30,9 @@ await new Command()
     for (const { platform, arch } of targets) {
       console.log(`Building for ${platform} ${arch}...`);
       const suffix = platform === "windows" ? ".exe" : "";
-      const denoBinary = await new DenoDownloader({ platform, arch }).getBinaryPath();
-      await Deno.copyFile(denoBinary, `${cliDir}/deno`);
-      await $`gzip --best ${cliDir}/deno`;
-      try {
-        await $`
-          CGO_ENABLED=0
-          GOOS=${platform}
-          GOARCH=${toGOARCH(arch)}
-          go build -v
-          -o ${`${binDir}/cdkts_${platform}_${arch}${suffix}`}
-          ${`${cliDir}/main.go`}
-        `;
-      } finally {
-        await Deno.remove(`${cliDir}/deno.gz`);
-      }
+      await $`deno compile -A --target ${toTARGET(platform, arch)} --output ${
+        join(binDir, `cdkts_${platform}_${arch}${suffix}`)
+      } ${join(import.meta.dirname!, "../cli/main.ts")}`;
     }
   })
   .parse();

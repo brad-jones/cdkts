@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.5.1](https://github.com/brad-jones/cdkts/compare/1871bda34225d9e6a29201c7c2bffa8732b32739..v0.5.1) - 2026-02-10
+#### Documentation
+- update readme with latest CLI install instructions - ([1871bda](https://github.com/brad-jones/cdkts/commit/1871bda34225d9e6a29201c7c2bffa8732b32739)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.5.0](https://github.com/brad-jones/cdkts/compare/87fb0af6baf1499bfb28c453b0f50d1e5c03e9ee..v0.5.0) - 2026-02-10
 #### Features
 - go back to the go cli wrapper but without injecting config - ([87fb0af](https://github.com/brad-jones/cdkts/commit/87fb0af6baf1499bfb28c453b0f50d1e5c03e9ee)) - [@brad-jones](https://github.com/brad-jones)

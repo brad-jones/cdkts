@@ -19,7 +19,9 @@ async function withTempDir(fn: (tempDir: string) => Promise<void>) {
   }
 }
 
-Deno.test("OpenTofuDownloader - downloads latest version", async () => {
+Deno.test("OpenTofuDownloader - downloads latest version", {
+  ignore: Deno.env.get("RUN_DOWNLOADER_TESTS") ? false : true,
+}, async () => {
   await withTempDir(async (tempDir) => {
     const downloader = new OpenTofuDownloader({ baseDir: tempDir });
     const binaryPath = await downloader.getBinaryPath();
@@ -37,7 +39,9 @@ Deno.test("OpenTofuDownloader - downloads latest version", async () => {
   });
 });
 
-Deno.test("OpenTofuDownloader - downloads specific version", async () => {
+Deno.test("OpenTofuDownloader - downloads specific version", {
+  ignore: Deno.env.get("RUN_DOWNLOADER_TESTS") ? false : true,
+}, async () => {
   await withTempDir(async (tempDir) => {
     const version = "1.11.3";
     const downloader = new OpenTofuDownloader({ baseDir: tempDir });
@@ -56,7 +60,9 @@ Deno.test("OpenTofuDownloader - downloads specific version", async () => {
   });
 });
 
-Deno.test("OpenTofuDownloader - caches downloaded binary", async () => {
+Deno.test("OpenTofuDownloader - caches downloaded binary", {
+  ignore: Deno.env.get("RUN_DOWNLOADER_TESTS") ? false : true,
+}, async () => {
   await withTempDir(async (tempDir) => {
     const version = "1.11.2";
     const downloader = new OpenTofuDownloader({ baseDir: tempDir });
@@ -77,7 +83,9 @@ Deno.test("OpenTofuDownloader - caches downloaded binary", async () => {
   });
 });
 
-Deno.test("OpenTofuDownloader - cleans up old versions", async () => {
+Deno.test("OpenTofuDownloader - cleans up old versions", {
+  ignore: Deno.env.get("RUN_DOWNLOADER_TESTS") ? false : true,
+}, async () => {
   await withTempDir(async (tempDir) => {
     const downloader = new OpenTofuDownloader({ baseDir: tempDir });
 
@@ -107,7 +115,9 @@ Deno.test("OpenTofuDownloader - cleans up old versions", async () => {
   });
 });
 
-Deno.test("OpenTofuDownloader - handles different platforms", async () => {
+Deno.test("OpenTofuDownloader - handles different platforms", {
+  ignore: Deno.env.get("RUN_DOWNLOADER_TESTS") ? false : true,
+}, async () => {
   await withTempDir(async (tempDir) => {
     // Test different platform configurations
     const configs = [

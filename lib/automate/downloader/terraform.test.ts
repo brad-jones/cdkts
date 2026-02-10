@@ -19,7 +19,9 @@ async function withTempDir(fn: (tempDir: string) => Promise<void>) {
   }
 }
 
-Deno.test("TerraformDownloader - downloads latest version", async () => {
+Deno.test("TerraformDownloader - downloads latest version", {
+  ignore: Deno.env.get("RUN_DOWNLOADER_TESTS") ? false : true,
+}, async () => {
   await withTempDir(async (tempDir) => {
     const downloader = new TerraformDownloader({ baseDir: tempDir });
     const binaryPath = await downloader.getBinaryPath();
@@ -37,7 +39,9 @@ Deno.test("TerraformDownloader - downloads latest version", async () => {
   });
 });
 
-Deno.test("TerraformDownloader - downloads specific version", async () => {
+Deno.test("TerraformDownloader - downloads specific version", {
+  ignore: Deno.env.get("RUN_DOWNLOADER_TESTS") ? false : true,
+}, async () => {
   await withTempDir(async (tempDir) => {
     const version = "1.14.3";
     const downloader = new TerraformDownloader({ baseDir: tempDir });
@@ -56,7 +60,9 @@ Deno.test("TerraformDownloader - downloads specific version", async () => {
   });
 });
 
-Deno.test("TerraformDownloader - caches downloaded binary", async () => {
+Deno.test("TerraformDownloader - caches downloaded binary", {
+  ignore: Deno.env.get("RUN_DOWNLOADER_TESTS") ? false : true,
+}, async () => {
   await withTempDir(async (tempDir) => {
     const version = "1.14.2";
     const downloader = new TerraformDownloader({ baseDir: tempDir });
@@ -77,7 +83,9 @@ Deno.test("TerraformDownloader - caches downloaded binary", async () => {
   });
 });
 
-Deno.test("TerraformDownloader - cleans up old versions", async () => {
+Deno.test("TerraformDownloader - cleans up old versions", {
+  ignore: Deno.env.get("RUN_DOWNLOADER_TESTS") ? false : true,
+}, async () => {
   await withTempDir(async (tempDir) => {
     const downloader = new TerraformDownloader({ baseDir: tempDir });
 
@@ -107,7 +115,9 @@ Deno.test("TerraformDownloader - cleans up old versions", async () => {
   });
 });
 
-Deno.test("TerraformDownloader - handles different platforms", async () => {
+Deno.test("TerraformDownloader - handles different platforms", {
+  ignore: Deno.env.get("RUN_DOWNLOADER_TESTS") ? false : true,
+}, async () => {
   await withTempDir(async (tempDir) => {
     // Test different platform configurations
     const configs = [

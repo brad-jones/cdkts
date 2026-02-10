@@ -1,8 +1,8 @@
-import { TsImporter } from "@brad-jones/deno-ts-importer";
+import { findDenoConfigFile } from "@brad-jones/deno-config";
+import { ImportMapImporter, loadImportMap } from "@lambdalisue/import-map-importer";
 import { basename, dirname, join } from "@std/path";
 import { toFileUrl } from "@std/path/to-file-url";
 import { Stack } from "../constructs/stack.ts";
-
 /**
  * Gets the root directory for Deno compiled executables, where included files are stored.
  *
@@ -20,15 +20,19 @@ export function getDenoCompileRootDir(): string {
  * Dynamically imports a Stack from a TypeScript file.
  * Validates that the default export is a class that extends Stack.
  *
- * @param stackFilePath - The file system path to the stack module
+ * @param stackFilePath - The path to the stack module (local path or URL)
  * @returns A promise that resolves to an instance of the Stack
  * @throws {Error} If the default export is not a constructor or class
  * @throws {Error} If the instantiated object is not a Stack instance
  */
 export async function importStack(stackFilePath: string): Promise<Stack> {
   // Import the stack from the stack file
+  const config = stackFilePath.startsWith("http") ? undefined : await findDenoConfigFile(stackFilePath);
+  const importMap = config ? await loadImportMap(config) : { imports: {} };
   // deno-lint-ignore no-explicit-any
-  const module = await new TsImporter().import<any>(toFileUrl(stackFilePath).toString());
+  const module = await new ImportMapImporter(importMap).import<any>(
+    stackFilePath.startsWith("http") ? stackFilePath : toFileUrl(stackFilePath).toString(),
+  );
   const defaultValue = module.default;
 
   // Validate that the default export is a constructor

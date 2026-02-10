@@ -270,7 +270,7 @@ export class StackBundler {
     return tsSrc.includes("import.meta.main");
   }
 
-  readonly #CDKTS_VERSION = "0.4.1";
+  readonly #CDKTS_VERSION = "0.5.0";
 
   /**
    * Gets the entrypoint file for the stack.

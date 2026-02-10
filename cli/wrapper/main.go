@@ -17,7 +17,7 @@ import (
 var denoGzippedBytes []byte
 
 // This will be replaced by the build script
-var cdkTsVersion = "0.4.0"
+var cdkTsVersion = "0.5.0"
 
 func sha256Sum(data []byte) string {
 	hash := sha256.Sum256(data)

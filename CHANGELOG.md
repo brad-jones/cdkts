@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.5.0](https://github.com/brad-jones/cdkts/compare/87fb0af6baf1499bfb28c453b0f50d1e5c03e9ee..v0.5.0) - 2026-02-10
+#### Features
+- go back to the go cli wrapper but without injecting config - ([87fb0af](https://github.com/brad-jones/cdkts/commit/87fb0af6baf1499bfb28c453b0f50d1e5c03e9ee)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.4.1](https://github.com/brad-jones/cdkts/compare/8cbccaf03e0284709e7ad351eabc8b16670dc22d..v0.4.1) - 2026-02-09
 #### Miscellaneous Chores
 - update deno  lockfile - ([6107d10](https://github.com/brad-jones/cdkts/commit/6107d100a67fae8b4b100fbdb3440e0ff0358ed4)) - [@brad-jones](https://github.com/brad-jones)

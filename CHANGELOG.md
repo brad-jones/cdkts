@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.5.2](https://github.com/brad-jones/cdkts/compare/9522726ebab9a9d689b44ad0eca70f3d00c7a0c8..v0.5.2) - 2026-02-10
+#### Bug Fixes
+- (**escapeHclString**) do not escape the percentage sign - ([9522726](https://github.com/brad-jones/cdkts/commit/9522726ebab9a9d689b44ad0eca70f3d00c7a0c8)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.5.1](https://github.com/brad-jones/cdkts/compare/1871bda34225d9e6a29201c7c2bffa8732b32739..v0.5.1) - 2026-02-10
 #### Documentation
 - update readme with latest CLI install instructions - ([1871bda](https://github.com/brad-jones/cdkts/commit/1871bda34225d9e6a29201c7c2bffa8732b32739)) - [@brad-jones](https://github.com/brad-jones)

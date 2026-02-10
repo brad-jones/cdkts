@@ -43,8 +43,19 @@ export function escapeHclString(str: string): string {
     .replace(/\n/g, "\\n") // Newline
     .replace(/\r/g, "\\r") // Carriage return
     .replace(/\t/g, "\\t") // Tab
-    .replace(/\$/g, "\\$") // Dollar sign (prevents interpolation)
-    .replace(/%/g, "\\%"); // Percent sign (prevents directives)
+    .replace(/\$/g, "\\$"); // Dollar sign (prevents interpolation)
+
+  /*
+    NB: In general HCL syntax outside of the format function, the % symbol is
+    not a special operator like the dollar sign ($) used for string interpolation
+    (${...}) or the asterisk (*) for splat expressions. Therefore, it can typically
+    be used as a literal character within strings without special escaping.
+
+    TODO: We might introduce a special format helper function if we ever
+    find ourselves needing to do native tf string formatting. My hope is we
+    can just use ES string templates, everywhere format would have been
+    used in traditional HCL.
+  */
 
   // Restore interpolations as HCL syntax
   return escaped.replace(

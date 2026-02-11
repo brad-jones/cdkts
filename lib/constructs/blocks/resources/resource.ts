@@ -85,7 +85,7 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
      * });
      * ```
      */
-    dependsOn = new Block.Input<string[] | undefined>();
+    dependsOn = new Block.Input<Block[] | undefined>();
 
     /**
      * Creates multiple resource instances by iterating over a collection.

@@ -41,7 +41,7 @@ export class EphemeralResource<Self = typeof EphemeralResource> extends Block<Se
     count = new Block.Input<number | undefined>();
 
     /** List of construct IDs that this resource depends on. Ensures proper ordering. */
-    dependsOn = new Block.Input<string[] | undefined>();
+    dependsOn = new Block.Input<Block[] | undefined>();
 
     /** Iterate over a collection to create multiple instances with different configurations. */
     forEach = new Block.Input<Record<string, string> | string[] | undefined>();

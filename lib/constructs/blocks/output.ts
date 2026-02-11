@@ -108,7 +108,7 @@ export class Output extends Block<typeof Output> {
      * dependsOn: ["aws_instance.web", "aws_security_group.web_sg"]
      * ```
      */
-    dependsOn = new Block.Input<string[] | undefined>();
+    dependsOn = new Block.Input<Block[] | undefined>();
 
     /**
      * Validation preconditions that must be met.

@@ -62,7 +62,7 @@ export class DataSource<Self = typeof DataSource> extends Block<Self> {
      *
      * @see https://developer.hashicorp.com/terraform/language/data-sources#depends_on
      */
-    dependsOn = new Block.Input<string[] | undefined>();
+    dependsOn = new Block.Input<Block[] | undefined>();
 
     /**
      * The for_each meta-argument instructs Terraform to create multiple instances of

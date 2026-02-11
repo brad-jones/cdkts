@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.5.3](https://github.com/brad-jones/cdkts/compare/549079d17228ccc0eee6494d48842bab9778816c..v0.5.3) - 2026-02-11
+#### Bug Fixes
+- update dependsOn type to Block[] so that the HCL is serialized without quotes - ([549079d](https://github.com/brad-jones/cdkts/commit/549079d17228ccc0eee6494d48842bab9778816c)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.5.2](https://github.com/brad-jones/cdkts/compare/9522726ebab9a9d689b44ad0eca70f3d00c7a0c8..v0.5.2) - 2026-02-10
 #### Bug Fixes
 - (**escapeHclString**) do not escape the percentage sign - ([9522726](https://github.com/brad-jones/cdkts/commit/9522726ebab9a9d689b44ad0eca70f3d00c7a0c8)) - [@brad-jones](https://github.com/brad-jones)

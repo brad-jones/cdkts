@@ -2,6 +2,29 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.6.0](https://github.com/brad-jones/cdkts/compare/e0abd7e690e7257032a3afcca4468f79fe6cdcb7..v0.6.0) - 2026-02-13
+#### Features
+- finished automatic denobridge provider registration - ([5115297](https://github.com/brad-jones/cdkts/commit/5115297f0dc0b0d724ecebc505a1549fe8ca4f52)) - [@brad-jones](https://github.com/brad-jones)
+- added a format datasource - ([6244041](https://github.com/brad-jones/cdkts/commit/6244041ee2e1c7e8539fca5f00da9bee8db6403f)) - [@brad-jones](https://github.com/brad-jones)
+#### Bug Fixes
+- (**constructs**) remove implicit snake case transform and introduce hclName metadata for Block Inputs. - ([cf052cc](https://github.com/brad-jones/cdkts/commit/cf052ccdc10de01b1390500d76d57d9d689118aa)) - [@brad-jones](https://github.com/brad-jones)
+- (**constructs**) stacks now correctly render blocks from nested constructs - ([d91e3d4](https://github.com/brad-jones/cdkts/commit/d91e3d40829715187f557bab6292e2bcbd1a6420)) - [@brad-jones](https://github.com/brad-jones)
+#### Tests
+- update to account for dynamic DENOBRIDGE_VERSION - ([007a6f9](https://github.com/brad-jones/cdkts/commit/007a6f904d49238faf844c0109f8601145e5cb13)) - [@brad-jones](https://github.com/brad-jones)
+#### Build system
+- make sure the new tests folder runs too - ([7eab88f](https://github.com/brad-jones/cdkts/commit/7eab88feb84b96c3a3689add9101f4e27d3e31ef)) - [@brad-jones](https://github.com/brad-jones)
+#### Miscellaneous Chores
+- (**wip**) added automatic denobridge provider registration - ([ef6e125](https://github.com/brad-jones/cdkts/commit/ef6e125c5acb40cf5cc40053eb1abe51c999759e)) - [@brad-jones](https://github.com/brad-jones)
+- bump deno lock file (attempt #2) - ([9822451](https://github.com/brad-jones/cdkts/commit/9822451c29af83828d4b5a46a62b9666584076af)) - [@brad-jones](https://github.com/brad-jones)
+- bump deno lock file - ([b068f3d](https://github.com/brad-jones/cdkts/commit/b068f3d5e21166103a6c748f403f0bbf4b8b0853)) - [@brad-jones](https://github.com/brad-jones)
+- bump deno deps - ([f50bae6](https://github.com/brad-jones/cdkts/commit/f50bae63dffda9d8ff72f2073e4b72362cdfad04)) - [@brad-jones](https://github.com/brad-jones)
+- changed my mind, this test file can live alongside the stack source, will keep the seperate tests folder for end to end tests - ([8b22d03](https://github.com/brad-jones/cdkts/commit/8b22d0307177fa2df4e4ae3840c59097dd562d78)) - [@brad-jones](https://github.com/brad-jones)
+- bump pixi lock file - ([e0abd7e](https://github.com/brad-jones/cdkts/commit/e0abd7e690e7257032a3afcca4468f79fe6cdcb7)) - [@brad-jones](https://github.com/brad-jones)
+#### Style
+- added newline - ([61d1937](https://github.com/brad-jones/cdkts/commit/61d19377f8bce00791b80a3cae1649fbb6304468)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.5.3](https://github.com/brad-jones/cdkts/compare/549079d17228ccc0eee6494d48842bab9778816c..v0.5.3) - 2026-02-11
 #### Bug Fixes
 - update dependsOn type to Block[] so that the HCL is serialized without quotes - ([549079d](https://github.com/brad-jones/cdkts/commit/549079d17228ccc0eee6494d48842bab9778816c)) - [@brad-jones](https://github.com/brad-jones)

@@ -242,7 +242,7 @@ export class Block<
    * ```
    */
   get outputs(): Outputs {
-    return createAttributeProxy(new Attribute(this.id)) as Outputs;
+    return createAttributeProxy(new Attribute(this.id, this)) as Outputs;
   }
 
   /**

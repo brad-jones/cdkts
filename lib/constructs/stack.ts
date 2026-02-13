@@ -48,6 +48,29 @@ export abstract class Stack<
   Outputs = InferOutputs<Self>,
 > extends Construct {
   /**
+   * Walks the construct tree upward from the given construct to find the enclosing Stack.
+   *
+   * This is useful in nested Constructs and Blocks where you don't have direct
+   * access to the Stack instance but need to reference it.
+   *
+   * @param construct - Any construct within a Stack's tree
+   * @returns The enclosing Stack instance
+   * @throws Error if no Stack is found in the parent chain
+   *
+   * @example
+   * ```typescript
+   * const stack = Stack.of(this);
+   * ```
+   */
+  static of(construct: Construct): Stack {
+    let current: Construct | undefined = construct;
+    while (current) {
+      if (current instanceof Stack) return current;
+      current = current.parent;
+    }
+    throw new Error(`No Stack found in the construct tree above ${construct.id}`);
+  }
+  /**
    * Input class for defining stack input variables.
    *
    * Use this in your Props class to declare inputs that can be passed to the stack.

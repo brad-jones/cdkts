@@ -1,4 +1,5 @@
 import { DenoBridgeProvider, Stack, Terraform } from "@brad-jones/cdkts/constructs";
+import { DENOBRIDGE_VERSION } from "@brad-jones/terraform-provider-denobridge";
 import { EchoExampleAction } from "./blocks/echo_example_action.ts";
 import { FileExampleResource } from "./blocks/file_example_resource.ts";
 import { Sha256ExampleDataSource } from "./blocks/sha256_example_datasource.ts";
@@ -13,7 +14,7 @@ export default class MyStack extends Stack<typeof MyStack> {
       requiredProviders: {
         denobridge: {
           source: "brad-jones/denobridge",
-          version: "0.2.7",
+          version: DENOBRIDGE_VERSION,
         },
       },
     });

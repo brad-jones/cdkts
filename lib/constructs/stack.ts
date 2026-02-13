@@ -1,5 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 
+import { DENOBRIDGE_VERSION } from "@brad-jones/terraform-provider-denobridge";
 import { outdent } from "@cspotcode/outdent";
 import { DenoAction } from "./blocks/actions/deno_action.ts";
 import { Block } from "./blocks/block.ts";
@@ -13,10 +14,6 @@ import { Variable } from "./blocks/variable.ts";
 import { Construct } from "./construct.ts";
 import { type InferInputs, type InferOutputs, Input, Output } from "./input_output/types.ts";
 import { fmtHcl } from "./utils.ts";
-
-// TODO: Update @brad-jones/terraform-provider-denobridge to export this
-// import { DENOBRIDGE_VERSION } from "@brad-jones/terraform-provider-denobridge";
-const DENOBRIDGE_VERSION = "0.2.7";
 
 /**
  * Base class for defining Terraform/OpenTofu stacks.

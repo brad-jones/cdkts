@@ -1,6 +1,6 @@
 import { outdent } from "@cspotcode/outdent";
 import { expect } from "@std/expect";
-import { Block, Construct, Stack } from "../lib/constructs/mod.ts";
+import { Block, Construct, Stack } from "./mod.ts";
 
 Deno.test("empty stack", async () => {
   expect(

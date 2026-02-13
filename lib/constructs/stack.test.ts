@@ -1,3 +1,4 @@
+import { DENOBRIDGE_VERSION } from "@brad-jones/terraform-provider-denobridge";
 import { outdent } from "@cspotcode/outdent";
 import { expect } from "@std/expect";
 import { DenoAction } from "./blocks/actions/deno_action.ts";
@@ -157,7 +158,7 @@ Deno.test("stack with DenoDataSource automatically adds DenoBridgeProvider and T
 
   expect(hcl).toContain("terraform {");
   expect(hcl).toContain('source  = "brad-jones/denobridge"');
-  expect(hcl).toContain('version = "0.2.7"');
+  expect(hcl).toContain(`version = "${DENOBRIDGE_VERSION}"`);
   expect(hcl).toContain('provider "denobridge" {');
   expect(hcl).toContain('data "denobridge_datasource" "test_data" {');
 });
@@ -179,7 +180,7 @@ Deno.test("stack with DenoResource automatically adds DenoBridgeProvider and Ter
 
   expect(hcl).toContain("terraform {");
   expect(hcl).toContain('source  = "brad-jones/denobridge"');
-  expect(hcl).toContain('version = "0.2.7"');
+  expect(hcl).toContain(`version = "${DENOBRIDGE_VERSION}"`);
   expect(hcl).toContain('provider "denobridge" {');
   expect(hcl).toContain('resource "denobridge_resource" "test_resource" {');
 });
@@ -203,7 +204,7 @@ Deno.test("stack with DenoAction automatically adds DenoBridgeProvider and Terra
 
   expect(hcl).toContain("terraform {");
   expect(hcl).toContain('source  = "brad-jones/denobridge"');
-  expect(hcl).toContain('version = "0.2.7"');
+  expect(hcl).toContain(`version = "${DENOBRIDGE_VERSION}"`);
   expect(hcl).toContain('provider "denobridge" {');
   expect(hcl).toContain('action "denobridge_action" "test_action" {');
 });
@@ -225,7 +226,7 @@ Deno.test("stack with DenoEphemeralResource automatically adds DenoBridgeProvide
 
   expect(hcl).toContain("terraform {");
   expect(hcl).toContain('source  = "brad-jones/denobridge"');
-  expect(hcl).toContain('version = "0.2.7"');
+  expect(hcl).toContain(`version = "${DENOBRIDGE_VERSION}"`);
   expect(hcl).toContain('provider "denobridge" {');
   expect(hcl).toContain('ephemeral "denobridge_ephemeral_resource" "test_ephemeral" {');
 });
@@ -284,7 +285,7 @@ Deno.test("stack with Deno construct and existing Terraform block adds denobridg
   expect(hcl).toContain('source  = "hashicorp/local"');
   expect(hcl).toContain('version = "2.0.0"');
   expect(hcl).toContain('source  = "brad-jones/denobridge"');
-  expect(hcl).toContain('version = "0.2.7"');
+  expect(hcl).toContain(`version = "${DENOBRIDGE_VERSION}"`);
   expect(hcl).toContain('required_version = ">=1.0"');
 
   // Count terraform blocks - should only be one

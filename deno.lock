@@ -4,14 +4,14 @@
     "jsr:@brad-jones/deno-config@1": "1.0.0",
     "jsr:@brad-jones/deno-net-container@0.4": "0.4.0",
     "jsr:@brad-jones/jsr-dynamic-imports@~0.1.1": "0.1.2",
-    "jsr:@brad-jones/terraform-provider-denobridge@~0.2.6": "0.2.6",
-    "jsr:@cliffy/ansi@1.0.0-rc.8": "1.0.0-rc.8",
-    "jsr:@cliffy/command@1.0.0-rc.8": "1.0.0-rc.8",
-    "jsr:@cliffy/flags@1.0.0-rc.8": "1.0.0-rc.8",
-    "jsr:@cliffy/internal@1.0.0-rc.8": "1.0.0-rc.8",
-    "jsr:@cliffy/keycode@1.0.0-rc.8": "1.0.0-rc.8",
-    "jsr:@cliffy/prompt@^1.0.0-rc.8": "1.0.0-rc.8",
-    "jsr:@cliffy/table@1.0.0-rc.8": "1.0.0-rc.8",
+    "jsr:@brad-jones/terraform-provider-denobridge@~0.2.7": "0.2.7",
+    "jsr:@cliffy/ansi@1.0.0": "1.0.0",
+    "jsr:@cliffy/command@1.0.0": "1.0.0",
+    "jsr:@cliffy/flags@1.0.0": "1.0.0",
+    "jsr:@cliffy/internal@1.0.0": "1.0.0",
+    "jsr:@cliffy/keycode@1.0.0": "1.0.0",
+    "jsr:@cliffy/prompt@1": "1.0.0",
+    "jsr:@cliffy/table@1.0.0": "1.0.0",
     "jsr:@core/unknownutil@^4.3.0": "4.3.0",
     "jsr:@cspotcode/outdent@0.8": "0.8.0",
     "jsr:@david/console-static-text@0.3": "0.3.0",
@@ -20,7 +20,6 @@
     "jsr:@david/which@~0.4.1": "0.4.1",
     "jsr:@deno-library/progress@^1.5.1": "1.5.1",
     "jsr:@deno/cache-dir@~0.13.2": "0.13.2",
-    "jsr:@deno/graph@~0.73.1": "0.73.1",
     "jsr:@deno/graph@~0.96.2": "0.96.2",
     "jsr:@hono/hono@^4.11.9": "4.11.9",
     "jsr:@lambdalisue/import-map-importer@~0.5.1": "0.5.1",
@@ -28,18 +27,16 @@
     "jsr:@std/assert@0.223": "0.223.0",
     "jsr:@std/assert@^1.0.14": "1.0.18",
     "jsr:@std/assert@^1.0.18": "1.0.18",
-    "jsr:@std/assert@~1.0.6": "1.0.18",
     "jsr:@std/bytes@0.223": "0.223.0",
     "jsr:@std/bytes@^1.0.2": "1.0.6",
     "jsr:@std/bytes@^1.0.6": "1.0.6",
     "jsr:@std/crypto@^1.0.5": "1.0.5",
     "jsr:@std/encoding@^1.0.10": "1.0.10",
-    "jsr:@std/encoding@~1.0.5": "1.0.10",
     "jsr:@std/expect@^1.0.17": "1.0.17",
     "jsr:@std/fmt@0.223": "0.223.0",
     "jsr:@std/fmt@1": "1.0.9",
     "jsr:@std/fmt@1.0.3": "1.0.3",
-    "jsr:@std/fmt@~1.0.2": "1.0.9",
+    "jsr:@std/fmt@^1.0.9": "1.0.9",
     "jsr:@std/fs@0.223": "0.223.0",
     "jsr:@std/fs@1": "1.0.22",
     "jsr:@std/fs@^1.0.1": "1.0.22",
@@ -50,17 +47,16 @@
     "jsr:@std/io@0.223": "0.223.0",
     "jsr:@std/io@0.225": "0.225.0",
     "jsr:@std/io@0.225.0": "0.225.0",
-    "jsr:@std/io@~0.224.9": "0.224.9",
     "jsr:@std/path@0.223": "0.223.0",
     "jsr:@std/path@1": "1.1.4",
     "jsr:@std/path@^1.0.1": "1.1.4",
     "jsr:@std/path@^1.1.2": "1.1.4",
     "jsr:@std/path@^1.1.4": "1.1.4",
-    "jsr:@std/path@~1.0.6": "1.0.9",
+    "jsr:@std/semver@^1.0.8": "1.0.8",
     "jsr:@std/streams@^1.0.17": "1.0.17",
-    "jsr:@std/text@~1.0.7": "1.0.17",
+    "jsr:@std/text@^1.0.17": "1.0.17",
     "jsr:@yieldray/json-rpc-ts@~0.2.2": "0.2.2",
-    "jsr:@zip-js/zip-js@^2.8.17": "2.8.17",
+    "jsr:@zip-js/zip-js@^2.8.20": "2.8.20",
     "jsr:@zod/zod@^4.1.12": "4.3.6",
     "jsr:@zod/zod@^4.3.6": "4.3.6",
     "npm:@brad-jones/jsr-dynamic-imports@0.1.2": "0.1.2",
@@ -89,61 +85,60 @@
         "npm:@brad-jones/jsr-dynamic-imports@0.1.2"
       ]
     },
-    "@brad-jones/terraform-provider-denobridge@0.2.6": {
-      "integrity": "90920ceb0b986cd068a49d3266e15508dcef6a959861382f52d3cfb6501b1797",
+    "@brad-jones/terraform-provider-denobridge@0.2.7": {
+      "integrity": "99140973804099a3b224a2d1968e934726683f6cded5aa34e537a1f565a61db6",
       "dependencies": [
         "jsr:@std/streams",
-        "jsr:@yieldray/json-rpc-ts",
-        "jsr:@zod/zod@^4.3.6"
+        "jsr:@yieldray/json-rpc-ts"
       ]
     },
-    "@cliffy/ansi@1.0.0-rc.8": {
-      "integrity": "ba37f10ce55bbfbdd8ddd987f91f029b17bce88385b98ba3058870f3b007b80c",
+    "@cliffy/ansi@1.0.0": {
+      "integrity": "987008f74e50aa72cc1517ffccc769711734a14927bc4599e052efe1b9a840e2",
       "dependencies": [
         "jsr:@cliffy/internal",
-        "jsr:@std/encoding@~1.0.5",
-        "jsr:@std/io@~0.224.9"
+        "jsr:@std/encoding"
       ]
     },
-    "@cliffy/command@1.0.0-rc.8": {
-      "integrity": "758147790797c74a707e5294cc7285df665422a13d2a483437092ffce40b5557",
+    "@cliffy/command@1.0.0": {
+      "integrity": "c52a241ea68857fcdaff4f3173eb404f8017d7bc35553b6f533c592b89dde7d2",
       "dependencies": [
         "jsr:@cliffy/flags",
         "jsr:@cliffy/internal",
         "jsr:@cliffy/table",
-        "jsr:@std/fmt@~1.0.2",
+        "jsr:@std/fmt@^1.0.9",
+        "jsr:@std/semver",
         "jsr:@std/text"
       ]
     },
-    "@cliffy/flags@1.0.0-rc.8": {
-      "integrity": "0f1043ce6ef037ba1cb5fe6b1bcecb25dc2f29371a1c17f278ab0f45e4b6f46c",
+    "@cliffy/flags@1.0.0": {
+      "integrity": "8b57698adc644da8f90422d58976362d41a4ebca39c312ca1c101585d0148feb",
       "dependencies": [
+        "jsr:@cliffy/internal",
         "jsr:@std/text"
       ]
     },
-    "@cliffy/internal@1.0.0-rc.8": {
-      "integrity": "34cdf2fad9b084b5aed493b138d573f52d4e988767215f7460daf0b918ff43d8"
+    "@cliffy/internal@1.0.0": {
+      "integrity": "1e17ccbcd5420093c0a93e5b3827bbdc9abac5195bacf187edc44665e54bdde6"
     },
-    "@cliffy/keycode@1.0.0-rc.8": {
-      "integrity": "76dbf85a67ec0aea2e29ca049b8507b6b3f62a2a971bd744d8d3fc447c177cd9"
+    "@cliffy/keycode@1.0.0": {
+      "integrity": "755dbf007be110dcb5625f87eb61b362b6a0ca6835453af03ebd3b34d399cf14"
     },
-    "@cliffy/prompt@1.0.0-rc.8": {
-      "integrity": "eba403ea1d47b9971bf2210fa35f4dc7ebd2aba87beec9540ae47552806e2f25",
+    "@cliffy/prompt@1.0.0": {
+      "integrity": "48b4cd35199fda7832f35e1fe0a3e8bc2b1ea49ba57b4ec0e29e22db44e8ca9f",
       "dependencies": [
         "jsr:@cliffy/ansi",
         "jsr:@cliffy/internal",
         "jsr:@cliffy/keycode",
-        "jsr:@std/assert@~1.0.6",
-        "jsr:@std/fmt@~1.0.2",
-        "jsr:@std/io@~0.224.9",
-        "jsr:@std/path@~1.0.6",
+        "jsr:@std/assert@^1.0.18",
+        "jsr:@std/fmt@^1.0.9",
+        "jsr:@std/path@^1.1.4",
         "jsr:@std/text"
       ]
     },
-    "@cliffy/table@1.0.0-rc.8": {
-      "integrity": "8bbcdc2ba5e0061b4b13810a24e6f5c6ab19c09f0cce9eb691ccd76c7c6c9db5",
+    "@cliffy/table@1.0.0": {
+      "integrity": "3fdaa9e1ef1ea62022108adabd826932bdea8dd05497079896febcd41322907f",
       "dependencies": [
-        "jsr:@std/fmt@~1.0.2"
+        "jsr:@std/fmt@^1.0.9"
       ]
     },
     "@core/unknownutil@4.3.0": {
@@ -187,15 +182,11 @@
     "@deno/cache-dir@0.13.2": {
       "integrity": "c22419dfe27ab85f345bee487aaaadba498b005cce3644e9d2528db035c5454d",
       "dependencies": [
-        "jsr:@deno/graph@~0.73.1",
         "jsr:@std/fmt@0.223",
         "jsr:@std/fs@0.223",
         "jsr:@std/io@0.223",
         "jsr:@std/path@0.223"
       ]
-    },
-    "@deno/graph@0.73.1": {
-      "integrity": "cd69639d2709d479037d5ce191a422eabe8d71bb68b0098344f6b07411c84d41"
     },
     "@deno/graph@0.96.2": {
       "integrity": "db21e52fc5b2850cc5fe92528f4f84dd460c5e40678a6bd23ece5c9c53193090"
@@ -208,7 +199,7 @@
       "dependencies": [
         "jsr:@core/unknownutil",
         "jsr:@deno/cache-dir",
-        "jsr:@deno/graph@~0.96.2",
+        "jsr:@deno/graph",
         "jsr:@std/crypto",
         "jsr:@std/fs@^1.0.1",
         "jsr:@std/path@^1.0.1"
@@ -274,9 +265,6 @@
         "jsr:@std/bytes@0.223"
       ]
     },
-    "@std/io@0.224.9": {
-      "integrity": "4414664b6926f665102e73c969cfda06d2c4c59bd5d0c603fd4f1b1c840d6ee3"
-    },
     "@std/io@0.225.0": {
       "integrity": "c1db7c5e5a231629b32d64b9a53139445b2ca640d828c26bf23e1c55f8c079b3",
       "dependencies": [
@@ -289,14 +277,14 @@
         "jsr:@std/assert@0.223"
       ]
     },
-    "@std/path@1.0.9": {
-      "integrity": "260a49f11edd3db93dd38350bf9cd1b4d1366afa98e81b86167b4e3dd750129e"
-    },
     "@std/path@1.1.4": {
       "integrity": "1d2d43f39efb1b42f0b1882a25486647cb851481862dc7313390b2bb044314b5",
       "dependencies": [
         "jsr:@std/internal@^1.0.12"
       ]
+    },
+    "@std/semver@1.0.8": {
+      "integrity": "dc830e8b8b6a380c895d53fbfd1258dc253704ca57bbe1629ac65fd7830179b7"
     },
     "@std/streams@1.0.17": {
       "integrity": "7859f3d9deed83cf4b41f19223d4a67661b3d3819e9fc117698f493bf5992140",
@@ -310,8 +298,8 @@
     "@yieldray/json-rpc-ts@0.2.2": {
       "integrity": "9bc60205c01ab7d629ebacade690dd02094011ad9eb9e5fb13f4debb85a891f3"
     },
-    "@zip-js/zip-js@2.8.17": {
-      "integrity": "ed05ac9c883df88f00e679fe4f819fe53675a5409e38c9b78cd037e490edade4"
+    "@zip-js/zip-js@2.8.20": {
+      "integrity": "64bbc8b46777e1369dd258852c2244083a413a1e7cba3a7bf27a99cc88d3b860"
     },
     "@zod/zod@4.3.6": {
       "integrity": "7144e5e11f8ffc3cf6e2fca624f6597a8762898aac9868cc8938e9398b96ffe4"
@@ -357,9 +345,9 @@
   "workspace": {
     "dependencies": [
       "jsr:@brad-jones/deno-config@1",
-      "jsr:@brad-jones/terraform-provider-denobridge@~0.2.6",
-      "jsr:@cliffy/command@1.0.0-rc.8",
-      "jsr:@cliffy/prompt@^1.0.0-rc.8",
+      "jsr:@brad-jones/terraform-provider-denobridge@~0.2.7",
+      "jsr:@cliffy/command@1.0.0",
+      "jsr:@cliffy/prompt@1",
       "jsr:@cspotcode/outdent@0.8",
       "jsr:@david/dax@0.45",
       "jsr:@deno-library/progress@^1.5.1",
@@ -371,7 +359,7 @@
       "jsr:@std/expect@^1.0.17",
       "jsr:@std/fs@^1.0.22",
       "jsr:@std/path@^1.1.4",
-      "jsr:@zip-js/zip-js@^2.8.17",
+      "jsr:@zip-js/zip-js@^2.8.20",
       "jsr:@zod/zod@^4.3.6",
       "npm:@cdktf/hcl-tools@0.21",
       "npm:ky@^1.14.3"

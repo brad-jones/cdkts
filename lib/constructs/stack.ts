@@ -211,7 +211,12 @@ export abstract class Stack<
   async toHcl(fmt = true): Promise<string> {
     let hcl = "";
 
-    for (const block of this.children.filter((_) => _ instanceof Block)) {
+    // Filter for top-level Blocks: those whose parent is NOT a Block.
+    // This includes Blocks that are direct children of the Stack, as well as
+    // Blocks nested within non-Block Constructs. Blocks nested inside other
+    // Blocks are excluded here since they're rendered by their parent Block's toHcl().
+    for (const item of this.descendants.filter((_) => _ instanceof Block && !(_.parent instanceof Block))) {
+      const block = item as Block;
       hcl = outdent`
         ${hcl}
 

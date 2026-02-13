@@ -62,7 +62,7 @@ export class DataSource<Self = typeof DataSource> extends Block<Self> {
      *
      * @see https://developer.hashicorp.com/terraform/language/data-sources#depends_on
      */
-    dependsOn = new Block.Input<Block[] | undefined>();
+    dependsOn = new Block.Input<Block[] | undefined>({ hclName: "depends_on" });
 
     /**
      * The for_each meta-argument instructs Terraform to create multiple instances of
@@ -70,7 +70,7 @@ export class DataSource<Self = typeof DataSource> extends Block<Self> {
      *
      * @see https://developer.hashicorp.com/terraform/language/data-sources#for_each
      */
-    forEach = new Block.Input<Record<string, string> | string[] | undefined>();
+    forEach = new Block.Input<Record<string, string> | string[] | undefined>({ hclName: "for_each" });
 
     /**
      * The provider argument instructs Terraform to use an alternate provider
@@ -154,7 +154,7 @@ export class DataSource<Self = typeof DataSource> extends Block<Self> {
    * @returns The inputs object without the lifecycles property
    */
   protected override mapInputsForHcl(): unknown {
-    const inputs = { ...this.inputs };
+    const inputs = super.mapInputsForHcl();
     delete inputs["lifecycles"];
     return inputs;
   }

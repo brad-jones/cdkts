@@ -41,10 +41,10 @@ export class EphemeralResource<Self = typeof EphemeralResource> extends Block<Se
     count = new Block.Input<number | undefined>();
 
     /** List of construct IDs that this resource depends on. Ensures proper ordering. */
-    dependsOn = new Block.Input<Block[] | undefined>();
+    dependsOn = new Block.Input<Block[] | undefined>({ hclName: "depends_on" });
 
     /** Iterate over a collection to create multiple instances with different configurations. */
-    forEach = new Block.Input<Record<string, string> | string[] | undefined>();
+    forEach = new Block.Input<Record<string, string> | string[] | undefined>({ hclName: "for_each" });
 
     /** The provider instance to use for this resource. Overrides the default provider. */
     provider = new Block.Input<Provider | undefined>();
@@ -95,7 +95,7 @@ export class EphemeralResource<Self = typeof EphemeralResource> extends Block<Se
    * @returns The inputs object without the lifecycles property
    */
   protected override mapInputsForHcl(): unknown {
-    const inputs = { ...this.inputs };
+    const inputs = super.mapInputsForHcl();
     delete inputs["lifecycles"];
     return inputs;
   }

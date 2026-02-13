@@ -42,7 +42,7 @@ export class LocalBackend extends Backend<typeof LocalBackend> {
     /**
      * (Optional) The path to non-default workspaces.
      */
-    workspaceDir = new Backend.Input<string | undefined>();
+    workspaceDir = new Backend.Input<string | undefined>({ hclName: "workspace_dir" });
   };
 
   /**

@@ -68,8 +68,9 @@ export class Block<
      *
      * @param metadata - Optional metadata including default value
      * @param metadata.default - Default value expression (as HCL string) if input is not provided
+     * @param metadata.hclName - The value used when printing this property to HCL.
      */
-    constructor(override readonly metadata?: { default?: string }) {
+    constructor(override readonly metadata?: { default?: string; hclName?: string }) {
       super(metadata);
     }
   };
@@ -105,10 +106,11 @@ export class Block<
      *                 currently serves as a TypeScript type helper)
      * @param metadata - Optional metadata including default value
      * @param metadata.default - Default value expression (as HCL string) if input is not provided
+     * @param metadata.hclName - The value used when printing this property to HCL.
      */
     constructor(
       readonly schema: Schema,
-      metadata?: { default?: string },
+      metadata?: { default?: string; hclName?: string },
     ) {
       super(metadata);
     }
@@ -326,25 +328,61 @@ export class Block<
   /**
    * Transforms input values before HCL serialization.
    *
-   * This method can be overridden by subclasses to modify, filter, or transform
-   * the input object before it's converted to HCL. Common use cases include
-   * removing internal properties, renaming keys to match HCL conventions, or
-   * filtering out lifecycle-related inputs that are handled separately.
+   * By default, this method maps input property keys to their HCL names by using the
+   * `hclName` metadata from `Block.Input` definitions. If no `hclName` is specified,
+   * the original property key is used. This allows TypeScript property names to differ
+   * from their corresponding HCL attribute names.
+   *
+   * This method can be overridden by subclasses for additional transformations such as
+   * removing internal properties, applying custom renaming logic, or filtering out
+   * lifecycle-related inputs that are handled separately.
    *
    * @returns The transformed input object for HCL serialization
    *
    * @example
    * ```typescript
+   * // Example Props with hclName mapping
+   * class MyBlockProps extends Block.Props {
+   *   myProperty = new Block.Input<string>({ hclName: "my_property" });
+   * }
+   * // Input { myProperty: "value" } becomes HCL: my_property = "value"
+   *
+   * // Override for custom transformation
    * protected override mapInputsForHcl(): unknown {
-   *   const inputs = { ...this.inputs };
+   *   const inputs = super.mapInputsForHcl();
    *   // Remove internal property not needed in HCL output
    *   delete inputs["lifecycles"];
    *   return inputs;
    * }
    * ```
    */
-  protected mapInputsForHcl(): unknown {
-    return this.inputs;
+  protected mapInputsForHcl(): any {
+    // Return nothing if we have nothing
+    if (!this.inputs) return {};
+
+    // Just return the inputs as is if we have no props schema to inspect
+    const props = Object.entries(this.props);
+    if (props.length === 0) return this.inputs;
+
+    // First, copy all inputs as-is
+    const hclInputs: any = {};
+    for (const [k, v] of Object.entries(this.inputs)) {
+      hclInputs[k] = v;
+    }
+
+    // Then, remap properties that have hclName metadata
+    for (const [k, v] of props) {
+      if (v instanceof Block.Input && v.metadata?.hclName) {
+        const inputValue = (this.inputs as any)[k];
+        if (typeof inputValue !== "undefined") {
+          // Remove the original key and add with hclName
+          delete hclInputs[k];
+          hclInputs[v.metadata.hclName] = inputValue;
+        }
+      }
+    }
+
+    return hclInputs;
   }
 
   /**

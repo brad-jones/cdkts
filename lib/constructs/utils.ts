@@ -1,5 +1,4 @@
 import { format } from "@cdktf/hcl-tools";
-import { snakeCase } from "@mesqueeb/case-anything";
 import { Block } from "./blocks/block.ts";
 import { Attribute } from "./input_output/attribute.ts";
 import { RawHcl } from "./rawhcl.ts";
@@ -42,8 +41,7 @@ export function escapeHclString(str: string): string {
     .replace(/"/g, '\\"') // Double quote
     .replace(/\n/g, "\\n") // Newline
     .replace(/\r/g, "\\r") // Carriage return
-    .replace(/\t/g, "\\t") // Tab
-    .replace(/\$/g, "\\$"); // Dollar sign (prevents interpolation)
+    .replace(/\t/g, "\\t"); // Tab
 
   /*
     NB: In general HCL syntax outside of the format function, the % symbol is
@@ -55,6 +53,10 @@ export function escapeHclString(str: string): string {
     find ourselves needing to do native tf string formatting. My hope is we
     can just use ES string templates, everywhere format would have been
     used in traditional HCL.
+
+    Similarly we do not actually need to escape the $. HCL only treats ${} as special.
+    And since in JavaScript we can use string templates as well as normal strings
+    we can easily decide if we want to interpolate using JavaScript or HCL.
   */
 
   // Restore interpolations as HCL syntax
@@ -114,7 +116,7 @@ export function toHcl(obj: unknown, root = true): string {
   if (typeof obj === "object") {
     const hcl = Object.entries(obj)
       .filter(([_, v]) => typeof v !== "undefined")
-      .map(([k, v]) => `${snakeCase(k)} = ${toHcl(v, false)}`) // TODO: Can we get away with this global snakeCase transform?
+      .map(([k, v]) => `${k} = ${toHcl(v, false)}`)
       .join("\n");
     return root ? hcl : `{\n${hcl}\n}`;
   }

@@ -65,7 +65,7 @@ export class Terraform extends Block<typeof Terraform> {
      * requiredVersion: "~> 1.5.0"
      * ```
      */
-    requiredVersion = new Block.Input<string | undefined>();
+    requiredVersion = new Block.Input<string | undefined>({ hclName: "required_version" });
 
     /**
      * Specifies all provider plugins required to create and manage resources.
@@ -179,8 +179,8 @@ export class Terraform extends Block<typeof Terraform> {
    *
    * @returns The inputs object with backend and requiredProviders properties removed
    */
-  protected override mapInputsForHcl(): unknown {
-    const inputs = this.inputs;
+  protected override mapInputsForHcl() {
+    const inputs = super.mapInputsForHcl();
     if (inputs) {
       delete inputs["backend"];
       delete inputs["requiredProviders"];

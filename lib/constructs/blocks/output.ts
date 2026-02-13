@@ -108,7 +108,7 @@ export class Output extends Block<typeof Output> {
      * dependsOn: ["aws_instance.web", "aws_security_group.web_sg"]
      * ```
      */
-    dependsOn = new Block.Input<Block[] | undefined>();
+    dependsOn = new Block.Input<Block[] | undefined>({ hclName: "depends_on" });
 
     /**
      * Validation preconditions that must be met.
@@ -171,7 +171,7 @@ export class Output extends Block<typeof Output> {
    * @internal
    */
   protected override mapInputsForHcl(): unknown {
-    const inputs = this.inputs;
+    const inputs = super.mapInputsForHcl();
     if (inputs) {
       delete inputs["preconditions"];
     }

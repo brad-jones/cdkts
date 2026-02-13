@@ -85,7 +85,7 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
      * });
      * ```
      */
-    dependsOn = new Block.Input<Block[] | undefined>();
+    dependsOn = new Block.Input<Block[] | undefined>({ hclName: "depends_on" });
 
     /**
      * Creates multiple resource instances by iterating over a collection.
@@ -103,7 +103,7 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
      * });
      * ```
      */
-    forEach = new Block.Input<Record<string, string> | string[] | undefined>();
+    forEach = new Block.Input<Record<string, string> | string[] | undefined>({ hclName: "for_each" });
 
     /**
      * Specifies an alternate provider configuration for this resource.
@@ -141,7 +141,7 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
      * });
      * ```
      */
-    createBeforeDestroy = new Block.Input<boolean | undefined>();
+    createBeforeDestroy = new Block.Input<boolean | undefined>({ hclName: "create_before_destroy" });
 
     /**
      * Prevents accidental destruction of the resource.
@@ -159,7 +159,7 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
      * });
      * ```
      */
-    preventDestroy = new Block.Input<boolean | undefined>();
+    preventDestroy = new Block.Input<boolean | undefined>({ hclName: "prevent_destroy" });
 
     /**
      * Ignores changes to specified attributes.
@@ -177,7 +177,7 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
      * });
      * ```
      */
-    ignoreChanges = new Block.Input<string[] | undefined>();
+    ignoreChanges = new Block.Input<string[] | undefined>({ hclName: "ignore_changes" });
 
     /**
      * Forces resource replacement when specified references change.
@@ -195,7 +195,7 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
      * });
      * ```
      */
-    replaceTriggeredBy = new Block.Input<string[] | undefined>();
+    replaceTriggeredBy = new Block.Input<string[] | undefined>({ hclName: "replace_triggered_by" });
 
     /**
      * Defines lifecycle validation conditions.
@@ -349,13 +349,13 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
    * @internal This method is called automatically during HCL generation
    */
   protected override mapInputsForHcl(): unknown {
-    const inputs = { ...this.inputs };
+    const inputs = super.mapInputsForHcl();
     delete inputs["lifecycles"];
-    delete inputs["actionTriggers"];
-    delete inputs["createBeforeDestroy"];
-    delete inputs["preventDestroy"];
-    delete inputs["ignoreChanges"];
-    delete inputs["replaceTriggeredBy"];
+    delete inputs["action_triggers"];
+    delete inputs["create_before_destroy"];
+    delete inputs["prevent_destroy"];
+    delete inputs["ignore_changes"];
+    delete inputs["replace_triggered_by"];
     return inputs;
   }
 }

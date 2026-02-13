@@ -214,7 +214,7 @@ export class Variable extends Block<typeof Variable> {
    * @internal
    */
   protected override mapInputsForHcl(): unknown {
-    const inputs = this.inputs;
+    const inputs = super.mapInputsForHcl();
     if (inputs) {
       delete inputs["validations"];
     }

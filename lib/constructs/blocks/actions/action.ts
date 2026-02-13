@@ -39,7 +39,7 @@ export class Action<Self = typeof Action> extends Block<Self> {
      *
      * @see https://developer.hashicorp.com/terraform/language/block/action#for_each
      */
-    forEach = new Block.Input<Record<string, string> | string[] | undefined>();
+    forEach = new Block.Input<Record<string, string> | string[] | undefined>({ hclName: "for_each" });
 
     /**
      * The provider argument instructs Terraform to use an alternate provider
@@ -88,7 +88,7 @@ export class Action<Self = typeof Action> extends Block<Self> {
    * @returns The inputs object without the config property
    */
   protected override mapInputsForHcl(): unknown {
-    const inputs = { ...this.inputs };
+    const inputs = super.mapInputsForHcl();
     delete inputs["config"];
     return inputs;
   }

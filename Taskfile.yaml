@@ -45,7 +45,7 @@ tasks:
   test:
     desc: Executes our lib test suite
     cmds:
-      - deno test -A ./lib/**/*.test.ts
+      - deno test -A ./lib/**/*.test.ts ./tests/**/*.test.ts
 
   build:
     desc: Builds the cli for all platforms

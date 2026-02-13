@@ -70,6 +70,7 @@ export abstract class Stack<
     }
     throw new Error(`No Stack found in the construct tree above ${construct.id}`);
   }
+
   /**
    * Input class for defining stack input variables.
    *

@@ -1,12 +1,22 @@
 // deno-lint-ignore-file no-explicit-any
 
 import { outdent } from "@cspotcode/outdent";
+import { DenoAction } from "./blocks/actions/deno_action.ts";
 import { Block } from "./blocks/block.ts";
+import { DenoDataSource } from "./blocks/datasources/deno_datasource.ts";
 import { Output as OutputBlock } from "./blocks/output.ts";
+import { DenoBridgeProvider } from "./blocks/providers/denobridge.ts";
+import { DenoResource } from "./blocks/resources/deno_resource.ts";
+import { DenoEphemeralResource } from "./blocks/resources/ephemeral/deno_ephemeral_resource.ts";
+import { Terraform } from "./blocks/terraform.ts";
 import { Variable } from "./blocks/variable.ts";
 import { Construct } from "./construct.ts";
 import { type InferInputs, type InferOutputs, Input, Output } from "./input_output/types.ts";
 import { fmtHcl } from "./utils.ts";
+
+// TODO: Update @brad-jones/terraform-provider-denobridge to export this
+// import { DENOBRIDGE_VERSION } from "@brad-jones/terraform-provider-denobridge";
+const DENOBRIDGE_VERSION = "0.2.7";
 
 /**
  * Base class for defining Terraform/OpenTofu stacks.
@@ -217,6 +227,93 @@ export abstract class Stack<
   }
 
   /**
+   * Automatically configures DenoBridge provider and Terraform block if Deno-based constructs are present.
+   *
+   * This method checks if any Deno-based constructs (DenoAction, DenoDataSource, DenoResource,
+   * DenoEphemeralResource) exist in the stack. If found, it ensures that:
+   * 1. A DenoBridgeProvider is added to the stack
+   * 2. A Terraform block exists with the denobridge provider in requiredProviders
+   *
+   * @internal
+   */
+  #ensureDenobridgeConfiguration(): void {
+    // Check if any Deno-based constructs are present
+    const hasDenoConstructs = this.descendants.some((_) =>
+      _ instanceof DenoAction ||
+      _ instanceof DenoDataSource ||
+      _ instanceof DenoResource ||
+      _ instanceof DenoEphemeralResource
+    );
+
+    if (!hasDenoConstructs) {
+      return;
+    }
+
+    // Check for existing DenoBridgeProvider
+    const hasDenoBridgeProvider = this.descendants.some((_) => _ instanceof DenoBridgeProvider);
+    if (!hasDenoBridgeProvider) {
+      new DenoBridgeProvider(this);
+    }
+
+    // Check for existing Terraform block
+    const terraformBlock = this.descendants.find((_) => _ instanceof Terraform) as Terraform | undefined;
+
+    if (!terraformBlock) {
+      // Create new Terraform block with denobridge provider
+      new Terraform(this, {
+        requiredProviders: {
+          denobridge: {
+            source: "brad-jones/denobridge",
+            version: DENOBRIDGE_VERSION,
+          },
+        },
+      });
+    } else {
+      // Ensure denobridge is in requiredProviders
+      this.#ensureDenobridgeInRequiredProviders(terraformBlock, DENOBRIDGE_VERSION);
+    }
+  }
+
+  /**
+   * Ensures the denobridge provider is registered in the Terraform block's requiredProviders.
+   *
+   * Checks if the Terraform block has a required_providers child block and adds
+   * the denobridge provider configuration if it's not already present. If the
+   * required_providers block doesn't exist, it creates one.
+   *
+   * @param terraformBlock - The existing Terraform block to update
+   * @param version - The denobridge provider version to register
+   *
+   * @internal
+   */
+  #ensureDenobridgeInRequiredProviders(terraformBlock: Terraform, version: string): void {
+    // Find the required_providers child block
+    const requiredProvidersBlock = terraformBlock.children.find(
+      (child) => child instanceof Block && (child as Block).type === "required_providers",
+    ) as Block | undefined;
+
+    if (requiredProvidersBlock) {
+      // Check if denobridge is already in the inputs
+      const inputs = requiredProvidersBlock.inputs as any;
+      if (!inputs.denobridge) {
+        // Add denobridge to the inputs
+        inputs.denobridge = {
+          source: "brad-jones/denobridge",
+          version: version,
+        };
+      }
+    } else {
+      // Create the required_providers block
+      new Block(terraformBlock, "required_providers", [], {
+        denobridge: {
+          source: "brad-jones/denobridge",
+          version: version,
+        },
+      });
+    }
+  }
+
+  /**
    * Converts the stack to HCL (HashiCorp Configuration Language) code.
    *
    * Generates Terraform/OpenTofu configuration by serializing all child blocks
@@ -234,6 +331,9 @@ export abstract class Stack<
    */
   async toHcl(fmt = true): Promise<string> {
     let hcl = "";
+
+    // Automatically configure DenoBridge provider and Terraform block if needed
+    this.#ensureDenobridgeConfiguration();
 
     // Filter for top-level Blocks: those whose parent is NOT a Block.
     // This includes Blocks that are direct children of the Stack, as well as

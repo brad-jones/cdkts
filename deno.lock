@@ -20,6 +20,7 @@
     "jsr:@david/which@~0.4.1": "0.4.1",
     "jsr:@deno-library/progress@^1.5.1": "1.5.1",
     "jsr:@deno/cache-dir@~0.13.2": "0.13.2",
+    "jsr:@deno/graph@~0.73.1": "0.73.1",
     "jsr:@deno/graph@~0.96.2": "0.96.2",
     "jsr:@hono/hono@^4.11.9": "4.11.9",
     "jsr:@lambdalisue/import-map-importer@~0.5.1": "0.5.1",
@@ -47,6 +48,7 @@
     "jsr:@std/io@0.223": "0.223.0",
     "jsr:@std/io@0.225": "0.225.0",
     "jsr:@std/io@0.225.0": "0.225.0",
+    "jsr:@std/io@~0.225.3": "0.225.3",
     "jsr:@std/path@0.223": "0.223.0",
     "jsr:@std/path@1": "1.1.4",
     "jsr:@std/path@^1.0.1": "1.1.4",
@@ -90,14 +92,16 @@
       "integrity": "1411714a98762c38e5b461411034c9bbe5315c2eced73a9c6905606a30b7c9e1",
       "dependencies": [
         "jsr:@std/streams",
-        "jsr:@yieldray/json-rpc-ts"
+        "jsr:@yieldray/json-rpc-ts",
+        "jsr:@zod/zod@^4.3.6"
       ]
     },
     "@cliffy/ansi@1.0.0": {
       "integrity": "987008f74e50aa72cc1517ffccc769711734a14927bc4599e052efe1b9a840e2",
       "dependencies": [
         "jsr:@cliffy/internal",
-        "jsr:@std/encoding"
+        "jsr:@std/encoding",
+        "jsr:@std/io@~0.225.3"
       ]
     },
     "@cliffy/command@1.0.0": {
@@ -132,6 +136,7 @@
         "jsr:@cliffy/keycode",
         "jsr:@std/assert@^1.0.18",
         "jsr:@std/fmt@^1.0.9",
+        "jsr:@std/io@~0.225.3",
         "jsr:@std/path@^1.1.4",
         "jsr:@std/text"
       ]
@@ -183,11 +188,15 @@
     "@deno/cache-dir@0.13.2": {
       "integrity": "c22419dfe27ab85f345bee487aaaadba498b005cce3644e9d2528db035c5454d",
       "dependencies": [
+        "jsr:@deno/graph@~0.73.1",
         "jsr:@std/fmt@0.223",
         "jsr:@std/fs@0.223",
         "jsr:@std/io@0.223",
         "jsr:@std/path@0.223"
       ]
+    },
+    "@deno/graph@0.73.1": {
+      "integrity": "cd69639d2709d479037d5ce191a422eabe8d71bb68b0098344f6b07411c84d41"
     },
     "@deno/graph@0.96.2": {
       "integrity": "db21e52fc5b2850cc5fe92528f4f84dd460c5e40678a6bd23ece5c9c53193090"
@@ -200,7 +209,7 @@
       "dependencies": [
         "jsr:@core/unknownutil",
         "jsr:@deno/cache-dir",
-        "jsr:@deno/graph",
+        "jsr:@deno/graph@~0.96.2",
         "jsr:@std/crypto",
         "jsr:@std/fs@^1.0.1",
         "jsr:@std/path@^1.0.1"
@@ -271,6 +280,9 @@
       "dependencies": [
         "jsr:@std/bytes@^1.0.2"
       ]
+    },
+    "@std/io@0.225.3": {
+      "integrity": "27b07b591384d12d7b568f39e61dff966b8230559122df1e9fd11cc068f7ddd1"
     },
     "@std/path@0.223.0": {
       "integrity": "593963402d7e6597f5a6e620931661053572c982fc014000459edc1f93cc3989",

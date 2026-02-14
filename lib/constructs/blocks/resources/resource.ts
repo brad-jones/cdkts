@@ -299,7 +299,8 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
     inputs: Resource["inputs"],
     childBlocks?: (b: Block) => void,
   ) {
-    super(parent, "resource", [typeName, label], inputs, childBlocks);
+    const resourceId = parent.parent ? `${parent.id}_${label}` : label;
+    super(parent, "resource", [typeName, resourceId], inputs, childBlocks);
 
     if (
       typeof inputs?.createBeforeDestroy !== "undefined" ||

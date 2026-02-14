@@ -74,7 +74,8 @@ export class Action<Self = typeof Action> extends Block<Self> {
     inputs: Action["inputs"],
     childBlocks?: (b: Block) => void,
   ) {
-    super(parent, "action", [typeName, label], inputs, childBlocks);
+    const actionId = parent.parent ? `${parent.id}_${label}` : label;
+    super(parent, "action", [typeName, actionId], inputs, childBlocks);
     new Block(this, "config", [], inputs!.config);
   }
 

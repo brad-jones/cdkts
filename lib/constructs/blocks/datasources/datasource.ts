@@ -130,7 +130,8 @@ export class DataSource<Self = typeof DataSource> extends Block<Self> {
     inputs: DataSource["inputs"],
     childBlocks?: (b: Block) => void,
   ) {
-    super(parent, "data", [typeName, label], inputs, childBlocks);
+    const dataSourceId = parent.parent ? `${parent.id}_${label}` : label;
+    super(parent, "data", [typeName, dataSourceId], inputs, childBlocks);
 
     if (inputs?.lifecycles && inputs.lifecycles.length > 0) {
       new Block(this, "lifecycle", [], {}, (b) => {

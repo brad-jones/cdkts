@@ -1,11 +1,15 @@
 import { DENOBRIDGE_VERSION } from "@brad-jones/terraform-provider-denobridge";
 import { outdent } from "@cspotcode/outdent";
 import { expect } from "@std/expect";
+import { Action } from "./blocks/actions/action.ts";
 import { DenoAction } from "./blocks/actions/deno_action.ts";
+import { DataSource } from "./blocks/datasources/datasource.ts";
 import { DenoDataSource } from "./blocks/datasources/deno_datasource.ts";
 import { DenoBridgeProvider } from "./blocks/providers/denobridge.ts";
 import { DenoResource } from "./blocks/resources/deno_resource.ts";
 import { DenoEphemeralResource } from "./blocks/resources/ephemeral/deno_ephemeral_resource.ts";
+import { EphemeralResource } from "./blocks/resources/ephemeral/ephemeral_resource.ts";
+import { Resource } from "./blocks/resources/resource.ts";
 import { Terraform } from "./blocks/terraform.ts";
 import { Block, Construct, Stack } from "./mod.ts";
 
@@ -135,6 +139,148 @@ Deno.test("stack with nested constructs", async () => {
     }
 
     foo "bar" "small_colored_thing_xyz" {
+      color = "green"
+      size  = "small"
+    }
+  `);
+});
+
+Deno.test("stack with nested typed constructs", async () => {
+  class MyInnerConstruct extends Construct {
+    constructor(parent: Construct | undefined, id: string, props: { color: string; size: string }) {
+      super(parent, id);
+
+      new Action(this, "moon", "launch_rocket", {
+        config: {
+          color: props.color,
+          size: props.size,
+        },
+      });
+
+      new DataSource(this, "vault", "my_secret", {
+        color: props.color,
+        size: props.size,
+      });
+
+      new Resource(this, "ec2", "my_vm", {
+        color: props.color,
+        size: props.size,
+      });
+
+      new EphemeralResource(this, "thing", "my_ephemeral_resource", {
+        color: props.color,
+        size: props.size,
+      });
+    }
+  }
+
+  class MyOuterConstruct extends Construct {
+    constructor(parent: Construct | undefined, id: string, props: { color: string }) {
+      super(parent, id);
+
+      new MyInnerConstruct(this, `large_colored_thing_${id}`, { color: props.color, size: "large" });
+      new MyInnerConstruct(this, `small_colored_thing_${id}`, { color: props.color, size: "small" });
+    }
+  }
+
+  const stack = new class MyStack extends Stack<typeof MyStack> {
+    constructor() {
+      super(`${import.meta.url}#${MyStack.name}`);
+
+      new MyOuterConstruct(this, "abc", { color: "red" });
+      new MyOuterConstruct(this, "xyz", { color: "green" });
+    }
+  }();
+
+  expect(await stack.toHcl()).toBe(outdent`
+    action "moon" "large_colored_thing_abc_launch_rocket" {
+
+      config {
+        color = "red"
+        size  = "large"
+      }
+    }
+
+    data "vault" "large_colored_thing_abc_my_secret" {
+      color = "red"
+      size  = "large"
+    }
+
+    resource "ec2" "large_colored_thing_abc_my_vm" {
+      color = "red"
+      size  = "large"
+    }
+
+    ephemeral "thing" "large_colored_thing_abc_my_ephemeral_resource" {
+      color = "red"
+      size  = "large"
+    }
+
+    action "moon" "small_colored_thing_abc_launch_rocket" {
+
+      config {
+        color = "red"
+        size  = "small"
+      }
+    }
+
+    data "vault" "small_colored_thing_abc_my_secret" {
+      color = "red"
+      size  = "small"
+    }
+
+    resource "ec2" "small_colored_thing_abc_my_vm" {
+      color = "red"
+      size  = "small"
+    }
+
+    ephemeral "thing" "small_colored_thing_abc_my_ephemeral_resource" {
+      color = "red"
+      size  = "small"
+    }
+
+    action "moon" "large_colored_thing_xyz_launch_rocket" {
+
+      config {
+        color = "green"
+        size  = "large"
+      }
+    }
+
+    data "vault" "large_colored_thing_xyz_my_secret" {
+      color = "green"
+      size  = "large"
+    }
+
+    resource "ec2" "large_colored_thing_xyz_my_vm" {
+      color = "green"
+      size  = "large"
+    }
+
+    ephemeral "thing" "large_colored_thing_xyz_my_ephemeral_resource" {
+      color = "green"
+      size  = "large"
+    }
+
+    action "moon" "small_colored_thing_xyz_launch_rocket" {
+
+      config {
+        color = "green"
+        size  = "small"
+      }
+    }
+
+    data "vault" "small_colored_thing_xyz_my_secret" {
+      color = "green"
+      size  = "small"
+    }
+
+    resource "ec2" "small_colored_thing_xyz_my_vm" {
+      color = "green"
+      size  = "small"
+    }
+
+    ephemeral "thing" "small_colored_thing_xyz_my_ephemeral_resource" {
       color = "green"
       size  = "small"
     }

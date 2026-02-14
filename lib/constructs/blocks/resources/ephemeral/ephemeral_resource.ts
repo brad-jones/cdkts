@@ -72,7 +72,8 @@ export class EphemeralResource<Self = typeof EphemeralResource> extends Block<Se
     inputs: EphemeralResource["inputs"],
     childBlocks?: (b: Block) => void,
   ) {
-    super(parent, "ephemeral", [typeName, label], inputs, childBlocks);
+    const ephemeralResourceId = parent.parent ? `${parent.id}_${label}` : label;
+    super(parent, "ephemeral", [typeName, ephemeralResourceId], inputs, childBlocks);
 
     if (inputs?.lifecycles && inputs.lifecycles.length > 0) {
       new Block(this, "lifecycle", [], {}, (b) => {

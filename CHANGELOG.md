@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.6.4](https://github.com/brad-jones/cdkts/compare/63fa26241585b2273f0cb7da995ffb07b56ff8ff..v0.6.4) - 2026-02-14
+#### Bug Fixes
+- (**provider**) add deno_binary_path & deno_version hcl name - ([63fa262](https://github.com/brad-jones/cdkts/commit/63fa26241585b2273f0cb7da995ffb07b56ff8ff)) - [@brad-jones](https://github.com/brad-jones)
+#### Tests
+- update test to account for the recent snake case changes - ([0ff07c3](https://github.com/brad-jones/cdkts/commit/0ff07c3f181b89cb8a0362b0c2a5bc8c80f6c53a)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.6.3](https://github.com/brad-jones/cdkts/compare/32dc3aa7ef1e9ec75392f4deb2562be753967a65..v0.6.3) - 2026-02-14
 #### Bug Fixes
 - (**format**) need to generate an id that works in hcl - ([32dc3aa](https://github.com/brad-jones/cdkts/commit/32dc3aa7ef1e9ec75392f4deb2562be753967a65)) - [@brad-jones](https://github.com/brad-jones)

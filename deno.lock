@@ -4,7 +4,7 @@
     "jsr:@brad-jones/deno-config@1": "1.0.0",
     "jsr:@brad-jones/deno-net-container@0.4": "0.4.0",
     "jsr:@brad-jones/jsr-dynamic-imports@~0.1.1": "0.1.2",
-    "jsr:@brad-jones/terraform-provider-denobridge@0.3": "0.3.0",
+    "jsr:@brad-jones/terraform-provider-denobridge@0.4": "0.4.0",
     "jsr:@cliffy/ansi@1.0.0": "1.0.0",
     "jsr:@cliffy/command@1.0.0": "1.0.0",
     "jsr:@cliffy/flags@1.0.0": "1.0.0",
@@ -88,8 +88,8 @@
         "npm:@brad-jones/jsr-dynamic-imports@0.1.2"
       ]
     },
-    "@brad-jones/terraform-provider-denobridge@0.3.0": {
-      "integrity": "1411714a98762c38e5b461411034c9bbe5315c2eced73a9c6905606a30b7c9e1",
+    "@brad-jones/terraform-provider-denobridge@0.4.0": {
+      "integrity": "117c240edde4d6df8cc849c33556277667309cb4c3bccca4f08c7168c34e6d07",
       "dependencies": [
         "jsr:@std/streams",
         "jsr:@yieldray/json-rpc-ts",
@@ -282,10 +282,7 @@
       ]
     },
     "@std/io@0.225.3": {
-      "integrity": "27b07b591384d12d7b568f39e61dff966b8230559122df1e9fd11cc068f7ddd1",
-      "dependencies": [
-        "jsr:@std/bytes@^1.0.6"
-      ]
+      "integrity": "27b07b591384d12d7b568f39e61dff966b8230559122df1e9fd11cc068f7ddd1"
     },
     "@std/path@0.223.0": {
       "integrity": "593963402d7e6597f5a6e620931661053572c982fc014000459edc1f93cc3989",
@@ -524,7 +521,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@brad-jones/deno-config@1",
-      "jsr:@brad-jones/terraform-provider-denobridge@0.3",
+      "jsr:@brad-jones/terraform-provider-denobridge@0.4",
       "jsr:@cliffy/command@1.0.0",
       "jsr:@cliffy/prompt@1",
       "jsr:@cspotcode/outdent@0.8",

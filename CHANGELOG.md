@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.6.5](https://github.com/brad-jones/cdkts/compare/7096884e59ea3470210b128d4d60a43333a376e8..v0.6.5) - 2026-02-14
+#### Bug Fixes
+- (**constructs**) make the basic 4 block types automatically namespace their labels - ([7096884](https://github.com/brad-jones/cdkts/commit/7096884e59ea3470210b128d4d60a43333a376e8)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.6.4](https://github.com/brad-jones/cdkts/compare/63fa26241585b2273f0cb7da995ffb07b56ff8ff..v0.6.4) - 2026-02-14
 #### Bug Fixes
 - (**provider**) add deno_binary_path & deno_version hcl name - ([63fa262](https://github.com/brad-jones/cdkts/commit/63fa26241585b2273f0cb7da995ffb07b56ff8ff)) - [@brad-jones](https://github.com/brad-jones)

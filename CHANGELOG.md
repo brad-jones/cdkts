@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.6.3](https://github.com/brad-jones/cdkts/compare/32dc3aa7ef1e9ec75392f4deb2562be753967a65..v0.6.3) - 2026-02-14
+#### Bug Fixes
+- (**format**) need to generate an id that works in hcl - ([32dc3aa](https://github.com/brad-jones/cdkts/commit/32dc3aa7ef1e9ec75392f4deb2562be753967a65)) - [@brad-jones](https://github.com/brad-jones)
+- (**resource**) add action_triggers hcl name - ([bb92ffa](https://github.com/brad-jones/cdkts/commit/bb92ffa7078f84c935d22c3ece478511b9619fa9)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.6.2](https://github.com/brad-jones/cdkts/compare/41161fea840774c3ea2a0669388214b4c2920128..v0.6.2) - 2026-02-14
 #### Bug Fixes
 - (**constructs**) format func handles an async formatter - ([41161fe](https://github.com/brad-jones/cdkts/commit/41161fea840774c3ea2a0669388214b4c2920128)) - [@brad-jones](https://github.com/brad-jones)

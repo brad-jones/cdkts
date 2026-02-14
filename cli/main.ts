@@ -28,7 +28,7 @@ import { StackBundler, type Target } from "../lib/automate/stack_bundler/stack_b
 import { importStack, tempDir } from "../lib/automate/utils.ts";
 
 /** The version, updated by the build process */
-const VERSION = "0.6.2";
+const VERSION = "0.6.3";
 
 await new Command()
   .name("cdkts")

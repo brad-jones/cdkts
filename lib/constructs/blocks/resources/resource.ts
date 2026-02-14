@@ -247,7 +247,7 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
         actions: Action[];
         condition?: string;
       }[] | undefined
-    >();
+    >({ hclName: "action_triggers" });
     // TODO: https://developer.hashicorp.com/terraform/language/block/resource#connection
     // TODO: https://developer.hashicorp.com/terraform/language/block/resource#provisioner
   };

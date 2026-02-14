@@ -79,7 +79,10 @@ export class DenoBridgeProvider extends Provider<typeof DenoBridgeProvider> {
      * });
      * ```
      */
-    denoBinaryPath = new Provider.Input<string | undefined>({ default: Deno.execPath() });
+    denoBinaryPath = new Provider.Input<string | undefined>({
+      hclName: "deno_binary_path",
+      default: Deno.execPath(),
+    });
 
     /**
      * Deno version to download and use.
@@ -103,7 +106,7 @@ export class DenoBridgeProvider extends Provider<typeof DenoBridgeProvider> {
      * new DenoBridgeProvider(this);
      * ```
      */
-    denoVersion = new Provider.Input<string | undefined>();
+    denoVersion = new Provider.Input<string | undefined>({ hclName: "deno_version" });
   };
 
   /**

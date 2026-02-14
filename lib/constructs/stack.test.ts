@@ -253,7 +253,7 @@ Deno.test("stack with Deno construct and existing DenoBridgeProvider does not du
   expect(providerMatches?.length).toBe(1);
 
   // Verify custom config is preserved (HCL uses snake_case)
-  expect(hcl).toContain('denoBinaryPath = "/custom/deno"');
+  expect(hcl).toContain('deno_binary_path = "/custom/deno"');
 });
 
 Deno.test("stack with Deno construct and existing Terraform block adds denobridge to requiredProviders", async () => {

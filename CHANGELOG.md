@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.6.1](https://github.com/brad-jones/cdkts/compare/f921bb5b28092a6519b2f2adc30d5c4259463779..v0.6.1) - 2026-02-14
+#### Miscellaneous Chores
+- bump lock files (attempt #2) - ([919a3ba](https://github.com/brad-jones/cdkts/commit/919a3bade117fb81ab4abbcb8ac86d0260a4a5ad)) - [@brad-jones](https://github.com/brad-jones)
+- bump lock files - ([f921bb5](https://github.com/brad-jones/cdkts/commit/f921bb5b28092a6519b2f2adc30d5c4259463779)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.6.0](https://github.com/brad-jones/cdkts/compare/e0abd7e690e7257032a3afcca4468f79fe6cdcb7..v0.6.0) - 2026-02-13
 #### Features
 - finished automatic denobridge provider registration - ([5115297](https://github.com/brad-jones/cdkts/commit/5115297f0dc0b0d724ecebc505a1549fe8ca4f52)) - [@brad-jones](https://github.com/brad-jones)

@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.6.2](https://github.com/brad-jones/cdkts/compare/41161fea840774c3ea2a0669388214b4c2920128..v0.6.2) - 2026-02-14
+#### Bug Fixes
+- (**constructs**) format func handles an async formatter - ([41161fe](https://github.com/brad-jones/cdkts/commit/41161fea840774c3ea2a0669388214b4c2920128)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.6.1](https://github.com/brad-jones/cdkts/compare/f921bb5b28092a6519b2f2adc30d5c4259463779..v0.6.1) - 2026-02-14
 #### Miscellaneous Chores
 - bump lock files (attempt #2) - ([919a3ba](https://github.com/brad-jones/cdkts/commit/919a3bade117fb81ab4abbcb8ac86d0260a4a5ad)) - [@brad-jones](https://github.com/brad-jones)

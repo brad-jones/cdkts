@@ -63,7 +63,25 @@ export function format<TArgs extends unknown[] = unknown[]>(
   `);
   }
 
-  return new DenoFormat(Stack.of(attr.source), crypto.randomUUID(), { args, formatter }).outputs.result;
+  return new DenoFormat(Stack.of(attr.source), generateId(), { args, formatter }).outputs.result;
+}
+
+function generateId(
+  length = 16,
+  charset: string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+): string {
+  const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  // First character must be a letter
+  const firstChar = letters[Math.floor(Math.random() * letters.length)];
+
+  // Remaining characters can include numbers
+  const remainingChars = Array.from(Array(length - 1)).reduce((prev, curr) => {
+    curr = prev + charset[Math.floor(Math.random() * charset.length)];
+    return curr;
+  }, "");
+
+  return firstChar + remainingChars;
 }
 
 /**

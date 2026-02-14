@@ -27,17 +27,18 @@ export type DenoFormatResult = string;
 /**
  * Convenience function for creating a {@linkcode DenoFormat} data source.
  *
- * Inspects `args` to find an {@linkcode Attribute} reference. If found, walks the
+ * Inspects `args` to find an {@linkcode Attribute} reference. Walks the
  * construct tree from that Attribute's source to locate the enclosing Stack, then
  * creates a `DenoFormat` data source attached to it.
  *
- * If none of the args are Attribute instances (i.e., all values are already resolved),
- * the formatter is executed directly and the plain string result is returned without
- * creating any Terraform constructs.
+ * **Note:** At least one argument must be an Attribute instance (i.e., a construct
+ * output reference). If all values are already resolved, this function will throw
+ * an error. In that case, execute the formatter directly instead of using this function.
  *
  * @param formatter - A function that will be serialized and executed by the Deno bridge provider
- * @param args - Arguments to pass to the formatter (typically construct output references)
- * @returns The formatted result attribute reference, or a plain string if no Attributes are present
+ * @param args - Arguments to pass to the formatter (at least one must be an Attribute reference)
+ * @returns The formatted result attribute reference
+ * @throws {Error} If none of the args are Attribute instances
  *
  * @example
  * ```typescript
@@ -47,11 +48,21 @@ export type DenoFormatResult = string;
  * ```
  */
 export function format<TArgs extends unknown[] = unknown[]>(
-  formatter: (...args: TArgs) => string,
+  formatter: (...args: TArgs) => string | Promise<string>,
   ...args: TArgs
 ): DenoFormatResult {
   const attr = findAttribute(args);
-  if (!attr?.source) return formatter(...args);
+
+  if (!attr?.source) {
+    throw new Error(`
+    At least one argument must be a construct output reference (i.e., an Attribute instance).
+    If this was intentional and all values are already resolved, execute the formatter directly to get the result string.
+    We probably shouldn't execute it for you because it could be asynchronous, and you can't use 'await' in a constructor.
+    You likely made your formatter function asynchronous to dynamically import some module at runtime,
+    but if you only need to format some already-resolved values, you can just do that directly without using this 'format' function at all.
+  `);
+  }
+
   return new DenoFormat(Stack.of(attr.source), crypto.randomUUID(), { args, formatter }).outputs.result;
 }
 

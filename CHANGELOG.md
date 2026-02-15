@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.7.2](https://github.com/brad-jones/cdkts/compare/81bb6a85f823ddc605c5102c945168555f87559c..v0.7.2) - 2026-02-15
+#### Bug Fixes
+- (**constructs**) the format func just doesn't make sense as we need to capture the logical id of the block and there is no good way to automate that - ([81bb6a8](https://github.com/brad-jones/cdkts/commit/81bb6a85f823ddc605c5102c945168555f87559c)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.7.1](https://github.com/brad-jones/cdkts/compare/ffccd9b29b1add2a42aff4d4ca9d1cea2891ffe3..v0.7.1) - 2026-02-15
 #### Bug Fixes
 - (**constructs**) correctly map configFile to config_file - ([ffccd9b](https://github.com/brad-jones/cdkts/commit/ffccd9b29b1add2a42aff4d4ca9d1cea2891ffe3)) - [@brad-jones](https://github.com/brad-jones)

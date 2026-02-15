@@ -115,6 +115,13 @@ export class DenoFormat<TArgs extends unknown[] = unknown[]> extends DenoDataSou
         args: props.args,
         formatterString: serializeFunc(props.formatter),
       },
+      permissions: {
+        allow: [
+          "ffi",
+          "read",
+          "env=GRACEFUL_FS_PLATFORM,TEST_GRACEFUL_FS_GLOBAL_PATCH,NAPI_RS_NATIVE_LIBRARY_PATH,NAPI_RS_FORCE_WASI",
+        ],
+      },
       ...options,
     });
   }

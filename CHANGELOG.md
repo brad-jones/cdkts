@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.7.0](https://github.com/brad-jones/cdkts/compare/4ca16219db6c4cf01badd8ff255820155e605941..v0.7.0) - 2026-02-15
+#### Features
+- (**constructs**) automatically inject the stacks deno config file - ([523e06b](https://github.com/brad-jones/cdkts/commit/523e06b6c4c4a38e138f52b8bc0db29205987ffc)) - [@brad-jones](https://github.com/brad-jones)
+#### Bug Fixes
+- (**constructs**) expose the config file property for deno bridge constructs - ([4ca1621](https://github.com/brad-jones/cdkts/commit/4ca16219db6c4cf01badd8ff255820155e605941)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.6.7](https://github.com/brad-jones/cdkts/compare/bbf9dc5d250e49733fafa4cf16da1418bcc8c34c..v0.6.7) - 2026-02-15
 #### Miscellaneous Chores
 - bump @brad-jones/terraform-provider-denobridge (#attempt 2) - ([dcb7b61](https://github.com/brad-jones/cdkts/commit/dcb7b615823eaec395921a6d5e2367e792553f3e)) - [@brad-jones](https://github.com/brad-jones)

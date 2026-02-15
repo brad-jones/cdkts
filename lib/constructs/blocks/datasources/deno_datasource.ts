@@ -1,6 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
 
 import type { Construct } from "../../construct.ts";
+import { Stack } from "../../stack.ts";
 import { DataSource } from "./datasource.ts";
 
 /**
@@ -213,6 +214,7 @@ export class DenoDataSource<Self = typeof DenoDataSource> extends DataSource<Sel
    * ```
    */
   constructor(parent: Construct, label: string, inputs: DenoDataSource["inputs"]) {
+    if (!inputs?.configFile) inputs!.configFile = Stack.of(parent).configFile;
     super(parent, "denobridge_datasource", label, inputs);
   }
 }

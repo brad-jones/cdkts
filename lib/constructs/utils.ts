@@ -1,4 +1,5 @@
 import { format } from "@cdktf/hcl-tools";
+import { dirname, fromFileUrl, join } from "@std/path";
 import type { DenoAction } from "./blocks/actions/deno_action.ts";
 import { Block } from "./blocks/block.ts";
 import type { DenoDataSource } from "./blocks/datasources/deno_datasource.ts";
@@ -180,4 +181,28 @@ export function toHcl(obj: unknown, root = true): string {
   }
 
   throw new Error(`unhandled type: ${JSON.stringify(obj)}`);
+}
+
+export function findConfigFileSync(tsFilePath: string): string | undefined {
+  if (tsFilePath.startsWith("file://")) {
+    tsFilePath = fromFileUrl(tsFilePath);
+  }
+
+  let currentDir = dirname(tsFilePath);
+
+  while (currentDir !== dirname(currentDir)) { // Stop at root directory
+    const denoJsonPath = join(currentDir, "deno.json");
+    try {
+      Deno.statSync(denoJsonPath);
+      return denoJsonPath;
+    } catch (e) {
+      if (!(e instanceof Deno.errors.NotFound)) {
+        throw e;
+      }
+      // File doesn't exist, continue
+    }
+
+    // Move up one directory
+    currentDir = dirname(currentDir);
+  }
 }

@@ -63,25 +63,7 @@ export function format<TArgs extends unknown[] = unknown[]>(
   `);
   }
 
-  return new DenoFormat(Stack.of(attr.source), generateId(), { args, formatter }).outputs.result;
-}
-
-function generateId(
-  length = 16,
-  charset: string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-): string {
-  const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-  // First character must be a letter
-  const firstChar = letters[Math.floor(Math.random() * letters.length)];
-
-  // Remaining characters can include numbers
-  const remainingChars = Array.from(Array(length - 1)).reduce((prev, curr) => {
-    curr = prev + charset[Math.floor(Math.random() * charset.length)];
-    return curr;
-  }, "");
-
-  return firstChar + remainingChars;
+  return new DenoFormat(Stack.of(attr.source), `deno_format_${generateId()}`, { args, formatter }).outputs.result;
 }
 
 /**
@@ -119,16 +101,65 @@ export class DenoFormat<TArgs extends unknown[] = unknown[]> extends DenoDataSou
     parent: Construct,
     label: string,
     props: DenoFormatProps<TArgs>,
-    options?: DataSource["inputs"],
+    options?: DataSource["inputs"] & {
+      /**
+       * Optional path to a Deno configuration file (e.g., `deno.json` or `deno.jsonc`).
+       *
+       * If specified, the Deno script will be executed with the settings from this
+       * config file. This allows you to define compiler options, import maps, and
+       * other Deno configurations in a separate file.
+       */
+      configFile?: string;
+
+      /**
+       * Deno runtime permissions for the script.
+       *
+       * Controls what system resources the Deno script can access at runtime.
+       * Following Deno's security model, scripts have no permissions by default.
+       *
+       * @see {@link https://registry.terraform.io/providers/brad-jones/denobridge/latest/docs/guides/deno-permissions | Deno Permissions Guide}
+       * @see {@link https://docs.deno.com/runtime/fundamentals/security/#permissions | Deno Security Documentation}
+       *
+       * @example
+       * ```ts
+       * // Grant all permissions (use with caution!)
+       * permissions: { all: true }
+       *
+       * // Fine-grained control
+       * permissions: {
+       *   allow: [
+       *     "read",                    // --allow-read (all paths)
+       *     "write=/tmp",              // --allow-write=/tmp
+       *     "net=example.com:443",     // --allow-net=example.com:443
+       *     "env=HOME,USER",           // --allow-env=HOME,USER
+       *     "run=curl,whoami",         // --allow-run=curl,whoami
+       *   ]
+       * }
+       *
+       * // Deny specific permissions (deny takes precedence over allow)
+       * permissions: {
+       *   allow: ["net"],              // Allow all network access
+       *   deny: ["net=evil.com"]       // Except evil.com
+       * }
+       * ```
+       */
+      permissions?: {
+        /** Grant all permissions to the Deno script (maps to `--allow-all`). Use with caution. */
+        all?: boolean;
+
+        /** List of permissions to allow (e.g., `read`, `write=/tmp`, `net=example.com:443`). */
+        allow?: string[];
+
+        /** List of permissions to deny. Deny rules take precedence over allow rules. */
+        deny?: string[];
+      };
+    },
   ) {
     super(parent, label, {
       path: import.meta.url,
       props: {
         args: props.args,
         formatterString: serializeFunc(props.formatter),
-      },
-      permissions: {
-        all: true,
       },
       ...options,
     });
@@ -152,6 +183,16 @@ function findAttribute(args: unknown[]): Attribute | undefined {
     }
   }
   return undefined;
+}
+
+function generateId(
+  length = 16,
+  charset: string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+): string {
+  return Array.from(Array(length)).reduce((prev, curr) => {
+    curr = prev + charset[Math.floor(Math.random() * charset.length)];
+    return curr;
+  }, "");
 }
 
 function serializeFunc(func: (...args: any[]) => any) {

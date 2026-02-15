@@ -14,7 +14,7 @@ import { Terraform } from "./blocks/terraform.ts";
 import { Variable } from "./blocks/variable.ts";
 import { Construct } from "./construct.ts";
 import { type InferInputs, type InferOutputs, Input, Output } from "./input_output/types.ts";
-import { fmtHcl } from "./utils.ts";
+import { findConfigFileSync, fmtHcl } from "./utils.ts";
 
 /**
  * Base class for defining Terraform/OpenTofu stacks.
@@ -139,6 +139,17 @@ export abstract class Stack<
    */
   get props(): Record<string, Input | Output> {
     return new ((this.constructor as any).Props)();
+  }
+
+  #configFile?: string;
+
+  get configFile(): string | undefined {
+    if (this.#configFile) return this.#configFile;
+    if (this.id.match(/^file:\/\/.*#.*$/)) {
+      this.#configFile = findConfigFileSync(this.id.split("#")[0]);
+      return this.#configFile;
+    }
+    return undefined;
   }
 
   /**

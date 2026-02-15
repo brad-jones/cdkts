@@ -173,6 +173,7 @@ Deno.test("DenoResource writeOnly props are re-written to write_only_props", asy
           password = "secret123"
           apiKey   = "key456"
         }
+        config_file = "*"
       }
     `),
   );

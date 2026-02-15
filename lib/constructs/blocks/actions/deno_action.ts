@@ -1,4 +1,5 @@
 import type { Construct } from "../../construct.ts";
+import { Stack } from "../../stack.ts";
 import { Action } from "./action.ts";
 
 /**
@@ -216,6 +217,7 @@ export class DenoAction<Self = typeof DenoAction> extends Action<Self> {
    * ```
    */
   constructor(parent: Construct, label: string, inputs: DenoAction["inputs"]) {
+    if (!inputs?.config.configFile) inputs!.config.configFile = Stack.of(parent).configFile;
     super(parent, "denobridge_action", label, inputs);
   }
 

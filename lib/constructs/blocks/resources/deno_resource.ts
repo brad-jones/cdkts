@@ -1,6 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
 
 import type { Construct } from "../../construct.ts";
+import { Stack } from "../../stack.ts";
 import { Resource } from "./resource.ts";
 
 /**
@@ -282,6 +283,7 @@ export class DenoResource<Self = typeof DenoResource> extends Resource<Self> {
    * ```
    */
   constructor(parent: Construct, label: string, inputs: DenoResource["inputs"]) {
+    if (!inputs?.configFile) inputs!.configFile = Stack.of(parent).configFile;
     if (inputs?.props["writeOnly"]) {
       inputs["write_only_props"] = inputs.props["writeOnly"];
       delete inputs.props["writeOnly"];

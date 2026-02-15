@@ -1,6 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
 
 import type { Construct } from "../../../construct.ts";
+import { Stack } from "../../../stack.ts";
 import { EphemeralResource } from "./ephemeral_resource.ts";
 
 /**
@@ -226,6 +227,7 @@ export class DenoEphemeralResource<Self = typeof DenoEphemeralResource> extends 
    * ```
    */
   constructor(parent: Construct, label: string, inputs: DenoEphemeralResource["inputs"]) {
+    if (!inputs?.configFile) inputs!.configFile = Stack.of(parent).configFile;
     super(parent, "denobridge_ephemeral_resource", label, inputs);
   }
 }

@@ -218,18 +218,11 @@ export class DenoAction<Self = typeof DenoAction> extends Action<Self> {
    */
   constructor(parent: Construct, label: string, inputs: DenoAction["inputs"]) {
     if (!inputs?.config.configFile) inputs!.config.configFile = Stack.of(parent).configFile;
-    super(parent, "denobridge_action", label, inputs);
-  }
-
-  protected override mapInputsForHcl(): unknown {
-    const inputs = super.mapInputsForHcl();
-    if (inputs && typeof inputs === "object" && "config" in inputs) {
-      if (inputs.config && typeof inputs.config === "object" && "configFile" in inputs.config) {
-        // deno-lint-ignore no-explicit-any
-        (inputs.config as any)["config_file"] = inputs.config["configFile"];
-        delete inputs.config["configFile"];
-      }
+    if (inputs?.config.configFile) {
+      // deno-lint-ignore no-explicit-any
+      (inputs as any).config["config_file"] = inputs.config.configFile;
+      delete inputs.config.configFile;
     }
-    return inputs;
+    super(parent, "denobridge_action", label, inputs);
   }
 }

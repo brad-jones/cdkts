@@ -17,7 +17,7 @@
   },
   "imports": {
     "@brad-jones/deno-config": "jsr:@brad-jones/deno-config@^1.0.0",
-    "@brad-jones/terraform-provider-denobridge": "jsr:@brad-jones/terraform-provider-denobridge@^0.4.0",
+    "@brad-jones/terraform-provider-denobridge": "jsr:@brad-jones/terraform-provider-denobridge@^0.4.1",
     "@cdktf/hcl-tools": "npm:@cdktf/hcl-tools@^0.21.0",
     "@cliffy/command": "jsr:@cliffy/command@1.0.0",
     "@cliffy/prompt": "jsr:@cliffy/prompt@^1.0.0",

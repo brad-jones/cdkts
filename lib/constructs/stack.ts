@@ -7,6 +7,7 @@ import { Block } from "./blocks/block.ts";
 import { DenoDataSource } from "./blocks/datasources/deno_datasource.ts";
 import { Output as OutputBlock } from "./blocks/output.ts";
 import { DenoBridgeProvider } from "./blocks/providers/denobridge.ts";
+import { Provider } from "./blocks/providers/provider.ts";
 import { DenoResource } from "./blocks/resources/deno_resource.ts";
 import { DenoEphemeralResource } from "./blocks/resources/ephemeral/deno_ephemeral_resource.ts";
 import { Terraform } from "./blocks/terraform.ts";
@@ -336,8 +337,35 @@ export abstract class Stack<
     // This includes Blocks that are direct children of the Stack, as well as
     // Blocks nested within non-Block Constructs. Blocks nested inside other
     // Blocks are excluded here since they're rendered by their parent Block's toHcl().
-    for (const item of this.descendants.filter((_) => _ instanceof Block && !(_.parent instanceof Block))) {
-      const block = item as Block;
+    const topLevelBlocks = this.descendants.filter((_) =>
+      _ instanceof Block && !(_.parent instanceof Block)
+    ) as Block[];
+
+    // Separate blocks by type for ordered output
+    const terraformBlocks = topLevelBlocks.filter((_) => _ instanceof Terraform);
+    const providerBlocks = topLevelBlocks.filter((_) => _ instanceof Provider);
+    const otherBlocks = topLevelBlocks.filter((_) => !(_ instanceof Terraform) && !(_ instanceof Provider));
+
+    // Output Terraform blocks first
+    for (const block of terraformBlocks) {
+      hcl = outdent`
+        ${hcl}
+
+        ${await block.toHcl(false)}
+      `;
+    }
+
+    // Output Provider blocks second
+    for (const block of providerBlocks) {
+      hcl = outdent`
+        ${hcl}
+
+        ${await block.toHcl(false)}
+      `;
+    }
+
+    // Output all other blocks
+    for (const block of otherBlocks) {
       hcl = outdent`
         ${hcl}
 

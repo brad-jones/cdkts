@@ -112,7 +112,6 @@ Deno.test("EphemeralResource - with lifecycle postcondition", async () => {
     ephemeral "provider_temp_token" "validated" {
       duration = "1h"
       lifecycle {
-
         postcondition {
           condition     = "self.token != null"
           error_message = "Token must not be null"
@@ -144,7 +143,6 @@ Deno.test("EphemeralResource - with lifecycle precondition", async () => {
     ephemeral "provider_temp_token" "checked" {
       duration = "1h"
       lifecycle {
-
         precondition {
           condition     = "var.enable_tokens == true"
           error_message = "Token generation must be enabled"

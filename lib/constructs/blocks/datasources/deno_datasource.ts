@@ -73,6 +73,13 @@ import { DataSource } from "./datasource.ts";
  */
 export class DenoDataSource<Self = typeof DenoDataSource> extends DataSource<Self> {
   /**
+   * Marker property to identify it's type to avoid circular dependencies when type checking.
+   *
+   * @internal
+   */
+  private readonly __type = "DenoDataSource";
+
+  /**
    * Properties class defining the inputs and outputs for DenoDataSource.
    *
    * Extends the base DataSource.Props with typed inputs for DenoDataSource specifics.

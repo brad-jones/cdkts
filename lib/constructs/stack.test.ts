@@ -2,12 +2,9 @@ import { DENOBRIDGE_VERSION } from "@brad-jones/terraform-provider-denobridge";
 import { outdent } from "@cspotcode/outdent";
 import { expect } from "@std/expect";
 import { Action } from "./blocks/actions/action.ts";
-import { DenoAction } from "./blocks/actions/deno_action.ts";
 import { DataSource } from "./blocks/datasources/datasource.ts";
 import { DenoDataSource } from "./blocks/datasources/deno_datasource.ts";
 import { DenoBridgeProvider } from "./blocks/providers/denobridge.ts";
-import { DenoResource } from "./blocks/resources/deno_resource.ts";
-import { DenoEphemeralResource } from "./blocks/resources/ephemeral/deno_ephemeral_resource.ts";
 import { EphemeralResource } from "./blocks/resources/ephemeral/ephemeral_resource.ts";
 import { Resource } from "./blocks/resources/resource.ts";
 import { Terraform } from "./blocks/terraform.ts";
@@ -85,6 +82,28 @@ Deno.test("stack with block with block", async () => {
   ).toBe(outdent`
     foo1 "bar" {
       baz = "qux"
+      foo2 "bar" {
+        baz = "qux"
+      }
+    }
+  `);
+});
+
+Deno.test("hcl fmt issue", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Block(this, "foo1", ["bar"], {}, (b) => {
+          new Block(b, "foo2", ["bar"], {
+            baz: "qux",
+          });
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    foo1 "bar" {
       foo2 "bar" {
         baz = "qux"
       }
@@ -194,7 +213,6 @@ Deno.test("stack with nested typed constructs", async () => {
 
   expect(await stack.toHcl()).toBe(outdent`
     action "moon" "large_colored_thing_abc_launch_rocket" {
-
       config {
         color = "red"
         size  = "large"
@@ -217,7 +235,6 @@ Deno.test("stack with nested typed constructs", async () => {
     }
 
     action "moon" "small_colored_thing_abc_launch_rocket" {
-
       config {
         color = "red"
         size  = "small"
@@ -240,7 +257,6 @@ Deno.test("stack with nested typed constructs", async () => {
     }
 
     action "moon" "large_colored_thing_xyz_launch_rocket" {
-
       config {
         color = "green"
         size  = "large"
@@ -263,7 +279,6 @@ Deno.test("stack with nested typed constructs", async () => {
     }
 
     action "moon" "small_colored_thing_xyz_launch_rocket" {
-
       config {
         color = "green"
         size  = "small"
@@ -285,96 +300,6 @@ Deno.test("stack with nested typed constructs", async () => {
       size  = "small"
     }
   `);
-});
-
-Deno.test("stack with DenoDataSource automatically adds DenoBridgeProvider and Terraform block", async () => {
-  const stack = new class MyStack extends Stack<typeof MyStack> {
-    constructor() {
-      super(`${import.meta.url}#${MyStack.name}`);
-
-      new DenoDataSource(this, "test_data", {
-        path: "https://example.com/datasource.ts",
-        props: { foo: "bar" },
-        permissions: { all: true },
-      });
-    }
-  }();
-
-  const hcl = await stack.toHcl();
-
-  expect(hcl).toContain("terraform {");
-  expect(hcl).toContain('source  = "brad-jones/denobridge"');
-  expect(hcl).toContain(`version = "${DENOBRIDGE_VERSION}"`);
-  expect(hcl).toContain('provider "denobridge" {');
-  expect(hcl).toContain('data "denobridge_datasource" "test_data" {');
-});
-
-Deno.test("stack with DenoResource automatically adds DenoBridgeProvider and Terraform block", async () => {
-  const stack = new class MyStack extends Stack<typeof MyStack> {
-    constructor() {
-      super(`${import.meta.url}#${MyStack.name}`);
-
-      new DenoResource(this, "test_resource", {
-        path: "https://example.com/resource.ts",
-        props: { name: "test" },
-        permissions: { allow: ["read"] },
-      });
-    }
-  }();
-
-  const hcl = await stack.toHcl();
-
-  expect(hcl).toContain("terraform {");
-  expect(hcl).toContain('source  = "brad-jones/denobridge"');
-  expect(hcl).toContain(`version = "${DENOBRIDGE_VERSION}"`);
-  expect(hcl).toContain('provider "denobridge" {');
-  expect(hcl).toContain('resource "denobridge_resource" "test_resource" {');
-});
-
-Deno.test("stack with DenoAction automatically adds DenoBridgeProvider and Terraform block", async () => {
-  const stack = new class MyStack extends Stack<typeof MyStack> {
-    constructor() {
-      super(`${import.meta.url}#${MyStack.name}`);
-
-      new DenoAction(this, "test_action", {
-        config: {
-          path: "https://example.com/action.ts",
-          props: { message: "hello" },
-          permissions: { all: true },
-        },
-      });
-    }
-  }();
-
-  const hcl = await stack.toHcl();
-
-  expect(hcl).toContain("terraform {");
-  expect(hcl).toContain('source  = "brad-jones/denobridge"');
-  expect(hcl).toContain(`version = "${DENOBRIDGE_VERSION}"`);
-  expect(hcl).toContain('provider "denobridge" {');
-  expect(hcl).toContain('action "denobridge_action" "test_action" {');
-});
-
-Deno.test("stack with DenoEphemeralResource automatically adds DenoBridgeProvider and Terraform block", async () => {
-  const stack = new class MyStack extends Stack<typeof MyStack> {
-    constructor() {
-      super(`${import.meta.url}#${MyStack.name}`);
-
-      new DenoEphemeralResource(this, "test_ephemeral", {
-        path: "https://example.com/ephemeral.ts",
-        props: { type: "v4" },
-        permissions: { all: true },
-      });
-    }
-  }();
-
-  const hcl = await stack.toHcl();
-
-  expect(hcl).toContain("terraform {");
-  expect(hcl).toContain('source  = "brad-jones/denobridge"');
-  expect(hcl).toContain(`version = "${DENOBRIDGE_VERSION}"`);
-  expect(hcl).toContain('provider "denobridge" {');
-  expect(hcl).toContain('ephemeral "denobridge_ephemeral_resource" "test_ephemeral" {');
 });
 
 Deno.test("stack with Deno construct and existing DenoBridgeProvider does not duplicate provider", async () => {

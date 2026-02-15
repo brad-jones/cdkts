@@ -7,6 +7,9 @@ import { z } from "@zod/zod";
 const Props = z.object({
   path: z.string(),
   content: z.string(),
+  writeOnly: z.object({
+    specialId: z.string(),
+  }).optional(),
 });
 
 const State = z.object({
@@ -26,8 +29,8 @@ export class FileExampleResource extends DenoResource<typeof FileExampleResource
     options?: Resource["inputs"],
   ) {
     super(parent, label, {
-      props,
       path: import.meta.url,
+      props,
       permissions: {
         all: true,
       },
@@ -38,8 +41,17 @@ export class FileExampleResource extends DenoResource<typeof FileExampleResource
 
 if (import.meta.main) {
   new ZodResourceProvider(Props, State, {
-    async create({ path, content }) {
+    async create({ path, content, writeOnly }) {
+      const specialId = writeOnly?.specialId;
+      if (specialId) {
+        // Do something with the specialId if needed.
+        // Keep in mind it is only available during create/update
+        // and will not be stored in state or available during read.
+        console.error(`Received specialId: ${specialId}`);
+      }
+
       await Deno.writeTextFile(path, content);
+
       return {
         id: path,
         state: {

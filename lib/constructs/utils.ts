@@ -1,7 +1,65 @@
 import { format } from "@cdktf/hcl-tools";
+import type { DenoAction } from "./blocks/actions/deno_action.ts";
 import { Block } from "./blocks/block.ts";
+import type { DenoDataSource } from "./blocks/datasources/deno_datasource.ts";
+import type { DenoResource } from "./blocks/resources/deno_resource.ts";
+import type { DenoEphemeralResource } from "./blocks/resources/ephemeral/deno_ephemeral_resource.ts";
+import type { Construct } from "./construct.ts";
 import { Attribute } from "./input_output/attribute.ts";
 import { RawHcl } from "./rawhcl.ts";
+
+/**
+ * Union type representing all Deno Bridge block types.
+ *
+ * Deno Bridge blocks allow executing Deno/TypeScript code within Terraform/OpenTofu configurations.
+ */
+export type DenoBridgeBlock = DenoAction | DenoDataSource | DenoResource | DenoEphemeralResource;
+
+/**
+ * Type guard to check if a construct is any type of Deno Bridge block.
+ *
+ * @param value - The construct to check.
+ * @returns True if the value is a DenoAction, DenoDataSource, DenoResource, or DenoEphemeralResource.
+ */
+export const isDenoBridgeBlock = (value: Construct): value is DenoBridgeBlock =>
+  "__type" in value && typeof value["__type"] === "string" &&
+  ["DenoAction", "DenoDataSource", "DenoResource", "DenoEphemeralResource"].includes(value["__type"]);
+
+/**
+ * Type guard to check if a construct is a DenoAction.
+ *
+ * @param value - The construct to check.
+ * @returns True if the value is a DenoAction.
+ */
+export const isDenoAction = (value: Construct): value is DenoAction =>
+  "__type" in value && value["__type"] === "DenoAction";
+
+/**
+ * Type guard to check if a construct is a DenoDataSource.
+ *
+ * @param value - The construct to check.
+ * @returns True if the value is a DenoDataSource.
+ */
+export const isDenoDataSource = (value: Construct): value is DenoDataSource =>
+  "__type" in value && value["__type"] === "DenoDataSource";
+
+/**
+ * Type guard to check if a construct is a DenoResource.
+ *
+ * @param value - The construct to check.
+ * @returns True if the value is a DenoResource.
+ */
+export const isDenoResource = (value: Construct): value is DenoResource =>
+  "__type" in value && value["__type"] === "DenoResource";
+
+/**
+ * Type guard to check if a construct is a DenoEphemeralResource.
+ *
+ * @param value - The construct to check.
+ * @returns True if the value is a DenoEphemeralResource.
+ */
+export const isDenoEphemeralResource = (value: Construct): value is DenoEphemeralResource =>
+  "__type" in value && value["__type"] === "DenoEphemeralResource";
 
 /**
  * Formats HCL (HashiCorp Configuration Language) code.

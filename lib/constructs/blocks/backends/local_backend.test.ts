@@ -17,7 +17,6 @@ Deno.test("LocalBackend - default", async () => {
     }().toHcl(),
   ).toBe(outdent`
     terraform {
-
       backend "local" {
 
       }
@@ -42,7 +41,6 @@ Deno.test("LocalBackend - with path", async () => {
     }().toHcl(),
   ).toBe(outdent`
     terraform {
-
       backend "local" {
         path = "custom-terraform.tfstate"
       }
@@ -67,7 +65,6 @@ Deno.test("LocalBackend - with workspace_dir", async () => {
     }().toHcl(),
   ).toBe(outdent`
     terraform {
-
       backend "local" {
         workspace_dir = "terraform-workspaces"
       }
@@ -93,7 +90,6 @@ Deno.test("LocalBackend - with both path and workspace_dir", async () => {
     }().toHcl(),
   ).toBe(outdent`
     terraform {
-
       backend "local" {
         path          = "state/terraform.tfstate"
         workspace_dir = "state/workspaces"

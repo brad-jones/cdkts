@@ -85,6 +85,13 @@ import { EphemeralResource } from "./ephemeral_resource.ts";
  */
 export class DenoEphemeralResource<Self = typeof DenoEphemeralResource> extends EphemeralResource<Self> {
   /**
+   * Marker property to identify it's type to avoid circular dependencies when type checking.
+   *
+   * @internal
+   */
+  private readonly __type = "DenoEphemeralResource";
+
+  /**
    * Properties class defining the inputs and outputs for DenoEphemeralResource.
    *
    * Extends the base EphemeralResource.Props with typed inputs for DenoEphemeralResource specifics.

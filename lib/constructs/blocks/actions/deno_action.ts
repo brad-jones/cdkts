@@ -165,6 +165,13 @@ export interface DenoActionConfig<Props = any> {
  */
 export class DenoAction<Self = typeof DenoAction> extends Action<Self> {
   /**
+   * Marker property to identify it's type to avoid circular dependencies when type checking.
+   *
+   * @internal
+   */
+  private readonly __type = "DenoAction";
+
+  /**
    * Properties class defining the inputs and outputs for DenoAction.
    *
    * Extends the base Action.Props with a typed config input for DenoAction specifics.

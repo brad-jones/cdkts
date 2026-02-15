@@ -122,11 +122,11 @@ export class DenoFormat<TArgs extends unknown[] = unknown[]> extends DenoDataSou
     options?: DataSource["inputs"],
   ) {
     super(parent, label, {
+      path: import.meta.url,
       props: {
         args: props.args,
         formatterString: serializeFunc(props.formatter),
       },
-      path: import.meta.url,
       permissions: {
         all: true,
       },

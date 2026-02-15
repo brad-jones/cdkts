@@ -121,6 +121,13 @@ import { Resource } from "./resource.ts";
  */
 export class DenoResource<Self = typeof DenoResource> extends Resource<Self> {
   /**
+   * Marker property to identify it's type to avoid circular dependencies when type checking.
+   *
+   * @internal
+   */
+  private readonly __type = "DenoResource";
+
+  /**
    * Properties class defining the inputs and outputs for DenoResource.
    *
    * Extends the base Resource.Props with typed inputs for DenoResource specifics.
@@ -266,6 +273,10 @@ export class DenoResource<Self = typeof DenoResource> extends Resource<Self> {
    * ```
    */
   constructor(parent: Construct, label: string, inputs: DenoResource["inputs"]) {
+    if (inputs?.props["writeOnly"]) {
+      inputs["write_only_props"] = inputs.props["writeOnly"];
+      delete inputs.props["writeOnly"];
+    }
     super(parent, "denobridge_resource", label, inputs);
   }
 }

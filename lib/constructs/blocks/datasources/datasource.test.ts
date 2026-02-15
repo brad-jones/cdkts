@@ -112,7 +112,6 @@ Deno.test("DataSource - with lifecycle postcondition", async () => {
     data "local_file" "validated" {
       filename = "test.txt"
       lifecycle {
-
         postcondition {
           condition     = "length(self.content) > 0"
           error_message = "File content must not be empty"

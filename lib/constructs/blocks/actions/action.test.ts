@@ -15,7 +15,6 @@ Deno.test("Action - basic", async () => {
     }().toHcl(),
   ).toBe(outdent`
     action "my_provider_action" "my_action" {
-
       config {
         key = "value"
       }
@@ -84,7 +83,6 @@ Deno.test("Action - with multiple config properties", async () => {
     }().toHcl(),
   ).toBe(outdent`
     action "my_provider_action" "my_action" {
-
       config {
         command = "echo hello"
         timeout = 30

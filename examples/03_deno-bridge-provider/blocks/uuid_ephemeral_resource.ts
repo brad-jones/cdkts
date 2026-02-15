@@ -25,8 +25,8 @@ export class UuidExampleEphemeralResource extends DenoEphemeralResource<typeof U
     options?: EphemeralResource["inputs"],
   ) {
     super(parent, label, {
-      props,
       path: import.meta.url,
+      props,
       permissions: {
         all: true,
       },

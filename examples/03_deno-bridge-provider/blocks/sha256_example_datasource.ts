@@ -23,8 +23,8 @@ export class Sha256ExampleDataSource extends DenoDataSource<typeof Sha256Example
     options?: DataSource["inputs"],
   ) {
     super(parent, label, {
-      props,
       path: import.meta.url,
+      props,
       permissions: {
         all: true,
       },

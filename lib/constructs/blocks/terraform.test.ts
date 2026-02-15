@@ -38,7 +38,6 @@ Deno.test("required_providers", async () => {
     }().toHcl(),
   ).toBe(outdent`
     terraform {
-
       required_providers {
         local = {
           source  = "hashicorp/local"

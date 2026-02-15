@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.6.6](https://github.com/brad-jones/cdkts/compare/321a3f784693c1f9f948a2f500786a605dc32593..v0.6.6) - 2026-02-15
+#### Bug Fixes
+- (**constructs**) re-write sensitive and writeOnly props to work with denobridge - ([b8e171c](https://github.com/brad-jones/cdkts/commit/b8e171c16c8fd94da1de133f39907ab29ff7c857)) - [@brad-jones](https://github.com/brad-jones)
+- (**constructs**) hcl is now prettier and does not contain unneeded newlines - ([326a8a8](https://github.com/brad-jones/cdkts/commit/326a8a8dfac067821dd856c0d2296fb9a4e6a823)) - [@brad-jones](https://github.com/brad-jones)
+#### Build system
+- allow command like task test -- --filter xyz to be run - ([321a3f7](https://github.com/brad-jones/cdkts/commit/321a3f784693c1f9f948a2f500786a605dc32593)) - [@brad-jones](https://github.com/brad-jones)
+#### Refactoring
+- small change that outputs blocks in a more ordered way - ([13c8d59](https://github.com/brad-jones/cdkts/commit/13c8d595e16b4c6a70147574faa80f774a7a19cc)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.6.5](https://github.com/brad-jones/cdkts/compare/7096884e59ea3470210b128d4d60a43333a376e8..v0.6.5) - 2026-02-14
 #### Bug Fixes
 - (**constructs**) make the basic 4 block types automatically namespace their labels - ([7096884](https://github.com/brad-jones/cdkts/commit/7096884e59ea3470210b128d4d60a43333a376e8)) - [@brad-jones](https://github.com/brad-jones)

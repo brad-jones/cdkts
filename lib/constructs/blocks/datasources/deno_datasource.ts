@@ -122,6 +122,15 @@ export class DenoDataSource<Self = typeof DenoDataSource> extends DataSource<Sel
     props = new DataSource.Input<any>();
 
     /**
+     * Optional path to a Deno configuration file (e.g., `deno.json` or `deno.jsonc`).
+     *
+     * If specified, the Deno script will be executed with the settings from this
+     * config file. This allows you to define compiler options, import maps, and
+     * other Deno configurations in a separate file.
+     */
+    configFile = new DataSource.Input<string | undefined>({ hclName: "config_file" });
+
+    /**
      * Deno runtime permissions for the script.
      *
      * Controls what system resources the Deno script can access at runtime.

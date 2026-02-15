@@ -211,6 +211,15 @@ export class DenoResource<Self = typeof DenoResource> extends Resource<Self> {
     path = new Resource.Input<string>();
 
     /**
+     * Optional path to a Deno configuration file (e.g., `deno.json` or `deno.jsonc`).
+     *
+     * If specified, the Deno script will be executed with the settings from this
+     * config file. This allows you to define compiler options, import maps, and
+     * other Deno configurations in a separate file.
+     */
+    configFile = new Resource.Input<string | undefined>({ hclName: "config_file" });
+
+    /**
      * Deno runtime permissions for the script.
      *
      * Controls what system resources the Deno script can access at runtime.

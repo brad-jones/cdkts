@@ -56,6 +56,15 @@ export interface DenoActionConfig<Props = any> {
   props: Props;
 
   /**
+   * Optional path to a Deno configuration file (e.g., `deno.json` or `deno.jsonc`).
+   *
+   * If specified, the Deno script will be executed with the settings from this
+   * config file. This allows you to define compiler options, import maps, and
+   * other Deno configurations in a separate file.
+   */
+  configFile?: string;
+
+  /**
    * Deno runtime permissions for the script.
    *
    * Controls what system resources the Deno script can access at runtime.
@@ -208,5 +217,17 @@ export class DenoAction<Self = typeof DenoAction> extends Action<Self> {
    */
   constructor(parent: Construct, label: string, inputs: DenoAction["inputs"]) {
     super(parent, "denobridge_action", label, inputs);
+  }
+
+  protected override mapInputsForHcl(): unknown {
+    const inputs = super.mapInputsForHcl();
+    if (inputs && typeof inputs === "object" && "config" in inputs) {
+      if (inputs.config && typeof inputs.config === "object" && "configFile" in inputs.config) {
+        // deno-lint-ignore no-explicit-any
+        (inputs.config as any)["config_file"] = inputs.config["configFile"];
+        delete inputs.config["configFile"];
+      }
+    }
+    return inputs;
   }
 }

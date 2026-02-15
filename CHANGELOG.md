@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.7.1](https://github.com/brad-jones/cdkts/compare/ffccd9b29b1add2a42aff4d4ca9d1cea2891ffe3..v0.7.1) - 2026-02-15
+#### Bug Fixes
+- (**constructs**) correctly map configFile to config_file - ([ffccd9b](https://github.com/brad-jones/cdkts/commit/ffccd9b29b1add2a42aff4d4ca9d1cea2891ffe3)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.7.0](https://github.com/brad-jones/cdkts/compare/4ca16219db6c4cf01badd8ff255820155e605941..v0.7.0) - 2026-02-15
 #### Features
 - (**constructs**) automatically inject the stacks deno config file - ([523e06b](https://github.com/brad-jones/cdkts/commit/523e06b6c4c4a38e138f52b8bc0db29205987ffc)) - [@brad-jones](https://github.com/brad-jones)

@@ -424,10 +424,14 @@ export class Block<
 
     childBlocks = childBlocks.trim();
 
+    const inputsHcl = toHcl(this.mapInputsForHcl());
+    const hasInputs = inputsHcl.trim().length > 0;
+    const separator = hasInputs && childBlocks.length > 0 ? "\n" : "";
+
     return await fmtHcl(
       outdent`
         ${this.type} ${this.labels.map((labels) => `"${labels}"`).join(" ")} {
-          ${toHcl(this.mapInputsForHcl())}${childBlocks.length > 0 ? `\n${childBlocks}` : ""}
+          ${inputsHcl}${separator}${childBlocks}
         }
       `,
       fmt,

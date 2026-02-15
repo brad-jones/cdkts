@@ -4,8 +4,6 @@ import { DatasourceProvider } from "@brad-jones/terraform-provider-denobridge";
 import { decodeBase64, encodeBase64 } from "@std/encoding";
 import { minifySync } from "oxc-minify";
 import type { Construct } from "../../construct.ts";
-import { Attribute } from "../../input_output/attribute.ts";
-import { Stack } from "../../stack.ts";
 import type { DataSource } from "./datasource.ts";
 import { DenoDataSource } from "./deno_datasource.ts";
 
@@ -25,48 +23,6 @@ export interface DenoFormatProps<TArgs extends unknown[] = unknown[]> {
 export type DenoFormatResult = string;
 
 /**
- * Convenience function for creating a {@linkcode DenoFormat} data source.
- *
- * Inspects `args` to find an {@linkcode Attribute} reference. Walks the
- * construct tree from that Attribute's source to locate the enclosing Stack, then
- * creates a `DenoFormat` data source attached to it.
- *
- * **Note:** At least one argument must be an Attribute instance (i.e., a construct
- * output reference). If all values are already resolved, this function will throw
- * an error. In that case, execute the formatter directly instead of using this function.
- *
- * @param formatter - A function that will be serialized and executed by the Deno bridge provider
- * @param args - Arguments to pass to the formatter (at least one must be an Attribute reference)
- * @returns The formatted result attribute reference
- * @throws {Error} If none of the args are Attribute instances
- *
- * @example
- * ```typescript
- * new Resource(this, "foo", "bar", {
- *   baz: format((r, g) => `${r} + ${g}`, red.outputs.rgbValue, green.outputs.rgbValue),
- * });
- * ```
- */
-export function format<TArgs extends unknown[] = unknown[]>(
-  formatter: (...args: TArgs) => string | Promise<string>,
-  ...args: TArgs
-): DenoFormatResult {
-  const attr = findAttribute(args);
-
-  if (!attr?.source) {
-    throw new Error(`
-    At least one argument must be a construct output reference (i.e., an Attribute instance).
-    If this was intentional and all values are already resolved, execute the formatter directly to get the result string.
-    We probably shouldn't execute it for you because it could be asynchronous, and you can't use 'await' in a constructor.
-    You likely made your formatter function asynchronous to dynamically import some module at runtime,
-    but if you only need to format some already-resolved values, you can just do that directly without using this 'format' function at all.
-  `);
-  }
-
-  return new DenoFormat(Stack.of(attr.source), `deno_format_${generateId()}`, { args, formatter }).outputs.result;
-}
-
-/**
  * A Terraform data source that serializes and executes a TypeScript formatter function
  * via the Deno bridge provider.
  *
@@ -75,13 +31,11 @@ export function format<TArgs extends unknown[] = unknown[]>(
  * resolved at plan/apply time. The formatter function is minified, base64-encoded,
  * and shipped to the Deno bridge provider for execution.
  *
- * For a more ergonomic API, prefer the {@linkcode format} convenience function.
- *
  * @template TArgs - Tuple type of the arguments passed to the formatter function
  *
  * @example
  * ```typescript
- * const redPlusGreen = new DenoFormat(this, crypto.randomUUID(), {
+ * const redPlusGreen = new DenoFormat(this, "RedGreen", {
  *   args: [red.outputs.rgbValue, green.outputs.rgbValue],
  *   formatter: (r, g) => `${r} + ${g}`,
  * });
@@ -172,27 +126,6 @@ if (import.meta.main) {
       return await parseFunc(formatterString)(...args);
     },
   });
-}
-
-function findAttribute(args: unknown[]): Attribute | undefined {
-  for (const arg of args) {
-    if (arg instanceof Attribute) return arg;
-    if (Array.isArray(arg)) {
-      const found = findAttribute(arg);
-      if (found) return found;
-    }
-  }
-  return undefined;
-}
-
-function generateId(
-  length = 16,
-  charset: string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-): string {
-  return Array.from(Array(length)).reduce((prev, curr) => {
-    curr = prev + charset[Math.floor(Math.random() * charset.length)];
-    return curr;
-  }, "");
 }
 
 function serializeFunc(func: (...args: any[]) => any) {

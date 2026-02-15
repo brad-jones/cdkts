@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.6.7](https://github.com/brad-jones/cdkts/compare/bbf9dc5d250e49733fafa4cf16da1418bcc8c34c..v0.6.7) - 2026-02-15
+#### Miscellaneous Chores
+- bump @brad-jones/terraform-provider-denobridge (#attempt 2) - ([dcb7b61](https://github.com/brad-jones/cdkts/commit/dcb7b615823eaec395921a6d5e2367e792553f3e)) - [@brad-jones](https://github.com/brad-jones)
+- bump @brad-jones/terraform-provider-denobridge - ([bbf9dc5](https://github.com/brad-jones/cdkts/commit/bbf9dc5d250e49733fafa4cf16da1418bcc8c34c)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.6.6](https://github.com/brad-jones/cdkts/compare/321a3f784693c1f9f948a2f500786a605dc32593..v0.6.6) - 2026-02-15
 #### Bug Fixes
 - (**constructs**) re-write sensitive and writeOnly props to work with denobridge - ([b8e171c](https://github.com/brad-jones/cdkts/commit/b8e171c16c8fd94da1de133f39907ab29ff7c857)) - [@brad-jones](https://github.com/brad-jones)

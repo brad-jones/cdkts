@@ -100,7 +100,8 @@ export function escapeHclString(str: string): string {
     .replace(/"/g, '\\"') // Double quote
     .replace(/\n/g, "\\n") // Newline
     .replace(/\r/g, "\\r") // Carriage return
-    .replace(/\t/g, "\\t"); // Tab
+    .replace(/\t/g, "\\t") // Tab
+    .replace(/\$\{/g, "$$$${"); // Escape ${ to prevent HCL interpolation (In HCL, `$$` produces a literal `$`, preventing interpolation.)
 
   /*
     NB: In general HCL syntax outside of the format function, the % symbol is
@@ -112,10 +113,6 @@ export function escapeHclString(str: string): string {
     find ourselves needing to do native tf string formatting. My hope is we
     can just use ES string templates, everywhere format would have been
     used in traditional HCL.
-
-    Similarly we do not actually need to escape the $. HCL only treats ${} as special.
-    And since in JavaScript we can use string templates as well as normal strings
-    we can easily decide if we want to interpolate using JavaScript or HCL.
   */
 
   // Restore interpolations as HCL syntax

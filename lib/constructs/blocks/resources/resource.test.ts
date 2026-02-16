@@ -1,6 +1,6 @@
 import { outdent } from "@cspotcode/outdent";
 import { expect } from "@std/expect";
-import { Resource, Stack } from "../../mod.ts";
+import { RawHcl, Resource, Stack } from "../../mod.ts";
 
 Deno.test("Resource - basic", async () => {
   expect(
@@ -30,8 +30,8 @@ Deno.test("Resource - with for_each", async () => {
 
         new Resource(this, "local_file", "each", {
           forEach: ["one", "two", "three"],
-          filename: "${each.value}.txt",
-          content: "Content for ${each.value}",
+          filename: new RawHcl('"${each.value}.txt"'),
+          content: new RawHcl('"Content for ${each.value}"'),
         });
       }
     }().toHcl(),

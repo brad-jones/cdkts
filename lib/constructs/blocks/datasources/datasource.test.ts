@@ -1,6 +1,6 @@
 import { outdent } from "@cspotcode/outdent";
 import { expect } from "@std/expect";
-import { DataSource, Resource, Stack } from "../../mod.ts";
+import { DataSource, RawHcl, Resource, Stack } from "../../mod.ts";
 
 Deno.test("DataSource - basic", async () => {
   expect(
@@ -28,7 +28,7 @@ Deno.test("DataSource - with count", async () => {
 
         new DataSource(this, "local_file", "files", {
           count: 3,
-          filename: "file-${count.index}.txt",
+          filename: new RawHcl('"file-${count.index}.txt"'),
         });
       }
     }().toHcl(),
@@ -48,7 +48,7 @@ Deno.test("DataSource - with for_each", async () => {
 
         new DataSource(this, "local_file", "configs", {
           forEach: ["dev", "staging", "prod"],
-          filename: "\${each.value}.json",
+          filename: new RawHcl('"${each.value}.json"'),
         });
       }
     }().toHcl(),

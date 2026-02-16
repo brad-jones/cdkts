@@ -1,6 +1,7 @@
 import { outdent } from "@cspotcode/outdent";
 import { expect } from "@std/expect";
 import { Action, Stack } from "../../mod.ts";
+import { RawHcl } from "../../rawhcl.ts";
 
 Deno.test("Action - basic", async () => {
   expect(
@@ -51,7 +52,7 @@ Deno.test("Action - with for_each", async () => {
         super(`${import.meta.url}#${MyStack.name}`);
 
         new Action(this, "my_provider_action", "my_action", {
-          config: { command: "${each.value}" },
+          config: { command: new RawHcl('"${each.value}"') },
           forEach: ["run", "test", "deploy"],
         });
       }

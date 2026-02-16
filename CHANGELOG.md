@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.7.4](https://github.com/brad-jones/cdkts/compare/a16c0835c24f8670d5b268aaffc5beddb8e40f06..v0.7.4) - 2026-02-16
+#### Bug Fixes
+- (**constructs**) finally figured out the right way to escape ${ to prevent HCL interpolation - ([a16c083](https://github.com/brad-jones/cdkts/commit/a16c0835c24f8670d5b268aaffc5beddb8e40f06)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.7.3](https://github.com/brad-jones/cdkts/compare/481f0c624e7a8ac4ad641f22f64d6cfe49ebb335..v0.7.3) - 2026-02-15
 #### Bug Fixes
 - (**constructs**) add default permissions to DenoFormat so it works out of the box - ([481f0c6](https://github.com/brad-jones/cdkts/commit/481f0c624e7a8ac4ad641f22f64d6cfe49ebb335)) - [@brad-jones](https://github.com/brad-jones)

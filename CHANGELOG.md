@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.7.6](https://github.com/brad-jones/cdkts/compare/6955d221b9481af3ac22de27faafe3e5a26478da..v0.7.6) - 2026-02-28
+#### Miscellaneous Chores
+- (**deno**) bump lock file again - ([f58f999](https://github.com/brad-jones/cdkts/commit/f58f9996a455eb8f2e73244b069d6b8843dc635e)) - [@brad-jones](https://github.com/brad-jones)
+- (**deno**) bump versions - ([6955d22](https://github.com/brad-jones/cdkts/commit/6955d221b9481af3ac22de27faafe3e5a26478da)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.7.5](https://github.com/brad-jones/cdkts/compare/8bc6b415d53366c1c0cb586a373c36641cc89fc0..v0.7.5) - 2026-02-28
 #### Miscellaneous Chores
 - (**pixi**) bump versions and add direnv support - ([8bc6b41](https://github.com/brad-jones/cdkts/commit/8bc6b415d53366c1c0cb586a373c36641cc89fc0)) - [@brad-jones](https://github.com/brad-jones)

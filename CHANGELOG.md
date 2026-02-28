@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.7.5](https://github.com/brad-jones/cdkts/compare/8bc6b415d53366c1c0cb586a373c36641cc89fc0..v0.7.5) - 2026-02-28
+#### Miscellaneous Chores
+- (**pixi**) bump versions and add direnv support - ([8bc6b41](https://github.com/brad-jones/cdkts/commit/8bc6b415d53366c1c0cb586a373c36641cc89fc0)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.7.4](https://github.com/brad-jones/cdkts/compare/a16c0835c24f8670d5b268aaffc5beddb8e40f06..v0.7.4) - 2026-02-16
 #### Bug Fixes
 - (**constructs**) finally figured out the right way to escape ${ to prevent HCL interpolation - ([a16c083](https://github.com/brad-jones/cdkts/commit/a16c0835c24f8670d5b268aaffc5beddb8e40f06)) - [@brad-jones](https://github.com/brad-jones)

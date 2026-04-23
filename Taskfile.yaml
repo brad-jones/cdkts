@@ -9,6 +9,8 @@ shopt: [globstar]
 tasks:
   init:
     desc: Setup dev env (anything that pixi can't install and setup for us).
+    status:
+      - test "$DIRENV_INIT" = "1"
     cmds:
       - lefthook install -f
       - git config pull.rebase true

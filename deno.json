@@ -19,8 +19,8 @@
     "@brad-jones/deno-config": "jsr:@brad-jones/deno-config@^1.0.0",
     "@brad-jones/terraform-provider-denobridge": "jsr:@brad-jones/terraform-provider-denobridge@^0.4.1",
     "@cdktf/hcl-tools": "npm:@cdktf/hcl-tools@^0.21.0",
-    "@cliffy/command": "jsr:@cliffy/command@1.0.0",
-    "@cliffy/prompt": "jsr:@cliffy/prompt@^1.0.0",
+    "@cliffy/command": "jsr:@cliffy/command@1.0.1",
+    "@cliffy/prompt": "jsr:@cliffy/prompt@^1.0.1",
     "@cspotcode/outdent": "jsr:@cspotcode/outdent@^0.8.0",
     "@david/dax": "jsr:@david/dax@^0.45.0",
     "@deno-library/progress": "jsr:@deno-library/progress@^1.5.1",
@@ -28,13 +28,13 @@
     "@mesqueeb/case-anything": "jsr:@mesqueeb/case-anything@^3.1.0",
     "@std/assert": "jsr:@std/assert@^1.0.19",
     "@std/encoding": "jsr:@std/encoding@^1.0.10",
-    "@std/expect": "jsr:@std/expect@^1.0.18",
+    "@std/expect": "jsr:@std/expect@^1.0.19",
     "@std/fs": "jsr:@std/fs@^1.0.23",
     "@std/path": "jsr:@std/path@^1.1.4",
-    "@zip-js/zip-js": "jsr:@zip-js/zip-js@^2.8.21",
+    "@zip-js/zip-js": "jsr:@zip-js/zip-js@^2.8.26",
     "@zod/zod": "jsr:@zod/zod@^4.3.6",
-    "ky": "npm:ky@^1.14.3",
-    "oxc-minify": "npm:oxc-minify@^0.115.0"
+    "ky": "npm:ky@^2.0.2",
+    "oxc-minify": "npm:oxc-minify@^0.127.0"
   },
   "lint": {
     "rules": {

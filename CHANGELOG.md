@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.7.8](https://github.com/brad-jones/cdkts/compare/857a57b994192648f4295229c710cbb3e92cef15..v0.7.8) - 2026-04-23
+#### Miscellaneous Chores
+- (**scripts**) execute bit - ([06683c8](https://github.com/brad-jones/cdkts/commit/06683c862476615238bbfd93895de82e71dfaeb5)) - [@brad-jones](https://github.com/brad-jones)
+- bump versions - ([6432af6](https://github.com/brad-jones/cdkts/commit/6432af6cd982b442a36d88894257ac0e34a55742)) - [@brad-jones](https://github.com/brad-jones)
+- remove some unneeded tasks - ([949d3bc](https://github.com/brad-jones/cdkts/commit/949d3bcda427d013cf12afbf2963f889b24d08ae)) - [@brad-jones](https://github.com/brad-jones)
+- add the scripts dir to PATH - ([990a2dd](https://github.com/brad-jones/cdkts/commit/990a2dd25a55cd0b06629249dc7ba412a8d8b720)) - [@brad-jones](https://github.com/brad-jones)
+- add lefthook script to ensure scripts are always executable - ([d3fd48b](https://github.com/brad-jones/cdkts/commit/d3fd48b1fb65ffa70d5ab2886e64e78e0f259a8f)) - [@brad-jones](https://github.com/brad-jones)
+- connect direnv to task init - ([857a57b](https://github.com/brad-jones/cdkts/commit/857a57b994192648f4295229c710cbb3e92cef15)) - [@brad-jones](https://github.com/brad-jones)
+
+- - -
+
 ## [v0.7.7](https://github.com/brad-jones/cdkts/compare/28d5681185e8887addc53a8f27649da66cec6b85..v0.7.7) - 2026-02-28
 #### Miscellaneous Chores
 - added a todo list - ([28d5681](https://github.com/brad-jones/cdkts/commit/28d5681185e8887addc53a8f27649da66cec6b85)) - [@brad-jones](https://github.com/brad-jones)

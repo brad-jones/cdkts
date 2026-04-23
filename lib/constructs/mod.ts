@@ -38,6 +38,7 @@ export * from "./blocks/backends/remote_backend.ts";
 export * from "./blocks/block.ts";
 export * from "./blocks/datasources/datasource.ts";
 export * from "./blocks/import.ts";
+export * from "./blocks/locals.ts";
 export * from "./blocks/datasources/deno_datasource.ts";
 export * from "./blocks/datasources/deno_format.ts";
 export * from "./blocks/output.ts";

@@ -1,5 +1,6 @@
 import type { Construct } from "../construct.ts";
 import { Block } from "./block.ts";
+import type { Provider } from "./providers/provider.ts";
 
 /**
  * Represents a Terraform/OpenTofu import block.
@@ -120,8 +121,7 @@ export class Import extends Block<typeof Import> {
      * provider: awsEast
      * ```
      */
-    // deno-lint-ignore no-explicit-any
-    provider = new Block.Input<Block<any> | undefined>();
+    provider = new Block.Input<Provider | undefined>();
   };
 
   /**

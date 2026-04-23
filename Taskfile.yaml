@@ -21,6 +21,14 @@ tasks:
       - "{{if .CI}}git config --global user.name github-actions[bot]{{end}}"
       - "{{if .CI}}git config --global user.email github-actions[bot]@users.noreply.github.com{{end}}"
 
+  add-skills:
+    desc: Installs agent skills from https://skills.sh/ but using Deno, instead of npm.
+    cmds:
+      - dx -y skills add github/awesome-copilot@git-commit -a universal -y
+      - dx -y skills add tttpob/bioinfo-skills@pixi -a universal -y
+      - dx -y skills add denoland/skills@deno-guidance -a universal -y
+      - dx -y skills add denoland/skills@deno-expert -a universal -y
+
   lint:
     desc: Lints our code to ensure it remains of a high quality.
     cmds:

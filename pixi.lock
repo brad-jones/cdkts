@@ -9,6 +9,7 @@ environments:
     packages:
       linux-64:
       - conda: https://prefix.dev/brads-forge/linux-64/cocogitto-7.0.0-h81b34b9_2.conda
+      - conda: https://prefix.dev/brads-forge/linux-64/copilot-cli-1.0.34-h81b34b9_1.conda
       - conda: https://prefix.dev/brads-forge/linux-64/deno-2.7.13-h81b34b9_4.conda
       - conda: https://prefix.dev/brads-forge/linux-64/dprint-0.54.0-h81b34b9_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gh-2.91.0-hfc2019e_0.conda
@@ -19,6 +20,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/terraform-1.14.9-h76a2195_0.conda
       osx-64:
       - conda: https://prefix.dev/brads-forge/osx-64/cocogitto-7.0.0-he0f4bc8_2.conda
+      - conda: https://prefix.dev/brads-forge/osx-64/copilot-cli-1.0.34-he0f4bc8_1.conda
       - conda: https://prefix.dev/brads-forge/osx-64/deno-2.7.13-he0f4bc8_4.conda
       - conda: https://prefix.dev/brads-forge/osx-64/dprint-0.54.0-he0f4bc8_2.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/gh-2.91.0-h5839d16_0.conda
@@ -29,6 +31,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-64/terraform-1.14.9-hdaada87_0.conda
       osx-arm64:
       - conda: https://prefix.dev/brads-forge/osx-arm64/cocogitto-7.0.0-he8ea13f_2.conda
+      - conda: https://prefix.dev/brads-forge/osx-arm64/copilot-cli-1.0.34-he8ea13f_1.conda
       - conda: https://prefix.dev/brads-forge/osx-arm64/deno-2.7.13-he8ea13f_4.conda
       - conda: https://prefix.dev/brads-forge/osx-arm64/dprint-0.54.0-he8ea13f_2.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gh-2.91.0-hf76c51c_0.conda
@@ -39,6 +42,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/terraform-1.14.9-h01237fd_0.conda
       win-64:
       - conda: https://prefix.dev/brads-forge/win-64/cocogitto-7.0.0-h3c70cbc_2.conda
+      - conda: https://prefix.dev/brads-forge/win-64/copilot-cli-1.0.34-h3c70cbc_1.conda
       - conda: https://prefix.dev/brads-forge/win-64/deno-2.7.13-h3c70cbc_4.conda
       - conda: https://prefix.dev/brads-forge/win-64/dprint-0.54.0-h3c70cbc_2.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/gh-2.91.0-h11686cb_0.conda
@@ -76,6 +80,30 @@ packages:
   license: MIT
   size: 2930608
   timestamp: 1772686802880
+- conda: https://prefix.dev/brads-forge/linux-64/copilot-cli-1.0.34-h81b34b9_1.conda
+  sha256: 4664cfa3165a765c98e6f4705814617b3e7cf9ab041fd23f13ca75f3689ea02e
+  md5: 01804c72349e779c03dd2e747442b65a
+  license: LicenseRef-GitHub-PreRelease
+  size: 53268369
+  timestamp: 1776745943863
+- conda: https://prefix.dev/brads-forge/osx-64/copilot-cli-1.0.34-he0f4bc8_1.conda
+  sha256: cf30951f825d1149dc82dfbec9089e849f345279637f902e39332e4be9db27cc
+  md5: 2d94d7850937013a0456c2372a8e100c
+  license: LicenseRef-GitHub-PreRelease
+  size: 51668304
+  timestamp: 1776745940836
+- conda: https://prefix.dev/brads-forge/osx-arm64/copilot-cli-1.0.34-he8ea13f_1.conda
+  sha256: 5e303d951d944434e9118da39b5de29f7f0002c763369cc69cc8b0aa69658d2f
+  md5: 0ed7ba1da810958d61151878ed2ac0f7
+  license: LicenseRef-GitHub-PreRelease
+  size: 48931492
+  timestamp: 1776745905806
+- conda: https://prefix.dev/brads-forge/win-64/copilot-cli-1.0.34-h3c70cbc_1.conda
+  sha256: 972c15713350194d719b099bd07b9a15a4b7294e304740e637d3f7d568113dc8
+  md5: f1eb9007ba27ecd37b6086aae7e11b60
+  license: LicenseRef-GitHub-PreRelease
+  size: 48822233
+  timestamp: 1776745897518
 - conda: https://prefix.dev/brads-forge/linux-64/deno-2.7.13-h81b34b9_4.conda
   sha256: 4ff28289affaf77c9e91abd5dfb0ce23f27e0b3577347f8b5c2745b158528c1a
   md5: 7d8eb4ea99c6dc3842b5f42dfdc3af61

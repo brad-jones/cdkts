@@ -47,6 +47,7 @@ HashiCorp's [terraform-cdk](https://github.com/hashicorp/terraform-cdk) (CDK-TF)
 - **Custom Data Sources**: Implement data sources in TypeScript
 - **Custom Actions**: Run TypeScript code during terraform lifecycle events
 - **Ephemeral Resources**: Support for temporary resources during operations
+- **Deno Backend**: Implement custom state backends entirely in TypeScript
 
 ## Installation
 
@@ -259,6 +260,7 @@ The [`examples/`](examples) directory contains progressively more advanced examp
 4. **[Inline Stack](examples/04_inline-stack)** - Execute without separate stack files
 5. **[Bundled Stack](examples/05_bundled-stack)** - Compile to standalone executable
 6. **[Multiple Stacks](examples/06_multiple-stacks)** - Coordinate dependent stacks
+7. **[Deno Backend](examples/07_deno-backend)** - Custom state backend in TypeScript
 
 ## CLI Usage
 
@@ -440,6 +442,69 @@ if (import.meta.main) {
 
 See the [Deno Bridge example](examples/03_deno-bridge-provider) for complete examples of resources, data sources, actions, and ephemeral resources.
 
+### Deno Backend
+
+Implement custom Terraform/OpenTofu state backends entirely in TypeScript.
+The `DenoBackend` wraps the [HTTP backend](https://developer.hashicorp.com/terraform/language/backend/http)
+and automatically starts a local HTTPS server that routes state operations to your handler methods:
+
+```typescript
+import { DenoBackend, RawHcl, Resource, Stack, Terraform } from "@brad-jones/cdkts/constructs";
+
+export default class MyStack extends Stack<typeof MyStack> {
+  constructor() {
+    super(`${import.meta.url}#${MyStack.name}`);
+
+    const tf = new Terraform(this, {
+      requiredVersion: ">=1,<2.0",
+      requiredProviders: {
+        local: { source: "hashicorp/local", version: "2.6.1" },
+      },
+    });
+
+    const stateFile = "./terraform.tfstate";
+    new DenoBackend(tf, {
+      handlers: {
+        getState: async () => {
+          try {
+            return await Deno.readFile(stateFile);
+          } catch {
+            return null;
+          }
+        },
+        updateState: async (body) => {
+          await Deno.writeFile(stateFile, body);
+        },
+        deleteState: async () => {
+          try {
+            await Deno.remove(stateFile);
+          } catch { /* noop */ }
+        },
+      },
+    });
+
+    new Resource(this, "local_file", "hello", {
+      filename: new RawHcl('"${path.module}/message.txt"'),
+      content: "Hello from Deno Backend!",
+    });
+  }
+}
+```
+
+Under the hood, `DenoBackend`:
+
+1. Generates a self-signed TLS certificate for localhost
+2. Generates random basic auth credentials
+3. Starts an HTTPS server that maps HTTP methods (GET, POST, DELETE, LOCK, UNLOCK) to your handlers
+4. Injects the server address and credentials into Terraform via `TF_HTTP_*` env vars
+5. Shuts down the server during project cleanup
+
+Optional `lock` and `unlock` handlers enable state locking. The construct is designed
+to be extended — build higher-level abstractions like file-based, database-backed,
+or cloud storage backends on top of it.
+
+See the [Deno Backend example](examples/07_deno-backend) for a complete working example.
+
 ## API Overview
 
 ### Constructs
@@ -451,6 +516,8 @@ See the [Deno Bridge example](examples/03_deno-bridge-provider) for complete exa
       - **`Backend`**: Extends Block, to provide a generic `backend` block
         - **`LocalBackend`**: Extends Backend, to provide a type safe local backend block
         - **`RemoteBackend`**: Extends Backend, to provide a type safe remote backend block
+        - **`HttpBackend`**: Extends Backend, to provide a type safe HTTP backend block
+          - **`DenoBackend`**: Extends HttpBackend, implements a state backend with TypeScript handlers
         - TODO: remaining backends but you can still express any backend with the base Backend block.
     - **`Provider`**: Extends Block, to provide a generic `provider` block
       - **`DenoBridgeProvider`**: Extends Provider, to provide a type safe `denobridge` provider block.
@@ -477,4 +544,5 @@ _Remember any block that is currently not implemented can still be expressed dir
 ### Automation
 
 - **`Project`** - Lifecycle management (init, plan, apply, destroy)
+- **`DenoBackendServer`** - HTTPS server for DenoBackend state handlers
 - **`StackBundler`** - Compile stacks to executables

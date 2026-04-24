@@ -5,14 +5,17 @@ import { encodeHex } from "@std/encoding/hex";
 import { ensureDir, exists, walk } from "@std/fs";
 import { dirname, fromFileUrl, join, normalize } from "@std/path";
 import { DenoAction } from "../constructs/blocks/actions/deno_action.ts";
+import { DenoBackend } from "../constructs/blocks/backends/deno_backend.ts";
 import { DenoDataSource } from "../constructs/blocks/datasources/deno_datasource.ts";
 import { DenoBridgeProvider } from "../constructs/blocks/providers/denobridge.ts";
 import { DenoResource } from "../constructs/blocks/resources/deno_resource.ts";
 import { DenoEphemeralResource } from "../constructs/blocks/resources/ephemeral/deno_ephemeral_resource.ts";
 import { Terraform } from "../constructs/blocks/terraform.ts";
 import type { Stack } from "../constructs/stack.ts";
+import { DenoBackendServer } from "./deno_backend_server.ts";
 import { OpenTofuDownloader } from "./downloader/opentofu.ts";
 import { TerraformDownloader } from "./downloader/terraform.ts";
+import { generateSelfSignedCert } from "./tls.ts";
 import type { ApplyOptions } from "./types/apply_options.ts";
 import type { InitOptions } from "./types/init_options.ts";
 import type { Plan, PlanJsonObject } from "./types/plan.ts";
@@ -78,6 +81,9 @@ export class Project<Self, Inputs, Outputs> {
   readonly #props: ProjectProps<Self, Inputs, Outputs> & {
     flavor: "tofu" | "terraform";
   };
+
+  #backendEnv: Record<string, string> = {};
+  #backendServer?: DenoBackendServer;
 
   /**
    * Gets the project directory path.
@@ -256,6 +262,52 @@ export class Project<Self, Inputs, Outputs> {
               }
             }
           }
+        }
+      }
+
+      // Start the Deno backend server if a DenoBackend construct is detected
+      let denoBackend: DenoBackend | undefined;
+      for (const construct of this.#props.stack.descendants) {
+        if (construct instanceof DenoBackend) {
+          if (denoBackend) {
+            throw new Error(
+              "Multiple DenoBackend instances detected in the stack. " +
+                "Terraform/OpenTofu only supports a single backend per configuration.",
+            );
+          }
+          denoBackend = construct;
+        }
+      }
+
+      if (denoBackend) {
+        const { cert, key } = await generateSelfSignedCert();
+        const username = crypto.randomUUID();
+        const password = crypto.randomUUID();
+
+        this.#backendServer = new DenoBackendServer({
+          handlers: denoBackend.handlers,
+          cert,
+          key,
+          username,
+          password,
+          port: denoBackend.serverPort,
+          hostname: denoBackend.serverHostname,
+        });
+
+        const addr = await this.#backendServer.start();
+        const baseUrl = `https://${addr.hostname}:${addr.port}/`;
+
+        this.#backendEnv = {
+          TF_HTTP_ADDRESS: baseUrl,
+          TF_HTTP_USERNAME: username,
+          TF_HTTP_PASSWORD: password,
+        };
+
+        if (denoBackend.handlers.lock) {
+          this.#backendEnv.TF_HTTP_LOCK_ADDRESS = baseUrl;
+        }
+        if (denoBackend.handlers.unlock) {
+          this.#backendEnv.TF_HTTP_UNLOCK_ADDRESS = baseUrl;
         }
       }
 
@@ -509,7 +561,7 @@ export class Project<Self, Inputs, Outputs> {
     args: string[],
     options?: { json?: boolean; quiet?: boolean; env?: Record<string, string | undefined> },
   ): Promise<unknown | void> {
-    const env = { ...Deno.env.toObject() };
+    const env = { ...Deno.env.toObject(), ...this.#backendEnv };
     if (options?.env) {
       for (const [key, value] of Object.entries(options.env)) {
         if (value !== undefined) {
@@ -544,6 +596,10 @@ export class Project<Self, Inputs, Outputs> {
    * This is useful for cleaning up temporary directories after project completion.
    */
   async cleanUp(): Promise<void> {
+    if (this.#backendServer) {
+      await this.#backendServer.stop();
+      this.#backendServer = undefined;
+    }
     if (this.#props.projectDir) {
       await Deno.remove(this.#props.projectDir, { recursive: true });
     }

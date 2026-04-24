@@ -37,6 +37,7 @@ export * from "./blocks/backends/backend.ts";
 export * from "./blocks/backends/azurerm_backend.ts";
 export * from "./blocks/backends/consul_backend.ts";
 export * from "./blocks/backends/cos_backend.ts";
+export * from "./blocks/backends/deno_backend.ts";
 export * from "./blocks/backends/gcs_backend.ts";
 export * from "./blocks/backends/http_backend.ts";
 export * from "./blocks/backends/kubernetes_backend.ts";

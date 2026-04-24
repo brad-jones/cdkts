@@ -464,7 +464,7 @@ See the [Deno Bridge example](examples/03_deno-bridge-provider) for complete exa
       - **`DenoDataSource`**: Extends DataSource, to provide a generic `denobridge_datasource` block.
     - **`Variable`** - Input variable
     - **`Output`** - Output value
-    - **`Module`** - TODO
+    - **`Module`** - Calls a reusable Terraform/OpenTofu module (local path, registry, or remote source).
     - **`Locals`** - TODO
     - **`Check`** - TODO
     - **`Import`** - TODO

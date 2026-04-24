@@ -157,7 +157,25 @@ export class Terraform extends Block<typeof Terraform> {
      */
     cloud = new Block.Input<Cloud["inputs"] | undefined>();
 
-    // TODO: https://developer.hashicorp.com/terraform/language/block/terraform#provider_meta
+    /**
+     * Specifies metadata fields that a provider may expect.
+     *
+     * Individual modules can populate the metadata fields independently of any
+     * provider configuration. The metadata schema is defined by each provider.
+     * Maps provider local names to their metadata key-value pairs.
+     *
+     * @see https://developer.hashicorp.com/terraform/language/block/terraform#provider_meta
+     *
+     * @example
+     * ```typescript
+     * providerMeta: {
+     *   "my-provider": {
+     *     hello: "world",
+     *   },
+     * }
+     * ```
+     */
+    providerMeta = new Block.Input<Record<string, Record<string, unknown>> | undefined>();
 
     /**
      * Specifies a list of experimental feature names to enable.
@@ -201,6 +219,12 @@ export class Terraform extends Block<typeof Terraform> {
       new Cloud(this, inputs.cloud);
     }
 
+    if (inputs?.providerMeta) {
+      for (const [providerName, meta] of Object.entries(inputs.providerMeta)) {
+        new Block(this, "provider_meta", [providerName], meta);
+      }
+    }
+
     if (inputs?.backend) {
       if ("local" in inputs.backend) {
         new LocalBackend(this, inputs.backend.local);
@@ -224,6 +248,7 @@ export class Terraform extends Block<typeof Terraform> {
     if (inputs) {
       delete inputs["backend"];
       delete inputs["cloud"];
+      delete inputs["providerMeta"];
       delete inputs["requiredProviders"];
     }
     return inputs;

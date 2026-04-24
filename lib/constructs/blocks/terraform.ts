@@ -2,6 +2,7 @@ import type { Construct } from "../construct.ts";
 import { LocalBackend } from "./backends/local_backend.ts";
 import { RemoteBackend } from "./backends/remote_backend.ts";
 import { Block } from "./block.ts";
+import { Cloud } from "./cloud.ts";
 
 /**
  * Represents a Terraform/OpenTofu configuration block.
@@ -39,6 +40,15 @@ import { Block } from "./block.ts";
  *     local: {
  *       path: "custom-terraform.tfstate",
  *     },
+ *   },
+ * });
+ *
+ * // Configuration with HCP Terraform (cloud)
+ * new Terraform(this, {
+ *   requiredVersion: ">=1.0",
+ *   cloud: {
+ *     organization: "my-org",
+ *     workspaces: { name: "my-workspace" },
  *   },
  * });
  * ```
@@ -129,6 +139,27 @@ export class Terraform extends Block<typeof Terraform> {
     >();
 
     /**
+     * Configures the connection to HCP Terraform or Terraform Enterprise.
+     *
+     * The `cloud` block enables remote state storage, remote execution, and workspace
+     * management. It is **mutually exclusive** with the `backend` property — only one
+     * of the two can be configured per Terraform block.
+     *
+     * @see https://developer.hashicorp.com/terraform/language/block/terraform#cloud
+     *
+     * @example
+     * ```typescript
+     * cloud: {
+     *   organization: "my-org",
+     *   workspaces: { name: "my-workspace" },
+     * }
+     * ```
+     */
+    cloud = new Block.Input<Cloud["inputs"] | undefined>();
+
+    // TODO: https://developer.hashicorp.com/terraform/language/block/terraform#provider_meta
+
+    /**
      * Specifies a list of experimental feature names to enable.
      *
      * Experimental features may have bugs or unexpected behavior and are subject
@@ -142,9 +173,6 @@ export class Terraform extends Block<typeof Terraform> {
      * ```
      */
     experiments = new Block.Input<string[] | undefined>();
-
-    // TODO: https://developer.hashicorp.com/terraform/language/settings/terraform-cloud
-    // TODO: https://developer.hashicorp.com/terraform/language/providers/requirements#provider-meta
   };
 
   /**
@@ -157,8 +185,20 @@ export class Terraform extends Block<typeof Terraform> {
   constructor(parent: Construct, inputs: Terraform["inputs"], childBlocks?: (b: Block) => void) {
     super(parent, "terraform", [], inputs, childBlocks);
 
+    if (inputs?.cloud && inputs?.backend) {
+      throw new Error(
+        "The 'cloud' and 'backend' options are mutually exclusive. " +
+          "Configure either a 'cloud' block for HCP Terraform / Terraform Enterprise, " +
+          "or a 'backend' block for other state storage, but not both.",
+      );
+    }
+
     if (inputs?.requiredProviders) {
       new Block(this, "required_providers", [], inputs.requiredProviders);
+    }
+
+    if (inputs?.cloud) {
+      new Cloud(this, inputs.cloud);
     }
 
     if (inputs?.backend) {
@@ -183,6 +223,7 @@ export class Terraform extends Block<typeof Terraform> {
     const inputs = super.mapInputsForHcl();
     if (inputs) {
       delete inputs["backend"];
+      delete inputs["cloud"];
       delete inputs["requiredProviders"];
     }
     return inputs;

@@ -38,6 +38,7 @@ export * from "./blocks/backends/local_backend.ts";
 export * from "./blocks/backends/remote_backend.ts";
 export * from "./blocks/block.ts";
 export * from "./blocks/check.ts";
+export * from "./blocks/cloud.ts";
 export * from "./blocks/datasources/datasource.ts";
 export * from "./blocks/import.ts";
 export * from "./blocks/locals.ts";

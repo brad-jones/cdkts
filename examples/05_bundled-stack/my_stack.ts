@@ -39,5 +39,6 @@ export default class MyStack extends Stack<typeof MyStack> {
 // NB: If you forget to add this section, CDKTS will generate it for you.
 //     You only bother to add this section if you wanted to do something custom.
 if (import.meta.main) {
-  await new Project({ projectDir: `${rootDir}/out`, stack: new MyStack() }).apply();
+  await using project = new Project({ projectDir: `${rootDir}/out`, stack: new MyStack() });
+  await project.apply();
 }

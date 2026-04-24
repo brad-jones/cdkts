@@ -596,12 +596,22 @@ export class Project<Self, Inputs, Outputs> {
    * This is useful for cleaning up temporary directories after project completion.
    */
   async cleanUp(): Promise<void> {
+    await this[Symbol.asyncDispose]();
+    if (this.#props.projectDir) {
+      await Deno.remove(this.#props.projectDir, { recursive: true });
+    }
+  }
+
+  /**
+   * Stops the Deno backend server if one was started.
+   *
+   * This is called automatically when using `await using` with a Project instance,
+   * ensuring the backend server is always cleaned up even if `cleanUp()` is not called.
+   */
+  async [Symbol.asyncDispose](): Promise<void> {
     if (this.#backendServer) {
       await this.#backendServer.stop();
       this.#backendServer = undefined;
-    }
-    if (this.#props.projectDir) {
-      await Deno.remove(this.#props.projectDir, { recursive: true });
     }
   }
 

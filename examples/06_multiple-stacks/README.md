@@ -163,14 +163,21 @@ The real power of custom project scripts is the ability to orchestrate complex m
 
 ```ts
 // Get outputs from first stack
-const stack1State = await new Project({ stack: stack1 }).apply();
+let stack1State;
+{
+  await using project = new Project({ stack: stack1 });
+  stack1State = await project.apply();
+}
 
 // Pass outputs as inputs to dependent stack
-await new Project({
-  stack: new Stack2({
-    specialId: stack1State.values!.outputs!.specialId.value,
-  }),
-}).apply();
+{
+  await using project = new Project({
+    stack: new Stack2({
+      specialId: stack1State.values!.outputs!.specialId.value,
+    }),
+  });
+  await project.apply();
+}
 ```
 
 This pattern enables:

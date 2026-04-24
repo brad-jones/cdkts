@@ -232,7 +232,7 @@ The `Project` class provides programmatic control over the Terraform/OpenTofu li
 import { Project } from "@brad-jones/cdkts/automate";
 import MyStack from "./my_stack.ts";
 
-const project = new Project({
+await using project = new Project({
   stack: new MyStack(),
 });
 
@@ -338,14 +338,21 @@ import Stack1 from "./stack_1.ts";
 import Stack2 from "./stack_2.ts";
 
 // Apply first stack
-const state1 = await new Project({ stack: new Stack1() }).apply();
+let state1;
+{
+  await using project = new Project({ stack: new Stack1() });
+  state1 = await project.apply();
+}
 
 // Pass outputs to second stack
-await new Project({
-  stack: new Stack2({
-    dbEndpoint: state1.values!.outputs!.dbEndpoint.value,
-  }),
-}).apply();
+{
+  await using project = new Project({
+    stack: new Stack2({
+      dbEndpoint: state1.values!.outputs!.dbEndpoint.value,
+    }),
+  });
+  await project.apply();
+}
 ```
 
 ### Bundled Stacks (Standalone Executables)

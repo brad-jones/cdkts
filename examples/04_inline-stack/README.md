@@ -79,7 +79,7 @@ Terraform or OpenTofu binary. Its primary purpose is to take a `Stack` instance
 and execute various Terraform commands against it:
 
 ```ts
-const project = new Project({
+await using project = new Project({
   stack: new MyStack(),
 });
 
@@ -92,15 +92,18 @@ await project.destroy(); // terraform destroy
 In this example, we're using an inline stack with immediate execution:
 
 ```ts
-await new Project({
-  projectDir: `${import.meta.dirname}/out`,
-  stack: new (class MyStack extends Stack<typeof MyStack> {
-    // ... stack definition ...
-  })(),
-}).apply();
+{
+  await using project = new Project({
+    projectDir: `${import.meta.dirname}/out`,
+    stack: new (class MyStack extends Stack<typeof MyStack> {
+      // ... stack definition ...
+    })(),
+  });
+  await project.apply();
+}
 ```
 
-This creates a `Project`, passes it an anonymous `Stack` class instance, and immediately calls `.apply()` to provision the infrastructure.
+This creates a `Project`, passes it an anonymous `Stack` class instance, and calls `.apply()` to provision the infrastructure. The `await using` syntax ensures the project is automatically cleaned up when the block exits.
 
 ### Project Directory
 
@@ -142,7 +145,7 @@ Using a hash-based directory name provides several benefits:
 For advanced use cases, you can specify a custom project directory:
 
 ```ts
-const project = new Project({
+await using project = new Project({
   stack: new MyStack(),
   projectDir: "./my-custom-project",
 });

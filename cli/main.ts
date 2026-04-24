@@ -85,7 +85,7 @@ await new Command()
   .action(async function (options, subCmd: string, stackFilePath: string) {
     const stack = await importStack(await Deno.realPath(stackFilePath));
 
-    const project = new Project({
+    await using project = new Project({
       stack,
       flavor: options.flavor ?? "tofu",
       tfBinaryPath: options.tfBinaryPath,
@@ -121,7 +121,7 @@ await new Command()
   .action(async function (options, stackFilePath: string) {
     const stack = await importStack(await Deno.realPath(stackFilePath));
 
-    const project = new Project({
+    await using project = new Project({
       stack,
       flavor: options.flavor ?? "tofu",
       tfBinaryPath: options.tfBinaryPath,
@@ -167,7 +167,7 @@ await new Command()
   .action(async function (options, stackFilePath: string) {
     const stack = await importStack(await Deno.realPath(stackFilePath));
 
-    const project = new Project({
+    await using project = new Project({
       stack,
       flavor: options.flavor ?? "tofu",
       tfBinaryPath: options.tfBinaryPath,
@@ -199,7 +199,7 @@ await new Command()
   .action(async function (options, stackFilePath: string) {
     const stack = await importStack(await Deno.realPath(stackFilePath));
 
-    const project = new Project({
+    await using project = new Project({
       stack,
       flavor: options.flavor ?? "tofu",
       tfBinaryPath: options.tfBinaryPath,
@@ -235,7 +235,7 @@ await new Command()
   .action(async function (options, stackFilePath: string) {
     const stack = await importStack(await Deno.realPath(stackFilePath));
 
-    const project = new Project({
+    await using project = new Project({
       stack,
       flavor: options.flavor ?? "tofu",
       tfBinaryPath: options.tfBinaryPath,
@@ -268,7 +268,7 @@ await new Command()
   .action(async function (options, stackFilePath: string) {
     const stack = await importStack(await Deno.realPath(stackFilePath));
 
-    const project = new Project({
+    await using project = new Project({
       stack,
       flavor: options.flavor ?? "tofu",
       tfBinaryPath: options.tfBinaryPath,
@@ -305,7 +305,7 @@ await new Command()
   .action(async function (options, stackFilePath: string) {
     const stack = await importStack(await Deno.realPath(stackFilePath));
 
-    const project = new Project({
+    await using project = new Project({
       stack,
       flavor: options.flavor ?? "tofu",
       tfBinaryPath: options.tfBinaryPath,
@@ -330,7 +330,7 @@ await new Command()
   .action(async function (options, stackFilePath: string, name?: string) {
     const stack = await importStack(await Deno.realPath(stackFilePath));
 
-    const project = new Project({
+    await using project = new Project({
       stack,
       flavor: options.flavor ?? "tofu",
       tfBinaryPath: options.tfBinaryPath,

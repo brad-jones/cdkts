@@ -70,6 +70,10 @@ export class DenoBackendServer {
     }
   }
 
+  async [Symbol.asyncDispose](): Promise<void> {
+    await this.stop();
+  }
+
   async #handleRequest(req: Request): Promise<Response> {
     // Validate basic auth
     if (!this.#checkAuth(req)) {

@@ -116,26 +116,28 @@ export class StackBundler {
     const stack = await importStack(stackFilePath);
 
     // Create a new project
-    const project = new Project({
-      flavor: this.#props.flavor,
-      tfVersion: this.#props.tfVersion,
-      stack,
-    });
-    await project.preInit();
+    {
+      await using project = new Project({
+        flavor: this.#props.flavor,
+        tfVersion: this.#props.tfVersion,
+        stack,
+      });
+      await project.preInit();
 
-    // Build the lock file args
-    const args = ["providers", "lock"];
-    for (const target of targets ?? [this.#props.currentTarget]) {
-      args.push(`-platform=${this.#targetToPlatform(target)}`);
+      // Build the lock file args
+      const args = ["providers", "lock"];
+      for (const target of targets ?? [this.#props.currentTarget]) {
+        args.push(`-platform=${this.#targetToPlatform(target)}`);
+      }
+
+      // Create the lock file
+      console.log(`generating .terraform.lock.hcl for ${stackFilePath}`);
+      await project.exec(args);
+      console.log("\n");
+
+      // Return it's path
+      return join(project.projectDir, ".terraform.lock.hcl");
     }
-
-    // Create the lock file
-    console.log(`generating .terraform.lock.hcl for ${stackFilePath}`);
-    await project.exec(args);
-    console.log("\n");
-
-    // Return it's path
-    return join(project.projectDir, ".terraform.lock.hcl");
   }
 
   /**
@@ -155,20 +157,22 @@ export class StackBundler {
     const stack = await importStack(stackFilePath);
 
     // Create a new project
-    const project = new Project({
-      flavor: this.#props.flavor,
-      tfVersion: this.#props.tfVersion,
-      stack,
-    });
-    await project.preInit();
+    {
+      await using project = new Project({
+        flavor: this.#props.flavor,
+        tfVersion: this.#props.tfVersion,
+        stack,
+      });
+      await project.preInit();
 
-    // Download the providers and return the mirror dir
-    console.log(`downloading providers:${target} for ${stackFilePath}`);
-    const tfMirrorDir = join(project.projectDir, target, "tf-mirror");
-    await project.exec(["providers", "mirror", `-platform=${this.#targetToPlatform(target)}`, tfMirrorDir]);
-    console.log("\n");
+      // Download the providers and return the mirror dir
+      console.log(`downloading providers:${target} for ${stackFilePath}`);
+      const tfMirrorDir = join(project.projectDir, target, "tf-mirror");
+      await project.exec(["providers", "mirror", `-platform=${this.#targetToPlatform(target)}`, tfMirrorDir]);
+      console.log("\n");
 
-    return tfMirrorDir;
+      return tfMirrorDir;
+    }
   }
 
   /**
@@ -292,7 +296,10 @@ export class StackBundler {
       outdent`
         import Stack from "./${basename(stackFilePath)}";
         import { Project } from "jsr:@brad-jones/cdkts@${this.#CDKTS_VERSION}/automate";
-        await new Project({ stack: new Stack() }).apply();
+        {
+          await using project = new Project({ stack: new Stack() });
+          await project.apply();
+        }
       `,
     );
 

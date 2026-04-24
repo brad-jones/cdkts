@@ -30,7 +30,7 @@ Deno.test(
   "project - throws when flavor is 'terraform' and encryption is configured",
   async () => {
     const stack = new EncryptedStack(`${import.meta.url}#terraform-encryption-error`);
-    const project = new Project({
+    await using project = new Project({
       flavor: "terraform",
       stack,
       projectDir: await Deno.makeTempDir({ prefix: "cdkts-project-test-" }),
@@ -48,7 +48,7 @@ Deno.test(
   async () => {
     const stack = new EncryptedStack(`${import.meta.url}#tofu-encryption-ok`);
     const projectDir = await Deno.makeTempDir({ prefix: "cdkts-project-test-" });
-    const project = new Project({
+    await using project = new Project({
       flavor: "tofu",
       stack,
       projectDir,
@@ -63,7 +63,7 @@ Deno.test(
   async () => {
     const stack = new PlainStack(`${import.meta.url}#terraform-no-encryption-ok`);
     const projectDir = await Deno.makeTempDir({ prefix: "cdkts-project-test-" });
-    const project = new Project({
+    await using project = new Project({
       flavor: "terraform",
       stack,
       projectDir,

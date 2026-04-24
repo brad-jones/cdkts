@@ -466,7 +466,8 @@ See the [Deno Bridge example](examples/03_deno-bridge-provider) for complete exa
     - **`Output`** - Exports a value from a stack, making it available for inspection after apply or for consumption by other configurations.
     - **`Module`** - Calls a reusable Terraform/OpenTofu module (local path, registry, or remote source).
     - **`Local`** - Assigns a name to an expression so it can be reused multiple times within a configuration without repetition.
-    - **`Check`** - TODO
+    - **`Check`** - Validates infrastructure outside the typical resource lifecycle.
+    - **`Assertion`** - Declares a validation condition within a `Check` block.
     - **`Import`** - Imports existing infrastructure resources into Terraform state so they can be managed as code.
     - **`Moved`** - TODO
     - **`Removed`** - TODO

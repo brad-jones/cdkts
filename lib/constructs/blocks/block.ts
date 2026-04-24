@@ -268,6 +268,20 @@ export class Block<
   }
 
   /**
+   * Whether this block scopes its child blocks in HCL output.
+   *
+   * When `true`, child constructs like {@link DataSource} will use their simple
+   * label without prefixing the parent's ID. This is appropriate for blocks like
+   * `check` where nested blocks appear inside the parent block in HCL rather
+   * than being flattened to the top level.
+   *
+   * @returns `false` by default — override to `true` in scoping block types
+   */
+  get scopesChildBlocks(): boolean {
+    return false;
+  }
+
+  /**
    * Creates a new Block instance.
    *
    * Initializes a block with the specified type, labels, inputs, and optional child blocks.

@@ -32,10 +32,12 @@
 
 export * from "./blocks/actions/action.ts";
 export * from "./blocks/actions/deno_action.ts";
+export * from "./blocks/assertion.ts";
 export * from "./blocks/backends/backend.ts";
 export * from "./blocks/backends/local_backend.ts";
 export * from "./blocks/backends/remote_backend.ts";
 export * from "./blocks/block.ts";
+export * from "./blocks/check.ts";
 export * from "./blocks/datasources/datasource.ts";
 export * from "./blocks/import.ts";
 export * from "./blocks/locals.ts";

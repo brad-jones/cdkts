@@ -43,6 +43,7 @@ export * from "./blocks/import.ts";
 export * from "./blocks/locals.ts";
 export * from "./blocks/module.ts";
 export * from "./blocks/moved.ts";
+export * from "./blocks/removed.ts";
 export * from "./blocks/datasources/deno_datasource.ts";
 export * from "./blocks/datasources/deno_format.ts";
 export * from "./blocks/output.ts";

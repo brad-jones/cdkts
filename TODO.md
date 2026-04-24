@@ -10,13 +10,9 @@
   - Consider adding support for creating docker image bundles.
   - Should be able to just run `deno cache` when building the image.
 
-- Add a backend that uses the HTTP Backend to store state in a K8s cluster. eg: In a ConfigMap / Secret.
-
 - Add a backend that automatically creates a new S3 bucket for each stack and
   stores state there to avoid the classic chicken & egg problem of needing to
   create the bucket before being able to deploy the stack.
-
-- Could probably create a generic HTTP backend class that uses Hono to create a simple REST API for storing state. Then we could have multiple implementations of this backend, eg: one that stores state in a K8s cluster, one that stores state in S3, etc.
 
 - Build the generator tooling to allow construct packages to be generated from existing Terraform providers.
   - Then build pipelines / repos to automatically publish all the main providers. eg: AWS, Azure, GCP, etc.

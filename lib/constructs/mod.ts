@@ -59,6 +59,7 @@ export * from "./blocks/datasources/deno_format.ts";
 export * from "./blocks/output.ts";
 export * from "./blocks/providers/denobridge.ts";
 export * from "./blocks/providers/provider.ts";
+export * from "./blocks/provisioning.ts";
 export * from "./blocks/resources/deno_resource.ts";
 export * from "./blocks/resources/ephemeral/deno_ephemeral_resource.ts";
 export * from "./blocks/resources/ephemeral/ephemeral_resource.ts";

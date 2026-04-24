@@ -109,3 +109,125 @@ Deno.test("Removed - multiple removed blocks", async () => {
     }
   `);
 });
+
+Deno.test("Removed - with destroy-time local-exec provisioner", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Removed(this, {
+          from: "aws_instance.old_server",
+          provisioners: [
+            {
+              type: "local-exec",
+              when: "destroy",
+              command: "echo 'Destroying old server'",
+            },
+          ],
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    removed {
+      from = aws_instance.old_server
+      lifecycle {
+        destroy = true
+      }
+
+      provisioner "local-exec" {
+        when    = destroy
+        command = "echo 'Destroying old server'"
+      }
+    }
+  `);
+});
+
+Deno.test("Removed - with connection and remote-exec provisioner", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Removed(this, {
+          from: "aws_instance.old_server",
+          connection: {
+            type: "ssh",
+            host: "10.0.0.1",
+            user: "root",
+          },
+          provisioners: [
+            {
+              type: "remote-exec",
+              when: "destroy",
+              inline: ["systemctl stop myapp"],
+            },
+          ],
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    removed {
+      from = aws_instance.old_server
+      lifecycle {
+        destroy = true
+      }
+
+      connection {
+        type = "ssh"
+        host = "10.0.0.1"
+        user = "root"
+      }
+
+      provisioner "remote-exec" {
+        when   = destroy
+        inline = ["systemctl stop myapp"]
+      }
+    }
+  `);
+});
+
+Deno.test("Removed - with multiple provisioners", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Removed(this, {
+          from: "aws_instance.old_server",
+          provisioners: [
+            {
+              type: "local-exec",
+              when: "destroy",
+              command: "echo 'Cleaning up'",
+              onFailure: "continue",
+            },
+            {
+              type: "remote-exec",
+              when: "destroy",
+              inline: ["systemctl stop myapp", "rm -rf /opt/myapp"],
+            },
+          ],
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    removed {
+      from = aws_instance.old_server
+      lifecycle {
+        destroy = true
+      }
+
+      provisioner "local-exec" {
+        when       = destroy
+        command    = "echo 'Cleaning up'"
+        on_failure = continue
+      }
+
+      provisioner "remote-exec" {
+        when   = destroy
+        inline = ["systemctl stop myapp", "rm -rf /opt/myapp"]
+      }
+    }
+  `);
+});

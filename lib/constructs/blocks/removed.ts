@@ -1,6 +1,8 @@
 import type { Construct } from "../construct.ts";
 import { RawHcl } from "../rawhcl.ts";
 import { Block } from "./block.ts";
+import type { Connection, RemovedProvisioner } from "./provisioning.ts";
+import { buildConnectionBlock, buildProvisionerBlocks } from "./provisioning.ts";
 
 /**
  * Represents a Terraform/OpenTofu `removed` block.
@@ -84,10 +86,52 @@ export class Removed extends Block<typeof Removed> {
      * ```
      */
     destroy = new Block.Input<boolean | undefined>();
-  };
 
-  // TODO: https://developer.hashicorp.com/terraform/language/block/removed#connection
-  // TODO: https://developer.hashicorp.com/terraform/language/block/removed#provisioner
+    /**
+     * Default connection settings for all provisioners defined on this removed block.
+     *
+     * Provisioners can override these settings with their own `connection` block.
+     *
+     * @see https://developer.hashicorp.com/terraform/language/block/removed#connection
+     *
+     * @example
+     * ```typescript
+     * new Removed(this, {
+     *   from: "aws_instance.old_server",
+     *   connection: {
+     *     type: "ssh",
+     *     host: "10.0.0.1",
+     *     user: "root",
+     *   },
+     * });
+     * ```
+     */
+    connection = new Block.Input<Connection | undefined>();
+
+    /**
+     * Provisioners to run during destroy.
+     *
+     * Only `local-exec` and `remote-exec` are supported (no `file` provisioner).
+     * The `when` argument is required and must be `"destroy"`.
+     *
+     * @see https://developer.hashicorp.com/terraform/language/block/removed#provisioner
+     *
+     * @example
+     * ```typescript
+     * new Removed(this, {
+     *   from: "aws_instance.old_server",
+     *   provisioners: [
+     *     {
+     *       type: "local-exec",
+     *       when: "destroy",
+     *       command: "echo 'Destroying old server'",
+     *     },
+     *   ],
+     * });
+     * ```
+     */
+    provisioners = new Block.Input<RemovedProvisioner[] | undefined>();
+  };
 
   /**
    * Creates a new Removed block.
@@ -108,6 +152,14 @@ export class Removed extends Block<typeof Removed> {
 
     const destroy = inputs?.destroy ?? true;
     new Block(this, "lifecycle", [], { destroy });
+
+    if (inputs?.connection) {
+      buildConnectionBlock(this, inputs.connection);
+    }
+
+    if (inputs?.provisioners && inputs.provisioners.length > 0) {
+      buildProvisionerBlocks(this, inputs.provisioners);
+    }
   }
 
   /**
@@ -126,6 +178,8 @@ export class Removed extends Block<typeof Removed> {
       inputs.from = new RawHcl(inputs.from);
     }
     delete inputs["destroy"];
+    delete inputs["connection"];
+    delete inputs["provisioners"];
     return inputs;
   }
 }

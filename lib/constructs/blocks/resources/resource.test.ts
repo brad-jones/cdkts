@@ -197,3 +197,217 @@ Deno.test("Resource - with multiple lifecycle options", async () => {
     }
   `);
 });
+
+Deno.test("Resource - with top-level connection block", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Resource(this, "aws_instance", "web", {
+          ami: "ami-12345678",
+          instance_type: "t2.micro",
+          connection: {
+            type: "ssh",
+            host: "10.0.0.1",
+            user: "root",
+            privateKey: "-----BEGIN RSA PRIVATE KEY-----",
+          },
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    resource "aws_instance" "web" {
+      ami           = "ami-12345678"
+      instance_type = "t2.micro"
+      connection {
+        type        = "ssh"
+        host        = "10.0.0.1"
+        user        = "root"
+        private_key = "-----BEGIN RSA PRIVATE KEY-----"
+      }
+    }
+  `);
+});
+
+Deno.test("Resource - with local-exec provisioner", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Resource(this, "aws_instance", "web", {
+          ami: "ami-12345678",
+          instance_type: "t2.micro",
+          provisioners: [
+            {
+              type: "local-exec",
+              command: "echo hello >> hosts.txt",
+            },
+          ],
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    resource "aws_instance" "web" {
+      ami           = "ami-12345678"
+      instance_type = "t2.micro"
+      provisioner "local-exec" {
+        command = "echo hello >> hosts.txt"
+      }
+    }
+  `);
+});
+
+Deno.test("Resource - with remote-exec provisioner and nested connection", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Resource(this, "aws_instance", "web", {
+          ami: "ami-12345678",
+          instance_type: "t2.micro",
+          provisioners: [
+            {
+              type: "remote-exec",
+              inline: ["sudo apt-get update", "sudo apt-get install -y nginx"],
+              connection: {
+                type: "ssh",
+                host: "10.0.0.2",
+                user: "ubuntu",
+              },
+            },
+          ],
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    resource "aws_instance" "web" {
+      ami           = "ami-12345678"
+      instance_type = "t2.micro"
+      provisioner "remote-exec" {
+        inline = ["sudo apt-get update", "sudo apt-get install -y nginx"]
+        connection {
+          type = "ssh"
+          host = "10.0.0.2"
+          user = "ubuntu"
+        }
+      }
+    }
+  `);
+});
+
+Deno.test("Resource - with file provisioner", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Resource(this, "aws_instance", "web", {
+          ami: "ami-12345678",
+          instance_type: "t2.micro",
+          provisioners: [
+            {
+              type: "file",
+              source: "conf/myapp.conf",
+              destination: "/etc/myapp.conf",
+            },
+          ],
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    resource "aws_instance" "web" {
+      ami           = "ami-12345678"
+      instance_type = "t2.micro"
+      provisioner "file" {
+        source      = "conf/myapp.conf"
+        destination = "/etc/myapp.conf"
+      }
+    }
+  `);
+});
+
+Deno.test("Resource - with multiple provisioners and top-level connection", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Resource(this, "aws_instance", "web", {
+          ami: "ami-12345678",
+          instance_type: "t2.micro",
+          connection: {
+            type: "ssh",
+            host: "10.0.0.3",
+            user: "root",
+          },
+          provisioners: [
+            {
+              type: "file",
+              source: "conf/myapp.conf",
+              destination: "/etc/myapp.conf",
+            },
+            {
+              type: "remote-exec",
+              inline: ["chmod 644 /etc/myapp.conf"],
+            },
+          ],
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    resource "aws_instance" "web" {
+      ami           = "ami-12345678"
+      instance_type = "t2.micro"
+      connection {
+        type = "ssh"
+        host = "10.0.0.3"
+        user = "root"
+      }
+
+      provisioner "file" {
+        source      = "conf/myapp.conf"
+        destination = "/etc/myapp.conf"
+      }
+
+      provisioner "remote-exec" {
+        inline = ["chmod 644 /etc/myapp.conf"]
+      }
+    }
+  `);
+});
+
+Deno.test("Resource - with provisioner when and onFailure", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Resource(this, "aws_instance", "web", {
+          ami: "ami-12345678",
+          instance_type: "t2.micro",
+          provisioners: [
+            {
+              type: "local-exec",
+              command: "echo 'Destroying instance'",
+              when: "destroy",
+              onFailure: "continue",
+            },
+          ],
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    resource "aws_instance" "web" {
+      ami           = "ami-12345678"
+      instance_type = "t2.micro"
+      provisioner "local-exec" {
+        command    = "echo 'Destroying instance'"
+        when       = destroy
+        on_failure = continue
+      }
+    }
+  `);
+});

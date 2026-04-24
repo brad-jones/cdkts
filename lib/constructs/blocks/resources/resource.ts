@@ -3,6 +3,8 @@ import { RawHcl } from "../../rawhcl.ts";
 import type { Action } from "../actions/action.ts";
 import { Block } from "../block.ts";
 import type { Provider } from "../providers/provider.ts";
+import type { Connection, Provisioner } from "../provisioning.ts";
+import { buildConnectionBlock, buildProvisionerBlocks } from "../provisioning.ts";
 
 /**
  * Represents a Terraform/OpenTofu resource block.
@@ -248,8 +250,64 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
         condition?: string;
       }[] | undefined
     >({ hclName: "action_triggers" });
-    // TODO: https://developer.hashicorp.com/terraform/language/block/resource#connection
-    // TODO: https://developer.hashicorp.com/terraform/language/block/resource#provisioner
+
+    /**
+     * Default connection settings for all provisioners defined on this resource.
+     *
+     * Provisioners can override these settings with their own `connection` block.
+     * Supports SSH and WinRM connections, optionally through bastion hosts or proxies.
+     *
+     * @see https://developer.hashicorp.com/terraform/language/block/resource#connection
+     *
+     * @example
+     * ```typescript
+     * new Resource(this, "aws_instance", "web", {
+     *   ami: "ami-12345678",
+     *   instance_type: "t2.micro",
+     *   connection: {
+     *     type: "ssh",
+     *     host: "${self.public_ip}",
+     *     user: "root",
+     *     privateKey: "${file(\"~/.ssh/id_rsa\")}",
+     *   },
+     * });
+     * ```
+     */
+    connection = new Block.Input<Connection | undefined>();
+
+    /**
+     * Provisioners to run after the resource is created (or before it is destroyed).
+     *
+     * Terraform supports three built-in provisioner types: `file`, `local-exec`, and
+     * `remote-exec`. Each provisioner can optionally include its own `connection` block
+     * to override the resource-level connection settings.
+     *
+     * @see https://developer.hashicorp.com/terraform/language/block/resource#provisioner
+     *
+     * @example
+     * ```typescript
+     * new Resource(this, "aws_instance", "web", {
+     *   ami: "ami-12345678",
+     *   instance_type: "t2.micro",
+     *   provisioners: [
+     *     {
+     *       type: "local-exec",
+     *       command: "echo ${self.private_ip} >> hosts.txt",
+     *     },
+     *     {
+     *       type: "remote-exec",
+     *       inline: ["sudo apt-get update", "sudo apt-get install -y nginx"],
+     *       connection: {
+     *         type: "ssh",
+     *         host: "${self.public_ip}",
+     *         user: "ubuntu",
+     *       },
+     *     },
+     *   ],
+     * });
+     * ```
+     */
+    provisioners = new Block.Input<Provisioner[] | undefined>();
   };
 
   /**
@@ -336,6 +394,14 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
         }
       });
     }
+
+    if (inputs?.connection) {
+      buildConnectionBlock(this, inputs.connection);
+    }
+
+    if (inputs?.provisioners && inputs.provisioners.length > 0) {
+      buildProvisionerBlocks(this, inputs.provisioners);
+    }
   }
 
   /**
@@ -357,6 +423,8 @@ export class Resource<Self = typeof Resource> extends Block<Self> {
     delete inputs["prevent_destroy"];
     delete inputs["ignore_changes"];
     delete inputs["replace_triggered_by"];
+    delete inputs["connection"];
+    delete inputs["provisioners"];
     return inputs;
   }
 }

@@ -24,6 +24,7 @@ import { Confirm } from "@cliffy/prompt";
 import { outdent } from "@cspotcode/outdent";
 import { join } from "@std/path";
 import { Project } from "../lib/automate/project.ts";
+import { generate } from "../lib/automate/generate/generate.ts";
 import { StackBundler, type Target } from "../lib/automate/stack_bundler/stack_bundler.ts";
 import { importStack, tempDir } from "../lib/automate/utils.ts";
 
@@ -402,6 +403,46 @@ await new Command()
     }
 
     await bundler.bundle(await Deno.realPath(stackFilePath), targetsToBundle);
+  })
+  // ---
+  .command("generate")
+  .description(`
+    Generate typed TypeScript bindings for a Terraform provider.
+
+    This command takes a Terraform provider source address, extracts the provider's
+    schema using tofu/terraform, and generates a set of typed TypeScript classes that
+    extend the CDKTS constructs (Resource, DataSource, Provider, EphemeralResource).
+
+    The generated package includes a deno.json configured for publishing to JSR.
+    Use --publish to automatically publish after generation.
+
+    Designed to be run in CI/CD pipelines when new provider versions are released.
+
+    Examples:
+        cdkts generate hashicorp/aws --version 5.82.0
+        cdkts generate hashicorp/local --version "~> 2.0" --output-dir ./local-provider
+        cdkts generate kreuzwerker/docker --publish --jsr-version 3.0.2
+  `)
+  .arguments("<providerSource:string>")
+  .option("--version <version:string>", "Provider version constraint (e.g., '5.82.0', '~> 5.0')")
+  .option("--output-dir <dir:string>", "Output directory for generated files (default: ./<provider-type>)")
+  .option("--jsr-scope <scope:string>", "JSR scope for the package (default: @cdkts-providers)", {
+    default: "@cdkts-providers",
+  })
+  .option("--jsr-name <name:string>", "JSR package name (default: derived from provider type)")
+  .option("--jsr-version <ver:string>", "JSR package version (default: derived from provider version)")
+  .option("--publish", "Publish to JSR after generating")
+  .action(async function (options, providerSource: string) {
+    await generate({
+      providerSource,
+      version: options.version,
+      outputDir: options.outputDir,
+      flavor: options.flavor ?? "tofu",
+      jsrScope: options.jsrScope,
+      jsrName: options.jsrName,
+      jsrVersion: options.jsrVersion,
+      publish: options.publish,
+    });
   })
   // ---
   .command("clean")

@@ -25,3 +25,4 @@ export * from "./deno_backend_server.ts";
 export * from "./tls.ts";
 export * from "./types/deno_backend_handlers.ts";
 export * from "./stack_bundler/stack_bundler.ts";
+export * from "./generate/mod.ts";

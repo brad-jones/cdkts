@@ -2,6 +2,42 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.8.0](https://github.com/brad-jones/cdkts/compare/33852cac0c393204c8fcf327245e3fb713ee5bad..v0.8.0) - 2026-04-24
+#### Features
+- (**backends**) implement all 9 Terraform backend types with full property coverage - ([5e27312](https://github.com/brad-jones/cdkts/commit/5e273123b007ce3494b6038e7470882c6d386251)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**blocks**) implement Check and Assertion blocks - ([b089aac](https://github.com/brad-jones/cdkts/commit/b089aac0675df6eacb9586d118388f8da741699c)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**cli**) add generate command for terraform provider bindings - ([a82dc1f](https://github.com/brad-jones/cdkts/commit/a82dc1f8647a0b637cc044623b056f6031e26033)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**constructs**) add OpenTofu state encryption support - ([b8bd776](https://github.com/brad-jones/cdkts/commit/b8bd77658c9ea353baaa25f682cb3a0537f5a655)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**constructs**) add connection and provisioner blocks to Resource and Removed - ([49adc84](https://github.com/brad-jones/cdkts/commit/49adc842fafee27ff0fdd9a9ac8db31750b4acac)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**constructs**) implement Removed block construct - ([ed1abb1](https://github.com/brad-jones/cdkts/commit/ed1abb1fd3bdce6510dc0431c6ad219c7d727910)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**constructs**) implement Moved block construct - ([0992c95](https://github.com/brad-jones/cdkts/commit/0992c953aa09e8774847247c841067f26446beb9)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**constructs**) implement Module block construct - ([ed65399](https://github.com/brad-jones/cdkts/commit/ed653997d911f91c9a46a2bc5affc3ee53650ca2)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**constructs**) implement Import block - ([77875c5](https://github.com/brad-jones/cdkts/commit/77875c5cf7bf0e9a348594e0edb0a10dc83182cd)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**generate**) add --build-number option for pre-release JSR versions - ([a18a65e](https://github.com/brad-jones/cdkts/commit/a18a65e7816714579044bd9517f83df5ea78b5bf)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**locals**) implement Local construct - ([89dffe9](https://github.com/brad-jones/cdkts/commit/89dffe95fb4c7b2765974286b351f4e7816334d4)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**terraform**) add provider_meta block support - ([69e3118](https://github.com/brad-jones/cdkts/commit/69e3118d1c077d4e656add058f872f7f5d7fa2c8)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**terraform**) add cloud block support for HCP Terraform - ([6a9d299](https://github.com/brad-jones/cdkts/commit/6a9d299930161cc9ca349ab0bb59b09a3ed09378)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- add DenoBackend construct for TypeScript state backends - ([900dda8](https://github.com/brad-jones/cdkts/commit/900dda828e382f0d2000fc18feca86811d75c66e)) - [@brad-jones](https://github.com/brad-jones), Copilot
+#### Bug Fixes
+- (**assertion**) resolve condition interpolation to raw HCL - ([548fef2](https://github.com/brad-jones/cdkts/commit/548fef231f107e25ad8d212612f4502b35264c1e)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**backends**) add missing properties and S3 multi-role support - ([4785b2f](https://github.com/brad-jones/cdkts/commit/4785b2f24d00356bfb26bc158cd4a85d388fc01c)) - [@brad-jones](https://github.com/brad-jones), Copilot
+#### Documentation
+- (**TODO**) remove state encryption consideration - ([250b6be](https://github.com/brad-jones/cdkts/commit/250b6bedd4bcffc09f8163b16c0acfecdc9c460d)) - [@brad-jones](https://github.com/brad-jones)
+- remove completed terraform block constructs todo - ([8669d16](https://github.com/brad-jones/cdkts/commit/8669d16165acc642c749d9e41d7db47c68088108)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- expand API overview descriptions for constructs - ([2c9db46](https://github.com/brad-jones/cdkts/commit/2c9db463d3e727d0155e780a901af238808fcf17)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- add TASKS section to AGENTS.md - ([7a10646](https://github.com/brad-jones/cdkts/commit/7a10646debc1e550a8d79e5a871efaa5e13469d7)) - [@brad-jones](https://github.com/brad-jones), Copilot
+#### Build system
+- (**dprint**) bump plugin versions - ([6bb5471](https://github.com/brad-jones/cdkts/commit/6bb5471d8f981aa121e9f84e30d9eed8f2d4706d)) - [@brad-jones](https://github.com/brad-jones), Copilot
+#### Refactoring
+- (**deno-backend**) use callback API for Terraform child constructs - ([4479301](https://github.com/brad-jones/cdkts/commit/447930116ce812cf8310439680cfe9505f243f66)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- (**import**) replace `Block<any>` with `Provider` type - ([56c46af](https://github.com/brad-jones/cdkts/commit/56c46af2ce8630080b8fa8c8ba4b418eabc86e58)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- implement AsyncDisposable for Project and DenoBackendServer - ([483f0ed](https://github.com/brad-jones/cdkts/commit/483f0ed7197b99b0ae99e341912f4a19942f5375)) - [@brad-jones](https://github.com/brad-jones), Copilot
+#### Miscellaneous Chores
+- remove completed/superseded TODO items - ([fd36266](https://github.com/brad-jones/cdkts/commit/fd36266c980d9d32c1857a9ab48e2ce4ab0a1adb)) - [@brad-jones](https://github.com/brad-jones), Copilot
+- add copilot-cli tooling and agent skills - ([33852ca](https://github.com/brad-jones/cdkts/commit/33852cac0c393204c8fcf327245e3fb713ee5bad)) - [@brad-jones](https://github.com/brad-jones), Copilot
+
+- - -
+
 ## [v0.7.8](https://github.com/brad-jones/cdkts/compare/857a57b994192648f4295229c710cbb3e92cef15..v0.7.8) - 2026-04-23
 #### Miscellaneous Chores
 - (**scripts**) execute bit - ([06683c8](https://github.com/brad-jones/cdkts/commit/06683c862476615238bbfd93895de82e71dfaeb5)) - [@brad-jones](https://github.com/brad-jones)

@@ -462,32 +462,33 @@ export default class MyStack extends Stack<typeof MyStack> {
   constructor() {
     super(`${import.meta.url}#${MyStack.name}`);
 
-    const tf = new Terraform(this, {
+    new Terraform(this, {
       requiredVersion: ">=1,<2.0",
       requiredProviders: {
         local: { source: "hashicorp/local", version: "2.6.1" },
       },
-    });
+    }, (tf) => {
+      const stateFile = "./terraform.tfstate";
 
-    const stateFile = "./terraform.tfstate";
-    new DenoBackend(tf, {
-      handlers: {
-        getState: async () => {
-          try {
-            return await Deno.readFile(stateFile);
-          } catch {
-            return null;
-          }
+      new DenoBackend(tf, {
+        handlers: {
+          getState: async () => {
+            try {
+              return await Deno.readFile(stateFile);
+            } catch {
+              return null;
+            }
+          },
+          updateState: async (body) => {
+            await Deno.writeFile(stateFile, body);
+          },
+          deleteState: async () => {
+            try {
+              await Deno.remove(stateFile);
+            } catch { /* noop */ }
+          },
         },
-        updateState: async (body) => {
-          await Deno.writeFile(stateFile, body);
-        },
-        deleteState: async () => {
-          try {
-            await Deno.remove(stateFile);
-          } catch { /* noop */ }
-        },
-      },
+      });
     });
 
     new Resource(this, "local_file", "hello", {

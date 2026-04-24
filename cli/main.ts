@@ -431,6 +431,7 @@ await new Command()
   })
   .option("--jsr-name <name:string>", "JSR package name (default: derived from provider type)")
   .option("--jsr-version <ver:string>", "JSR package version (default: derived from provider version)")
+  .option("--build-number <num:integer>", "Build number for pre-release suffix (e.g., 3 → x.y.z-build.3)")
   .option("--publish", "Publish to JSR after generating")
   .action(async function (options, providerSource: string) {
     await generate({
@@ -441,6 +442,7 @@ await new Command()
       jsrScope: options.jsrScope,
       jsrName: options.jsrName,
       jsrVersion: options.jsrVersion,
+      buildNumber: options.buildNumber,
       publish: options.publish,
     });
   })

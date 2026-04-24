@@ -2,7 +2,7 @@ import { assertEquals } from "@std/assert";
 import { terraformTypeToTs } from "./type_mapper.ts";
 import { generateBlockCode, generateModFile, generateProviderCode, generateRootModFile } from "./code_gen.ts";
 import { generateDenoJson } from "./deno_json_gen.ts";
-import { parseProviderSource } from "./generate.ts";
+import { applyBuildNumber, normalizeVersion, parseProviderSource } from "./generate.ts";
 import type { SchemaRepresentation } from "./schema_types.ts";
 
 // ---------------------------------------------------------------------------
@@ -369,4 +369,30 @@ Deno.test("deno_json_gen - generates valid deno.json", () => {
     parsed.imports["@brad-jones/cdkts/constructs"],
     "jsr:@brad-jones/cdkts/constructs",
   );
+});
+
+// ---------------------------------------------------------------------------
+// Build number / version tests
+// ---------------------------------------------------------------------------
+
+Deno.test("normalizeVersion - strips constraint operators", () => {
+  assertEquals(normalizeVersion("5.82.0"), "5.82.0");
+  assertEquals(normalizeVersion("~> 5.82.0"), "5.82.0");
+  assertEquals(normalizeVersion("2.0"), "2.0.0");
+  assertEquals(normalizeVersion("*"), "0.0.0");
+});
+
+Deno.test("applyBuildNumber - appends suffix when > 0", () => {
+  assertEquals(applyBuildNumber("5.82.0", 3), "5.82.0-build.3");
+  assertEquals(applyBuildNumber("1.0.0", 1), "1.0.0-build.1");
+});
+
+Deno.test("applyBuildNumber - no suffix when 0 or undefined", () => {
+  assertEquals(applyBuildNumber("5.82.0", 0), "5.82.0");
+  assertEquals(applyBuildNumber("5.82.0", undefined), "5.82.0");
+  assertEquals(applyBuildNumber("5.82.0"), "5.82.0");
+});
+
+Deno.test("applyBuildNumber - no suffix for negative numbers", () => {
+  assertEquals(applyBuildNumber("5.82.0", -1), "5.82.0");
 });

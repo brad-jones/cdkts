@@ -45,6 +45,9 @@ export interface GenerateOptions {
   /** JSR package version override */
   jsrVersion?: string;
 
+  /** Build number for pre-release suffix (e.g., 3 → "x.y.z-build.3") */
+  buildNumber?: number;
+
   /** Whether to publish to JSR after generating */
   publish?: boolean;
 }
@@ -121,7 +124,10 @@ export async function generate(options: GenerateOptions): Promise<void> {
   const outputDir = options.outputDir ?? `./${parsed.type}`;
   const jsrScope = options.jsrScope ?? "@cdkts-providers";
   const jsrName = options.jsrName ?? parsed.type;
-  const jsrVersion = options.jsrVersion ?? normalizeVersion(version ?? "0.0.0");
+  const jsrVersion = options.jsrVersion ?? applyBuildNumber(
+    normalizeVersion(version ?? "0.0.0"),
+    options.buildNumber,
+  );
   const flavor = options.flavor ?? "tofu";
 
   // Step 1: Extract the provider schema
@@ -310,7 +316,7 @@ async function generateCategory(
  * Strips constraint operators like `~>`, `>=`, etc.
  * If the version is `*` or can't be parsed, returns "0.0.0".
  */
-function normalizeVersion(version: string): string {
+export function normalizeVersion(version: string): string {
   if (version === "*") return "0.0.0";
 
   // Strip common constraint operators
@@ -332,6 +338,16 @@ function normalizeVersion(version: string): string {
   }
 
   return "0.0.0";
+}
+
+/**
+ * Append a `-build.<N>` pre-release suffix when the build number is > 0.
+ */
+export function applyBuildNumber(version: string, buildNumber?: number): string {
+  if (buildNumber !== undefined && buildNumber > 0) {
+    return `${version}-build.${buildNumber}`;
+  }
+  return version;
 }
 
 /**

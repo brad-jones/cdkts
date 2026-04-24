@@ -469,7 +469,7 @@ See the [Deno Bridge example](examples/03_deno-bridge-provider) for complete exa
     - **`Check`** - Validates infrastructure outside the typical resource lifecycle.
     - **`Assertion`** - Declares a validation condition within a `Check` block.
     - **`Import`** - Imports existing infrastructure resources into Terraform state so they can be managed as code.
-    - **`Moved`** - TODO
+    - **`Moved`** - Renames or relocates a resource/module in Terraform state without destroying and recreating it.
     - **`Removed`** - TODO
 
 _Remember any block that is currently not implemented can still be expressed directly with the Block class!_

@@ -9,6 +9,7 @@ import { DenoDataSource } from "../constructs/blocks/datasources/deno_datasource
 import { DenoBridgeProvider } from "../constructs/blocks/providers/denobridge.ts";
 import { DenoResource } from "../constructs/blocks/resources/deno_resource.ts";
 import { DenoEphemeralResource } from "../constructs/blocks/resources/ephemeral/deno_ephemeral_resource.ts";
+import { Terraform } from "../constructs/blocks/terraform.ts";
 import type { Stack } from "../constructs/stack.ts";
 import { OpenTofuDownloader } from "./downloader/opentofu.ts";
 import { TerraformDownloader } from "./downloader/terraform.ts";
@@ -109,6 +110,18 @@ export class Project<Self, Inputs, Outputs> {
    * - Extracts embedded deno binary and denobridge scripts if running as a standalone executable
    */
   async preInit(): Promise<void> {
+    if (this.#props.flavor === "terraform" && this.#props.stack) {
+      for (const construct of this.#props.stack.descendants) {
+        if (construct instanceof Terraform && construct.inputs?.encryption) {
+          throw new Error(
+            "State encryption is an OpenTofu-only feature and is not supported by Terraform. " +
+              "Either remove the 'encryption' configuration from your Terraform block, " +
+              "or set the project flavor to 'tofu'.",
+          );
+        }
+      }
+    }
+
     // Handle projectDir: create temp dir if not provided
     if (!this.#props.projectDir) {
       if (this.#props.stack?.id) {

@@ -12,6 +12,7 @@ import { RemoteBackend } from "./backends/remote_backend.ts";
 import { S3Backend } from "./backends/s3_backend.ts";
 import { Block } from "./block.ts";
 import { Cloud } from "./cloud.ts";
+import { Encryption, type EncryptionConfig } from "./encryption.ts";
 
 /**
  * Represents a Terraform/OpenTofu configuration block.
@@ -208,6 +209,34 @@ export class Terraform extends Block<typeof Terraform> {
      * ```
      */
     experiments = new Block.Input<string[] | undefined>();
+
+    /**
+     * Configures state and plan file encryption.
+     *
+     * **OpenTofu only** — this is not supported by Terraform. Using this option
+     * when the project `flavor` is `"terraform"` will throw an error during
+     * `Project.preInit()`.
+     *
+     * @see https://opentofu.org/docs/language/state/encryption
+     *
+     * @example
+     * ```typescript
+     * encryption: {
+     *   keyProviders: {
+     *     pbkdf2: {
+     *       my_key: { passphrase: "correct-horse-battery-staple" },
+     *     },
+     *   },
+     *   methods: {
+     *     aesGcm: {
+     *       my_method: { keys: "key_provider.pbkdf2.my_key" },
+     *     },
+     *   },
+     *   state: { method: "method.aes_gcm.my_method", enforced: true },
+     * }
+     * ```
+     */
+    encryption = new Block.Input<EncryptionConfig | undefined>();
   };
 
   /**
@@ -234,6 +263,10 @@ export class Terraform extends Block<typeof Terraform> {
 
     if (inputs?.cloud) {
       new Cloud(this, inputs.cloud);
+    }
+
+    if (inputs?.encryption) {
+      new Encryption(this, inputs.encryption);
     }
 
     if (inputs?.providerMeta) {
@@ -283,6 +316,7 @@ export class Terraform extends Block<typeof Terraform> {
     if (inputs) {
       delete inputs["backend"];
       delete inputs["cloud"];
+      delete inputs["encryption"];
       delete inputs["providerMeta"];
       delete inputs["requiredProviders"];
     }

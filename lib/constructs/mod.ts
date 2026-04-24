@@ -48,6 +48,7 @@ export * from "./blocks/backends/s3_backend.ts";
 export * from "./blocks/block.ts";
 export * from "./blocks/check.ts";
 export * from "./blocks/cloud.ts";
+export * from "./blocks/encryption.ts";
 export * from "./blocks/datasources/datasource.ts";
 export * from "./blocks/import.ts";
 export * from "./blocks/locals.ts";

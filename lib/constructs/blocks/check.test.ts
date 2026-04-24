@@ -27,7 +27,7 @@ Deno.test("Check - basic assertions only", async () => {
 
     check "bucket_name" {
       assert {
-        condition     = "aws_s3_bucket.main.bucket != \\"\\""
+        condition     = aws_s3_bucket.main.bucket != ""
         error_message = "S3 bucket name must not be empty"
       }
     }
@@ -58,7 +58,7 @@ Deno.test("Check - with scoped data source", async () => {
       }
 
       assert {
-        condition     = "data.http.api.status_code == 200"
+        condition     = data.http.api.status_code == 200
         error_message = "API health check failed"
       }
     }
@@ -94,12 +94,12 @@ Deno.test("Check - multiple assertions", async () => {
       }
 
       assert {
-        condition     = "data.aws_lb.app.enable_deletion_protection"
+        condition     = data.aws_lb.app.enable_deletion_protection
         error_message = "Load balancer must have deletion protection enabled"
       }
 
       assert {
-        condition     = "length(data.aws_lb.app.security_groups) > 0"
+        condition     = length(data.aws_lb.app.security_groups) > 0
         error_message = "Load balancer must have at least one security group"
       }
     }
@@ -144,7 +144,7 @@ Deno.test("Check - data source with depends_on", async () => {
       }
 
       assert {
-        condition     = "data.postgresql_database.app_db.allow_connections"
+        condition     = data.postgresql_database.app_db.allow_connections
         error_message = "Database is not accepting connections"
       }
     }
@@ -190,8 +190,61 @@ Deno.test("Check - data source with provider", async () => {
       }
 
       assert {
-        condition     = "data.aws_ami.web.architecture == \\"x86_64\\""
+        condition     = data.aws_ami.web.architecture == "x86_64"
         error_message = "AMI must be for x86_64 architecture"
+      }
+    }
+  `);
+});
+
+Deno.test("Check - references serialize correctly", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        const myBucket = new Resource(this, "aws_s3_bucket", "main", {
+          bucket: "my-bucket",
+        });
+
+        new Check(this, "bucket_name", (c) => {
+          new Assertion(c, "not_empty", {
+            condition: `${myBucket.outputs.bucket} != ""`,
+            errorMessage: "S3 bucket name must not be empty",
+          });
+        });
+
+        new Check(this, "health_check", (c) => {
+          // deno-lint-ignore no-explicit-any
+          const api = new DataSource(c, "http", "api", { url: "https://api.example.com/health" } as any);
+
+          new Assertion(c, "status_ok", {
+            condition: `${api.outputs.status_code} == 200`,
+            errorMessage: "API health check failed",
+          });
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    resource "aws_s3_bucket" "main" {
+      bucket = "my-bucket"
+    }
+
+    check "bucket_name" {
+      assert {
+        condition     = resource.aws_s3_bucket.main.bucket != ""
+        error_message = "S3 bucket name must not be empty"
+      }
+    }
+
+    check "health_check" {
+      data "http" "api" {
+        url = "https://api.example.com/health"
+      }
+
+      assert {
+        condition     = data.http.api.status_code == 200
+        error_message = "API health check failed"
       }
     }
   `);

@@ -1,4 +1,5 @@
 import type { Construct } from "../construct.ts";
+import { RawHcl } from "../rawhcl.ts";
 import { Block } from "./block.ts";
 
 /**
@@ -68,6 +69,12 @@ export class Assertion extends Block<typeof Assertion> {
     readonly assertionLabel: string,
     inputs: Assertion["inputs"],
   ) {
-    super(parent, "assert", [], inputs);
+    // Resolve any Attribute interpolation markers to their raw HCL expression paths.
+    const condition = inputs!.condition.replace(
+      // deno-lint-ignore no-control-regex
+      /\u0000__CDKTS_INTERPOLATION_START__(.+?)__CDKTS_INTERPOLATION_END__\u0000/g,
+      (_, id: string) => id,
+    );
+    super(parent, "assert", [], { ...inputs, condition: new RawHcl(condition) });
   }
 }

@@ -1,4 +1,5 @@
 import { format } from "@cdktf/hcl-tools";
+import { snakeCase } from "@mesqueeb/case-anything";
 import { dirname, fromFileUrl, join } from "@std/path";
 import type { DenoAction } from "./blocks/actions/deno_action.ts";
 import { Block } from "./blocks/block.ts";
@@ -202,4 +203,25 @@ export function findConfigFileSync(tsFilePath: string): string | undefined {
     // Move up one directory
     currentDir = dirname(currentDir);
   }
+}
+
+/**
+ * Converts object keys from camelCase to snake_case.
+ *
+ * Used for nested block inputs passed to `new Block()` without a Props class,
+ * where there is no `hclName` metadata to perform the key mapping.
+ *
+ * @param obj - The object whose keys should be converted
+ * @returns A new object with snake_case keys, excluding undefined values
+ */
+export function snakeCaseKeys(
+  obj: Record<string, unknown>,
+): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (typeof v !== "undefined") {
+      result[snakeCase(k)] = v;
+    }
+  }
+  return result;
 }

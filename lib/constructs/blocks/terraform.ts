@@ -1,6 +1,15 @@
 import type { Construct } from "../construct.ts";
+import { AzurermBackend } from "./backends/azurerm_backend.ts";
+import { ConsulBackend } from "./backends/consul_backend.ts";
+import { CosBackend } from "./backends/cos_backend.ts";
+import { GcsBackend } from "./backends/gcs_backend.ts";
+import { HttpBackend } from "./backends/http_backend.ts";
+import { KubernetesBackend } from "./backends/kubernetes_backend.ts";
 import { LocalBackend } from "./backends/local_backend.ts";
+import { OssBackend } from "./backends/oss_backend.ts";
+import { PgBackend } from "./backends/pg_backend.ts";
 import { RemoteBackend } from "./backends/remote_backend.ts";
+import { S3Backend } from "./backends/s3_backend.ts";
 import { Block } from "./block.ts";
 import { Cloud } from "./cloud.ts";
 
@@ -134,7 +143,15 @@ export class Terraform extends Block<typeof Terraform> {
     backend = new Block.Input<
       | Record<"local", LocalBackend["inputs"]>
       | Record<"remote", RemoteBackend["inputs"]>
-      // TODO: Add support for all the other backend types: https://developer.hashicorp.com/terraform/language/settings/backends/configuration#backend-configuration-blocks
+      | Record<"s3", S3Backend["inputs"]>
+      | Record<"gcs", GcsBackend["inputs"]>
+      | Record<"azurerm", AzurermBackend["inputs"]>
+      | Record<"consul", ConsulBackend["inputs"]>
+      | Record<"cos", CosBackend["inputs"]>
+      | Record<"http", HttpBackend["inputs"]>
+      | Record<"kubernetes", KubernetesBackend["inputs"]>
+      | Record<"oss", OssBackend["inputs"]>
+      | Record<"pg", PgBackend["inputs"]>
       | undefined
     >();
 
@@ -230,6 +247,24 @@ export class Terraform extends Block<typeof Terraform> {
         new LocalBackend(this, inputs.backend.local);
       } else if ("remote" in inputs.backend) {
         new RemoteBackend(this, inputs.backend.remote);
+      } else if ("s3" in inputs.backend) {
+        new S3Backend(this, inputs.backend.s3);
+      } else if ("gcs" in inputs.backend) {
+        new GcsBackend(this, inputs.backend.gcs);
+      } else if ("azurerm" in inputs.backend) {
+        new AzurermBackend(this, inputs.backend.azurerm);
+      } else if ("consul" in inputs.backend) {
+        new ConsulBackend(this, inputs.backend.consul);
+      } else if ("cos" in inputs.backend) {
+        new CosBackend(this, inputs.backend.cos);
+      } else if ("http" in inputs.backend) {
+        new HttpBackend(this, inputs.backend.http);
+      } else if ("kubernetes" in inputs.backend) {
+        new KubernetesBackend(this, inputs.backend.kubernetes);
+      } else if ("oss" in inputs.backend) {
+        new OssBackend(this, inputs.backend.oss);
+      } else if ("pg" in inputs.backend) {
+        new PgBackend(this, inputs.backend.pg);
       }
     }
   }

@@ -462,12 +462,12 @@ See the [Deno Bridge example](examples/03_deno-bridge-provider) for complete exa
       - **`DenoEphemeralResource`**: Extends Resource, to provide a generic `denobridge_resource` block.
     - **`DataSource`** - Extends Block, to provide a generic `datasource` block
       - **`DenoDataSource`**: Extends DataSource, to provide a generic `denobridge_datasource` block.
-    - **`Variable`** - Input variable
-    - **`Output`** - Output value
+    - **`Variable`** - Declares an input variable, allowing configurations to be parameterized without modifying source code.
+    - **`Output`** - Exports a value from a stack, making it available for inspection after apply or for consumption by other configurations.
     - **`Module`** - Calls a reusable Terraform/OpenTofu module (local path, registry, or remote source).
-    - **`Locals`** - TODO
+    - **`Local`** - Assigns a name to an expression so it can be reused multiple times within a configuration without repetition.
     - **`Check`** - TODO
-    - **`Import`** - TODO
+    - **`Import`** - Imports existing infrastructure resources into Terraform state so they can be managed as code.
     - **`Moved`** - TODO
     - **`Removed`** - TODO
 

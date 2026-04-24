@@ -80,6 +80,68 @@ Deno.test("OssBackend - with prefix and key", async () => {
   `);
 });
 
+Deno.test("OssBackend - with shared credentials", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Terraform(this, {
+          backend: {
+            oss: {
+              bucket: "bucket-for-terraform-state",
+              region: "cn-beijing",
+              sharedCredentialsFile: "~/.aliyun/config.json",
+              profile: "terraform",
+            },
+          },
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    terraform {
+      backend "oss" {
+        bucket                  = "bucket-for-terraform-state"
+        region                  = "cn-beijing"
+        profile                 = "terraform"
+        shared_credentials_file = "~/.aliyun/config.json"
+      }
+    }
+  `);
+});
+
+Deno.test("OssBackend - with assume role", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Terraform(this, {
+          backend: {
+            oss: {
+              bucket: "bucket-for-terraform-state",
+              region: "cn-beijing",
+              assumeRoleRoleArn: "acs:ram::123456789:role/terraform",
+              assumeRoleSessionName: "terraform",
+              assumeRoleSessionExpiration: 3600,
+            },
+          },
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    terraform {
+      backend "oss" {
+        bucket                         = "bucket-for-terraform-state"
+        region                         = "cn-beijing"
+        assume_role_role_arn           = "acs:ram::123456789:role/terraform"
+        assume_role_session_name       = "terraform"
+        assume_role_session_expiration = 3600
+      }
+    }
+  `);
+});
+
 Deno.test("OssBackend - with TableStore locking", async () => {
   expect(
     await new class MyStack extends Stack<typeof MyStack> {

@@ -122,6 +122,77 @@ export class OssBackend extends Backend<typeof OssBackend> {
      * The table must have a primary key named `LockID` of type `String`.
      */
     tablestoreTable = new Backend.Input<string | undefined>({ hclName: "tablestore_table" });
+
+    /**
+     * (Optional) Custom endpoint for the AliCloud Security Token Service (STS) API.
+     *
+     * Can also be set via `ALICLOUD_STS_ENDPOINT` or `ALIBABA_CLOUD_STS_ENDPOINT`
+     * environment variables.
+     */
+    stsEndpoint = new Backend.Input<string | undefined>({ hclName: "sts_endpoint" });
+
+    /**
+     * (Optional) Whether to enable server side encryption of the state file.
+     *
+     * If true, OSS will use 'AES256' encryption algorithm to encrypt state file.
+     */
+    encrypt = new Backend.Input<boolean | undefined>();
+
+    /**
+     * (Optional) Object ACL to be applied to the state file.
+     */
+    acl = new Backend.Input<string | undefined>();
+
+    /**
+     * (Optional) Path to the shared credentials file.
+     *
+     * Can also be sourced from `ALICLOUD_SHARED_CREDENTIALS_FILE` or
+     * `ALIBABA_CLOUD_CREDENTIALS_FILE` environment variables. If not set and a
+     * profile is specified, `~/.aliyun/config.json` will be used.
+     */
+    sharedCredentialsFile = new Backend.Input<string | undefined>({ hclName: "shared_credentials_file" });
+
+    /**
+     * (Optional) Alibaba Cloud profile name as set in the shared credentials file.
+     *
+     * Can also be set via `ALICLOUD_PROFILE` or `ALIBABA_CLOUD_PROFILE`
+     * environment variables.
+     */
+    profile = new Backend.Input<string | undefined>();
+
+    /**
+     * (Optional) The ARN of the role to assume.
+     *
+     * If set to an empty string, it does not perform role switching. Can also be
+     * set via `ALICLOUD_ASSUME_ROLE_ARN` or `ALIBABA_CLOUD_ROLE_ARN` environment
+     * variables.
+     */
+    assumeRoleRoleArn = new Backend.Input<string | undefined>({ hclName: "assume_role_role_arn" });
+
+    /**
+     * (Optional) A more restrictive policy to apply to the temporary credentials.
+     *
+     * You cannot use this policy to grant permissions that exceed those of the
+     * role being assumed.
+     */
+    assumeRolePolicy = new Backend.Input<string | undefined>({ hclName: "assume_role_policy" });
+
+    /**
+     * (Optional) The session name to use when assuming the role.
+     *
+     * If omitted, 'terraform' is passed to the AssumeRole call. Can also be set
+     * via `ALICLOUD_ASSUME_ROLE_SESSION_NAME` or
+     * `ALIBABA_CLOUD_ROLE_SESSION_NAME` environment variables.
+     */
+    assumeRoleSessionName = new Backend.Input<string | undefined>({ hclName: "assume_role_session_name" });
+
+    /**
+     * (Optional) The time after which the established session for assuming role expires.
+     *
+     * Valid value range: [900-3600] seconds. Default to 3600. Can also be set via
+     * `ALICLOUD_ASSUME_ROLE_SESSION_EXPIRATION` environment variable.
+     */
+    assumeRoleSessionExpiration = new Backend.Input<number | undefined>({ hclName: "assume_role_session_expiration" });
   };
 
   /**

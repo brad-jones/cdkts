@@ -486,6 +486,54 @@ export class S3Backend extends Backend<typeof S3Backend> {
          */
         transitiveTagKeys?: string[];
       }
+      | {
+        /**
+         * (Required) Amazon Resource Name (ARN) of the IAM Role to assume.
+         */
+        roleArn: string;
+
+        /**
+         * (Optional) Duration individual credentials will be valid.
+         *
+         * Format: `<hours>h<minutes>m<seconds>s`. Must be between 15m and 12h.
+         */
+        duration?: string;
+
+        /**
+         * (Optional) External identifier to use when assuming the role.
+         */
+        externalId?: string;
+
+        /**
+         * (Optional) IAM Policy JSON further restricting permissions for the assumed role.
+         */
+        policy?: string;
+
+        /**
+         * (Optional) Set of IAM Policy ARNs further restricting permissions for the assumed role.
+         */
+        policyArns?: string[];
+
+        /**
+         * (Optional) Session name to use when assuming the role.
+         */
+        sessionName?: string;
+
+        /**
+         * (Optional) Source identity specified by the principal assuming the role.
+         */
+        sourceIdentity?: string;
+
+        /**
+         * (Optional) Map of assume role session tags.
+         */
+        tags?: Record<string, string>;
+
+        /**
+         * (Optional) Set of assume role session tag keys to pass to subsequent sessions.
+         */
+        transitiveTagKeys?: string[];
+      }[]
       | undefined
     >({ hclName: "assume_role" });
 
@@ -558,7 +606,10 @@ export class S3Backend extends Backend<typeof S3Backend> {
     }
 
     if (inputs?.assumeRole) {
-      new Block(this, "assume_role", [], snakeCaseKeys(inputs.assumeRole));
+      const roles = Array.isArray(inputs.assumeRole) ? inputs.assumeRole : [inputs.assumeRole];
+      for (const role of roles) {
+        new Block(this, "assume_role", [], snakeCaseKeys(role));
+      }
     }
 
     if (inputs?.assumeRoleWithWebIdentity) {

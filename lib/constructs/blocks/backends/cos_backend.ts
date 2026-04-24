@@ -122,6 +122,30 @@ export class CosBackend extends Backend<typeof CosBackend> {
     domain = new Backend.Input<string | undefined>();
 
     /**
+     * (Optional) The directory of the shared credentials.
+     *
+     * Can also be sourced from the `TENCENTCLOUD_SHARED_CREDENTIALS_DIR`
+     * environment variable. If not set this defaults to `~/.tccli`.
+     */
+    sharedCredentialsDir = new Backend.Input<string | undefined>({ hclName: "shared_credentials_dir" });
+
+    /**
+     * (Optional) The profile name as set in the shared credentials.
+     *
+     * Can also be sourced from the `TENCENTCLOUD_PROFILE` environment variable.
+     * If not set, the default profile created with `tccli configure` will be used.
+     */
+    profile = new Backend.Input<string | undefined>();
+
+    /**
+     * (Optional) The name of the CVM instance CAM role.
+     *
+     * Can also be sourced from the `TENCENTCLOUD_CAM_ROLE_NAME`
+     * environment variable.
+     */
+    camRoleName = new Backend.Input<string | undefined>({ hclName: "cam_role_name" });
+
+    /**
      * (Optional) Configuration for assuming a role. If provided, terraform will
      * attempt to assume this role using the supplied credentials.
      */

@@ -80,6 +80,64 @@ Deno.test("CosBackend - with encryption and prefix", async () => {
   `);
 });
 
+Deno.test("CosBackend - with shared credentials", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Terraform(this, {
+          backend: {
+            cos: {
+              bucket: "bucket-for-terraform-state-1258798060",
+              region: "ap-guangzhou",
+              sharedCredentialsDir: "/Users/tf_user/.tccli",
+              profile: "default",
+            },
+          },
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    terraform {
+      backend "cos" {
+        bucket                 = "bucket-for-terraform-state-1258798060"
+        region                 = "ap-guangzhou"
+        profile                = "default"
+        shared_credentials_dir = "/Users/tf_user/.tccli"
+      }
+    }
+  `);
+});
+
+Deno.test("CosBackend - with CAM role", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Terraform(this, {
+          backend: {
+            cos: {
+              bucket: "bucket-for-terraform-state-1258798060",
+              region: "ap-guangzhou",
+              camRoleName: "my-cam-role-name",
+            },
+          },
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    terraform {
+      backend "cos" {
+        bucket        = "bucket-for-terraform-state-1258798060"
+        region        = "ap-guangzhou"
+        cam_role_name = "my-cam-role-name"
+      }
+    }
+  `);
+});
+
 Deno.test("CosBackend - with assume_role nested block", async () => {
   expect(
     await new class MyStack extends Stack<typeof MyStack> {

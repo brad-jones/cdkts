@@ -156,6 +156,55 @@ Deno.test("S3Backend - with endpoints nested block", async () => {
   `);
 });
 
+Deno.test("S3Backend - with multiple assume_role blocks", async () => {
+  expect(
+    await new class MyStack extends Stack<typeof MyStack> {
+      constructor() {
+        super(`${import.meta.url}#${MyStack.name}`);
+
+        new Terraform(this, {
+          backend: {
+            s3: {
+              bucket: "mybucket",
+              key: "terraform.tfstate",
+              region: "us-east-1",
+              assumeRole: [
+                {
+                  roleArn: "arn:aws:iam::111111111111:role/first-role",
+                  sessionName: "first",
+                },
+                {
+                  roleArn: "arn:aws:iam::222222222222:role/second-role",
+                  sessionName: "second",
+                  externalId: "ext-123",
+                },
+              ],
+            },
+          },
+        });
+      }
+    }().toHcl(),
+  ).toBe(outdent`
+    terraform {
+      backend "s3" {
+        bucket = "mybucket"
+        key    = "terraform.tfstate"
+        region = "us-east-1"
+        assume_role {
+          role_arn     = "arn:aws:iam::111111111111:role/first-role"
+          session_name = "first"
+        }
+
+        assume_role {
+          role_arn     = "arn:aws:iam::222222222222:role/second-role"
+          session_name = "second"
+          external_id  = "ext-123"
+        }
+      }
+    }
+  `);
+});
+
 Deno.test("S3Backend - with assume_role_with_web_identity nested block", async () => {
   expect(
     await new class MyStack extends Stack<typeof MyStack> {

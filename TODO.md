@@ -10,8 +10,6 @@
   - Consider adding support for creating docker image bundles.
   - Should be able to just run `deno cache` when building the image.
 
-- Finish modeling all the remaining Terraform block constructs.
-
 - Add a backend that uses the HTTP Backend to store state in a K8s cluster. eg: In a ConfigMap / Secret.
 
 - Add a backend that automatically creates a new S3 bucket for each stack and
